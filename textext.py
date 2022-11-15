@@ -13,7 +13,7 @@ admitted = [line[:-1] for line in admitted_temp.readlines()]
 # this will be the final text
 newText = ''
 
-dicSub = {'j':int, 'readText':str, 'writeText':str}
+dicSub = {'j':int, 'readText':str, 'writeText':str, 'asterisk':bool}
 
 # read main file latex
 text = open('main.tex', 'r')
@@ -27,11 +27,15 @@ while i<len(oldText):
         while oldText[j] in admitted:
             j=j+1
         # create path
-        command = "./exceptions/routines/" + oldText[i+1:j] + ".py"
+        if oldText[j-1] == '*':
+            command = "./exceptions/routines/" + oldText[i+1:j-1] + ".py"
+        else:
+            command = "./exceptions/routines/" + oldText[i+1:j] + ".py"
         if os.path.exists(command):
             dicSub['j'] = j
             dicSub['readText'] = oldText[j:]
             dicSub['writeText'] = newText
+            dicSub['asterisk'] = oldText[j-1] == '*'
             exec(open(command).read(),dicSub)
             # after executing the command, update j and newText
             j = dicSub['j']

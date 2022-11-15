@@ -1,8 +1,13 @@
 tt = 0 #this time I already removed the brackets, I know I am calling a begin function
 
-while readBegin[tt:tt+11] != '\\end{align}':
-    tt = tt+1
-t = t+tt+10
+if asterisk:
+    while readBegin[tt:tt+12] != '\\end{align*}':
+        tt = tt+1
+    t = t+tt+11
+else:
+    while readBegin[tt:tt+11] != '\\end{align}':
+        tt = tt+1
+    t = t+tt+10
 
 writeBegin = writeBegin + '[1]'
 while readBegin[tt-1] == ' ' or readBegin[tt-1] == '\n':
