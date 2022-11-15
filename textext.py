@@ -2,7 +2,7 @@ import os
 # import time if need to debug, time.sleep(seconds)
 
 # create a list of existing exceptions
-exceptions = [e[:-3] for e in os.listdir('./Exceptions/subroutines/')]
+exceptions = [e[:-3] for e in os.listdir('./Exceptions/routines/')]
 # fetch list of commands that should not produce any text output
 void_temp = open('./Exceptions/void.txt','r')
 void = [line[1:-1] for line in void_temp.readlines()]
@@ -27,8 +27,7 @@ while i<len(oldText):
         while oldText[j] in admitted:
             j=j+1
         # create path
-        command = "./Exceptions/subroutines/" + oldText[i+1:j] + ".py"
-        print(command)
+        command = "./Exceptions/routines/" + oldText[i+1:j] + ".py"
         if os.path.exists(command):
             dicSub['j'] = j
             dicSub['readText'] = oldText[j:]
@@ -38,7 +37,7 @@ while i<len(oldText):
             j = dicSub['j']
             newText = dicSub['writeText']
         elif oldText[i+1:j] not in void:
-            print('error 404: "' + oldText[i+1:j] + '" not found in ./Exceptions/subroutines/')
+            print('error 404: "' + oldText[i+1:j] + '" not found in ./Exceptions/routines/')
             break
         i = j
     elif oldText[i] != '{' and oldText[i] != '}':

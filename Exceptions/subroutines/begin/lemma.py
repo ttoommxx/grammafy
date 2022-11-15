@@ -1,0 +1,1 @@
+writeBegin = writeBegin + 'Lemma \n'
