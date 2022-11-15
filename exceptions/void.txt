@@ -1,0 +1,4 @@
+\centering
+\small
+\large
+\Large
