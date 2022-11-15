@@ -1,0 +1,64 @@
+ciao come stai
+
+questo dovrebbe funzionare
+
+[1]
+and this is the end
+
+come stau?
+
+[1],
+
+e domani mangiamo lapastaasciutto
+
+[1]
+[1]
+
+again! 
+
+the beginning of the theorem  here
+Theorem.
+I want to show that [1]
+
+Proof.
+because [1] then [1]. ■
+
+
+NOW WE DO SOMETHING ELSE.
+
+ciao! Now let's try  two different equations
+
+first with the double dollar
+[1],
+did it work?
+
+[1], is this now working?? 
+ want to write something in red Color:RED MOLTO ROSSO 
+
+
+
+- pasta
+- asciutta
+
+- carrots
+
+
+-------------------------------------------------------------
+
+
+Next, construct a sequence [1] and [1] in the following way. Suppose that [1] has been defined with [1]. Let [1] and using the same argument as before we find [1] and [1] such that
+[1],
+where [1]. Now let [1]. Then
+[1].
+
+Let [1]. Notice that the same argument as in Francos implies that [1] is differentiable a.e. and [1] (in particular in [1]). We only have to prove that [1]. The trick is the following: we simply evaluate
+[1].
+
+Color:RED DRAFT
+
+We need to enrich the above construction by asking that, at each [1],
+[1]
+as well, for some universal constant [1]. But because we can control the integral over the initial terms, as we have to prove is that there is [1] independent on [1] and [1] (Color:RED but if depends on [1] is still fine for [1], we just lose the bound) such that
+[1]
+
+
