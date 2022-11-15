@@ -1,1 +1,0 @@
-writeBegin = writeBegin + 'Proposition \n'
