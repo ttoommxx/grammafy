@@ -2,12 +2,12 @@ import os
 # import time if need to debug, time.sleep(seconds)
 
 # create a list of existing exceptions
-exceptions = [e[:-3] for e in os.listdir('./Exceptions/routines/')]
+exceptions = [e[:-3] for e in os.listdir('./exceptions/routines/')]
 # fetch list of commands that should not produce any text output
-void_temp = open('./Exceptions/void.txt','r')
+void_temp = open('./exceptions/void.txt','r')
 void = [line[1:-1] for line in void_temp.readlines()]
 # list of admissible characters for commands
-admitted_temp = open('./Exceptions/admitted.txt','r')
+admitted_temp = open('./exceptions/admitted.txt','r')
 admitted = [line[:-1] for line in admitted_temp.readlines()]
 
 # this will be the final text
@@ -27,7 +27,7 @@ while i<len(oldText):
         while oldText[j] in admitted:
             j=j+1
         # create path
-        command = "./Exceptions/routines/" + oldText[i+1:j] + ".py"
+        command = "./exceptions/routines/" + oldText[i+1:j] + ".py"
         if os.path.exists(command):
             dicSub['j'] = j
             dicSub['readText'] = oldText[j:]

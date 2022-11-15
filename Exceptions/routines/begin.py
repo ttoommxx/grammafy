@@ -1,7 +1,7 @@
 import os
 
 # behave similarly to the main, just create a list of what could be
-exceptions = [e[:-3] for e in os.listdir("./Exceptions/subroutines/begin/")]
+exceptions = [e[:-3] for e in os.listdir("./exceptions/subroutines/begin/")]
 
 dicSub = {'t':int, 'readBegin':str, 'writeBegin':str}
 
@@ -10,7 +10,7 @@ while readText[t] != '}':
     t = t+1
 t = t+1 # skip the end of brackets for begin
 
-command = "./Exceptions/subroutines/begin/" + readText[1:t-1] + ".py"
+command = "./exceptions/subroutines/begin/" + readText[1:t-1] + ".py"
 if os.path.exists(command):
     dicSub['t'] = t
     dicSub['readBegin'] = readText[t:]
