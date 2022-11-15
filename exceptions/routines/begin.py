@@ -30,4 +30,4 @@ else:
     while readText[k:k+6+len(readText[1:t-1])] != '\\end{'+readText[1:t-1]+'}':
         k = k+1
     t = k+6+len(readText[1:t-1])
-j = j + t
+j = j + t-1

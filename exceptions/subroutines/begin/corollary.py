@@ -1,1 +1,1 @@
-writeBegin = writeBegin + 'Corollary \n'
+writeBegin = writeBegin + 'Corollary.'

@@ -30,4 +30,221 @@ because $1-1=0$ then $1+(1-1)=1+0=0.$
 
 \section*{now we do something else}
 
-ciao
+ciao! Now let's try {\small two different equations}
+
+first with the double dollar
+$$
+this is it!,
+$$
+did it work?
+
+\[ hello, \] is this now working??
+
+-------------------------------------------------------------
+
+
+The first step in our proof is proving uniform APPROXIMATION of any continuous function via $\mathcal{A}$-free vector fields.
+
+First of all we are going to use Raita's result on the existence of a potential for a constant rank differential operator $\mathcal{A}$.
+
+We are trying to prove a result of the following form:
+\begin{lemma} \label{eps-approximation}
+Let $\Omega\subset \R^n$ open, $|\Omega|<\infty$ and $f:\Omega\to \R^d$ continuous, $\eta,\eps$ two positive real numbers. Then we can find $K\subset\Omega$ compact and $U\in C^1(\Omega,\R^d),\mathcal{A}U=0$ so that
+\begin{align}
+& |\Omega\setminus K|<\eps |\Omega| \\
+& |f-U|<\eta \ \text{ in } K \\
+& \|Du\|_p \leq C \eps^{\frac{1}{p}-1} \|f\|_p \ \text{ for all }p\in [1,\infty],
+\end{align}
+where the constant $C$ depends only on the dimension $d$.
+
+{\color{red} Correct here, $u$ should be compactly supported above, and so maybe better write $p=mn$ and $u\in C_0^1(\Omega,\R^m)$.}
+
+\end{lemma}
+
+\begin{proof}
+First find $K\subset \Omega$ compact so that $|\Omega\setminus K|<|\Omega|\eps/2$, then for a $\delta>0$, all $x\in K$ and $y\in \Omega$ we have $Q(x,4\delta)\subset \Omega$ and
+\begin{equation}
+|x-y|<\delta \ \Rightarrow \ |f(x)-f(y)|<\eta \ \text{ and } \ Q(x,4\delta)\subset \Omega.
+\end{equation}
+
+
+{\color{red} IDEA}
+
+The idea is the following, {\color{blue} WE ASSUME THE CONSTANT RANK CONDITION AND THE SPANNING CONDITION ON A}, i.e. $\R^d = span{\cup_{\xi\neq 0} A(\xi)}$. So using the result on the potentian by Raita, i.e. the existence of $\B$ so that
+\begin{equation}
+ker(A(\xi)) = Im(\B(\xi)),
+\end{equation}
+writing
+\begin{equation}
+\B = \sum_{|\alpha|=m} \partial^\alpha B_\alpha,
+\end{equation}
+we can find $\xi_i$ so that
+\begin{equation}
+V = \sum_i \B(\xi_i) = \sum_i \sum_\alpha \xi_i^\alpha B_\alpha v_i.
+\end{equation}
+Next, we construct a polynomail $P$ be setting
+\begin{equation}
+P(x) = \sum_i \sum_{|\gamma|=m} (\xi_i x)^\gamma v_i,
+\end{equation}
+so that
+\begin{equation}
+\B P = \sum_i \sum_\alpha \sum_\gamma B_\alpha \partial^\alpha (\xi_i x)^\gamma v_i = \sum_i \sum_\alpha B_\alpha \xi_i^\alpha v_i = V.
+\end{equation}
+The localization argument and the bounds should then just follow automatically.
+
+Also by 5.10 of the paper from 1993 we can obtain the $L^p$ bounds for $\phi$ and get the full result.
+\end{proof}
+
+
+The proof above is taken from the first proof of Alberti and then next one will be taken from the proof of Alberti, older paper.
+
+Actually, as Jan said we do not really need A-free vector fields but rather just higher order derivative and then using a trick by Hormander we can reconnect to the A-free vector fields (or $\B u$ in the instance of a potential for $A$).
+
+Next, we use \refp{eps-approximation} to find an exact approximation on a big region of $\Omega$.
+
+\begin{lemma}
+Let $\Omega\subset \R^n,n>1$ of finite measure and $f:\Omega\to \R^d$ a Borel function. For all $\eps>0$ there is $K\subset \Omega$ compact etc like above but this time $f=\B u$ on $K$ and the rest is as before.
+\end{lemma}
+
+\begin{proof}
+Take a sequence of numbers $\eta_n$ and define inductively $(u_n,K_n,f_n)$ in the following way. We set $u_0=0,K_0=\Omega$ and $f_0=f$. Having chosen $(u_{n-1},K_{n-1}, f_{n-1})$ we apply \refp{eps-approximation} to find $K_n\subset \Omega$ and $u_n\in C_0^1(\Omega,\R^m)$ so that
+\begin{align}
+|\Omega\setminus K_n|<|\Omega|2^{-n} \eps \\
+|f_{n-1}-\B u_n|<\eta_n \text{ on } K_n \\
+\| Du_n\|_p \leq C (2^{-n} \eps)^{\frac{1}{p}-1} \|f_{n-1} \|_p.
+\end{align}
+We let $f_n = f_{n-1}-\B u_n$ on $K_n$ and then extend $f$ to the whole of $K_n$ by Tietze so that $\|f_n\|_\infty = \|f_n\|_{\infty,K_n} \leq \eta_n$.
+
+
+Set $A = \Omega\setminus \cap_n K_n$ and $u=\sum_n u_n$ and choose a sequence $(\eta_n)$ so that the 3 conditions are satisfied. We obtain that
+\begin{equation}
+|A| \leq \sum |\Omega\setminus K_n| \leq \sum |\Omega|2^{-n} \eps = \Omega \eps.
+\end{equation}
+Moreover
+\begin{align*}
+\sum \|\B u_n\|_p \leq & \sum C \eps^{\frac{1}{p}-1} 2^n \|f_{n-1}\|_p \leq 2 C \eps^{\frac{1}{p}-1} \Big( \|f_0\|_p + \sum 2^n \|f_n\|_\infty |\Omega|^\frac{1}{p} \Big) \\
+\leq & 2 C \eps^{\frac{1}{p}-1} \|f\|_p \Big( 1 + \frac{|\Omega|^\frac{1}{p}}{\|f\|_p} \sum 2^n \eta_n \Big).
+\end{align*}
+
+Notice that because $f$ is non zero, then $p\mapsto \|f\|_p$ is positive and converges to $\|f\|_\infty>0$ and so it has a minimum, in particular $\frac{|\Omega|^\frac{1}{p}}{\|f\|_p} \leq a$ and so by restricting $\eta_n$ we can also assume that $\sum 2^n \eta_n \leq a^{-1}$. Then
+\begin{equation}
+\sum \|\B u\|_p \leq 4C\eps^{\frac{1}{p}-1} \|f\|_p.
+\end{equation}
+For $p=\infty$ we then obtain that $\sum u_n$ converges in $C_0^1$ norm to a function $u$ that satisfies the inequality
+\begin{equation}
+\|\B u\|_p \leq C \eps^{\frac{1}{p}-1} \|f\|_p.
+\end{equation}
+Also by definition of $f$ (telescopic series)
+\begin{equation}
+|f(x)-\B u(x)| \leq |f_m(x)| + \sum_{n>m} |\B u_n| \leq \eta_m + \sum_{n>m} |\B u_n|
+\end{equation}
+which converges to $0$ as $m\to \infty$.
+
+When $f$ is only a Borel function, then find $r>0$ so that $\{x:f(x)>r\} = B$ with $|B|<\eps/4$ and use Tietze to find a small subset $C,|C|<|B|$ and $f_1$ continuous agrees with $f$ outside $C$. Finally, set
+\begin{equation}
+\tilde{f} = f_1 \chi_{\{|f_1|\leq r\}} + r\frac{f_1(x)}{|f_1(x)|} \chi_{\{|f_1(x)|>r\}}.
+\end{equation}
+Then $f_2$ is bounded and continuous and agress with $f$ outside $C\cup B$ and bla bla bla. For all $p\geq 1$ we also have
+\begin{equation}
+\int_\Omega |f_2|^p \leq \int_{\Omega\setminus (B\cup C)} |f|^p + \int_{B\cup C} r^p \leq 2\int_\Omega |f|^p.
+\end{equation}
+Apply the previous part to $f_2$ to conclude.
+\end{proof}
+
+Next, we would like to find a kind of $BV$ result for $\B$ derivatives of functions. Here, we restrict to the study of gradients so that we know how to control the jump part of the derivative.
+
+{\color{purple} Interesting question that I have not yet found in the literature is that what is the jump part of a $\B$ derivative under certain assumptions on $\B$. Hausdorff dimension which means if $\B u\in \M(\Omega)$ what does $\B u$ not see?}
+
+First of all we start with an $\eps$-approximation lemma in the spirit as \refp{eps-approximation}.
+
+\begin{lemma}
+Let $f\in L^1(\R^n,\R^d)$ and $\eta>0$. There is a function $u\in L^1(\Omega,\R^m), D^k u\in \M(\Omega,\R^d)$ and two Borel functions $g^a,g^s$ such that $D^k u =g^a d\L^n + g^s d\H^{n-1}$ and
+\begin{align*}
+\|u\|_{W^{k-1,1}}\leq \|f\|_1 \\
+\|f-g^a\|_1 \leq \eta \\
+\int |g^s|d\H_{n-1} \leq C \|f\|_1
+\end{align*}
+and the constant $f$ depends on $N$ only.
+\end{lemma}
+
+\begin{proof}
+
+\end{proof}
+
+{\color{red} we need to find a bump function $\phi\in C^{k-1}(B)$ so that
+\begin{align*}
+\phi(B(1-\eps))=1 \\
+\| D^h\phi \|_\infty \leq \eps^{-h} \\
+\| D^h \phi\|_1 \leq \eps^{n+k-h-1} \\
+D^k \phi \parallel d\H^{n-1} \text{ in } \M(\Omega).
+\end{align*}
+}
+
+We can try to prove it by induction on $k$. When $k=1$ then it is just the indicator function of the small circle. Assume true for $k-1$, want to prove it for $k$. We are going to find a function in polar coordinate.  Then we let $\phi=\phi(r)$ be 1 on $[0,1-\eps)$ and take an polynomial interpolant of order $k-1$ between $1$ and $0$. Then we have that $\phi$ is one on the internal ball. The gradient is also ascending as $\eps$ uniformly. As for the integral, we have that
+\begin{equation}
+\int |D^h \phi| = \int_0^{2\pi}d\theta \int_0^\eps r^{n-1}  \frac{d}{dr^h} r^{k-1} dr = \frac{2\pi k!}{(k-h-2)!(n-k-h-1)} \eps^{n-k-h-1} = C \eps^{n+k-h-1}.
+\end{equation}
+Notice that when $n=1$ then we recover $k-h$ and also because $n> 1$ and $k\geq h$ the bound is always infinitesimal. Finally, because it is an interpolant, $D^k \phi$ is supported on $\partial B(1-\eps)$.
+
+We now do as in Alberti paper 1991 for the bound in norm 1 (the one in 1993 is for other measures/Besicovich differentiation etc). This should provide the proper approximation and then we can use an argument like the lemma that follows..
+
+{\color{purple} a better computation, the above makes little sense}
+
+We are computing the derivative of
+\begin{equation}
+D^k (P g) = D^k P g + \sum_{|\alpha|=0}^{k-1} {k \choose \alpha} D^\alpha P D^{k-\alpha} g.
+\end{equation}
+So $D^{k-\alpha}$ of the bump function $g$ might be big but then it is mitigated by $D^\alpha P$ which is a polynomial of order $|k|-|\alpha|$ evaluated close to $0$, and so small.
+
+Now we can consider an integral estimate for $D^\alpha P$, indeed it is a polynomial of order $k-\alpha$ and so integrated on a surface we have $\eps^{n+k-\alpha}$ approximately, which is infinitesimal. This holds as far as the derivatives are supported on disc $B\setminus B(1-\eps)$.
+
+\hspace{3cm}
+
+{\color{red} LET'S TRY THIS WAY NOW}
+
+
+For $3$ derivatives. Consider the function $\phi(-\frac{1}{2})=\frac{1}{2}$ and $\phi(\frac{1}{2})=+\frac{1}{2}$. Interpolating of order 2 we obtain
+\begin{equation}
+\phi(x) = \begin{cases}
+\frac{1}{2} & x\leq -\frac{1}{2} \\
+-2x^2 - 2x & -\frac{1}{2} \leq x\leq 0 \\
+2x^2 -2x & 0 \leq x \leq \frac{1}{2} \\
+- \frac{1}{2} & \frac{1}{2} \leq x.
+\end{cases}
+\end{equation}
+We then scale it by $\eps$ which will be the radius of the small circles to get
+\begin{equation}
+\phi(x) = \begin{cases}
+\frac{1}{2} & x\leq -\frac{\eps}{2} \\
+-2 \frac{x^2}{\eps^2} - 2\frac{x}{\eps} & -\frac{1}{\eps} \leq x\leq 0 \\
+2 \frac{x^2}{\eps^2} -2\frac{x}{\eps} & 0 \leq x \leq \frac{\eps}{2} \\
+- \frac{1}{2} & \frac{\eps}{2} \leq x.
+\end{cases}
+\end{equation}
+
+After translating $\phi$ and rotating it we obtain the cut off function $\phi(r-1+\frac{\eps}{2}) = \psi(r)$ which is 1 over the ball $1-\eps$ and $0$ outside of it. Then taking the polynomials we obtain $\psi(|x-x_i|) P_i(x-x_i)$ where $D^3P_i(x-x_i) = f(x_i)$ and $f(x)\in C_c(\Omega,\R^d)$ is the function we would like to approximate.
+
+Now we want to compute $L^1$ bounds for $u = P(x) \psi(r/a)$ and $D^3 P (0) = f(0) = f$ and $a$ is arbitrary. If the bounds are good we can use a Besicovich-like argument to cover up our domain.
+
+So we have
+\begin{align}
+\int u dx \sim & \int P \psi dx \sim |B_a| a^3 f \sim a^3 \int fdx \\
+\int |Du|dx \sim & \int DP \psi dx + \int P D\psi dx \sim |B_a| a^2 f(0) + \int_0^a r^{n-1} (\frac{r}{a^2} + \frac{1}{a}) dr f(0) a^3 \sim |B_a| a^2 f \sim a^2 \int fdx \\
+\int |D^2 u| \sim & |B_a| a f \sim a \int fdx \text{ similarly to above}.
+\end{align}
+Maybe above we could be taking the average of $f$ rather than $f(0)$ as this is still symmetric and the integral bound comes automatically without having to use uniform continuity and smallness of $a$ or whatever other quantifier.
+
+Next we compute $D^3$ and see that
+\begin{equation}
+D^3 u = D^3 (P\psi) \sim D^3P \psi + (D^2P D\psi + DP D^2\psi) + P D^3\psi.
+\end{equation}
+We study all 3 terms separately. What we expect is the first to converge in $L^1$ to $f$, the middle 2 to converge in $L^1$ to $0$ and the last one to be bounded in $\M(\Omega)$ and becomes with singular part. NOTICE THAT if we only take $\psi$ in $C^\infty$ with "equivalent" bounds then the last one will be comparable but absolutely continuous to the Lebesgue measure and so it would be hard to show that in the limit converges to something singular as a priori could diffuse.
+
+{\color{purple} FIRST TERM - APPROXIMATION IN $L^1$}
+
+We have just
+\begin{equation}
+D^3P \psi \sim f
+\end{equation}
+so that is fine.
+

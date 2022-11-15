@@ -1,1 +1,1 @@
-writeBegin = writeBegin + 'Proposition \n'
+writeBegin = writeBegin + 'Proposition.'

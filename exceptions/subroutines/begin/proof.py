@@ -1,1 +1,1 @@
-writeBegin = writeBegin + 'Proof \n'
+writeBegin = writeBegin + 'Proof.'

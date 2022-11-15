@@ -1,1 +1,1 @@
-writeBegin = writeBegin + 'Theorem \n'
+writeBegin = writeBegin + 'Theorem.'

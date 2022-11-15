@@ -1,1 +1,1 @@
-writeBegin = writeBegin + 'Remark \n'
+writeBegin = writeBegin + 'Remark.'
