@@ -49,21 +49,21 @@ while i<len(oldText):
                     command_name = oldText[i+1:j-1]
                 else:
                     command_name = oldText[i+1:j]
-                if os.path.exists("./exceptions/routines/" + command_name + ".py"):
-                    dicSub['j'] = j
-                    dicSub['readText'] = oldText[j:]
-                    dicSub['writeText'] = newText
-                    dicSub['asterisk'] = oldText[j-1] == '*'
-                    exec(open("./exceptions/routines/" + command_name + ".py").read(),dicSub)
-                    # after executing the command, update j and newText
-                    j = dicSub['j']
-                    newText = dicSub['writeText']
-                elif os.path.exists("./exceptions/routines_custom/" + command_name + ".py"):
+                if os.path.exists("./exceptions/routines_custom/" + command_name + ".py"):
                     dicSub['j'] = j
                     dicSub['readText'] = oldText[j:]
                     dicSub['writeText'] = newText
                     dicSub['asterisk'] = oldText[j-1] == '*'
                     exec(open("./exceptions/routines_custom/" + command_name + ".py").read(),dicSub)
+                    # after executing the command, update j and newText
+                    j = dicSub['j']
+                    newText = dicSub['writeText']
+                elif os.path.exists("./exceptions/routines/" + command_name + ".py"):
+                    dicSub['j'] = j
+                    dicSub['readText'] = oldText[j:]
+                    dicSub['writeText'] = newText
+                    dicSub['asterisk'] = oldText[j-1] == '*'
+                    exec(open("./exceptions/routines/" + command_name + ".py").read(),dicSub)
                     # after executing the command, update j and newText
                     j = dicSub['j']
                     newText = dicSub['writeText']
