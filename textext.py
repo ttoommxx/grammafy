@@ -1,10 +1,14 @@
-import os
-# import time
+import sys, os
 # import time if need to debug, time.sleep(seconds)
 
-# import easygui
+sys.path.append('./modules')
+import easygui
 
-# filename1= easygui.fileopenbox()
+file_path = easygui.fileopenbox()
+i=1
+while file_path[-i] != '\\':
+    i=i+1
+folder_path = file_path[:-i+1]
 
 
 # create a list of existing exceptions
@@ -24,10 +28,10 @@ admitted_temp.close()
 # this will be the final text
 newText = ''
 
-dicSub = {'j':int, 'readText':str, 'writeText':str, 'asterisk':bool}
+dicSub = {'j':int, 'readText':str, 'writeText':str, 'asterisk':bool, 'path_main':str}
 
 # read main file latex
-text = open('main.tex', 'r')
+text = open(file_path, 'r')
 oldText = text.read()
 text.close()
 
@@ -36,25 +40,6 @@ i=0
 while oldText[i:i+16] != '\\begin{document}':
     i=i+1
 i=i+16
-
-# firstly, we look for the title
-# while oldText[i:i+7] != '\\title{':
-#     i = i+1
-# i = i+7
-# while oldText[i+1] != '}':
-#     newText = newText + oldText[i].upper()
-#     i=i+1
-# i=i+1
-# # then the author
-# while oldText[i:i+8] != '\\author{':
-#     i = i+1
-# i = i+8
-# newText + newText + 'by '
-# while oldText[i+1] != '}':
-#     newText = newText + oldText[i]
-#     i=i+1
-# i=i+1
-# and then find the beginning of document
 
 while i<len(oldText):
     match oldText[i]:
@@ -89,6 +74,7 @@ while i<len(oldText):
                     dicSub['readText'] = oldText[j:]
                     dicSub['writeText'] = newText
                     dicSub['asterisk'] = oldText[j-1] == '*'
+                    dicSub['path_main'] = folder_path
                     exec(open("./exceptions/routines_custom/" + command_name + ".py").read(),dicSub)
                     # after executing the command, update j and newText
                     oldText = oldText[:j] + dicSub['readText']
@@ -99,6 +85,7 @@ while i<len(oldText):
                     dicSub['readText'] = oldText[j:]
                     dicSub['writeText'] = newText
                     dicSub['asterisk'] = oldText[j-1] == '*'
+                    dicSub['path_main'] = folder_path
                     exec(open("./exceptions/routines/" + command_name + ".py").read(),dicSub)
                     # after executing the command, update j and newText
                     oldText = oldText[:j] + dicSub['readText']
@@ -134,6 +121,6 @@ while i<len(oldText):
             newText = newText + oldText[i]
     i=i+1
 
-output_file = open('main_grammafied.txt','w')
+output_file = open(folder_path + 'main_grammafied.txt','w')
 output_file.write(newText)
 output_file.close()
