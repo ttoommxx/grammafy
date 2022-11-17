@@ -1,0 +1,85 @@
+\textbf{ciao come stai}
+
+questo dovrebbe funzionare
+
+\begin{align*}
+e^i+1=0 hello dear
+\end{align*}
+and this is the end
+
+come stau?
+
+\begin{align}
+Io andrei al passeggio ahahah,
+\end{align}
+
+e domani mangiamo la\textbf{pastaasciutto}
+
+\begin{equation} hello \end{equation}
+\begin{equation*} hello \end{equation*}
+
+again! \centering
+
+the beginning of the theorem {\Large here}
+\begin{theorem}
+I want to show that $1+1-1 = 1$
+\end{theorem}
+\begin{proof}
+because $1-1=0$ then $1+(1-1)=1+0=0.$
+\end{proof}
+
+\section*{now we do something else}
+
+ciao! Now let's try {\small two different equations}
+
+first with the double dollar
+$$
+this is it!,
+$$
+did it work?
+
+\[ hello, \] is this now working?? \\ want to write something in red {\color{red} MOLTO ROSSO }
+
+\begin{itemize}
+
+\item pasta
+\item asciutta
+
+\item carrots
+\end{itemize}
+
+-------------------------------------------------------------
+
+
+Next, construct a sequence $K_n$ and $u_n$ in the following way. Suppose that $K_1,\ldots,K_{n-1}$ has been defined with $u_1,\ldots,u_{n-1}$. Let $U_n = U\setminus \cup_{j=1}^{n-1} K_j$ and using the same argument as before we find $K_n\subset U_n$ and $u_n\in C_c^m(U_m)$ such that
+\begin{align}
+& D^m u_n = f-\sum_{j=1}^{n-1} D^m u_j \quad \text{ on } K_n \\
+& |U_n\setminus K_n| < |U_n|/2 \\
+& |D^\gamma u_n(x)| \leq \sigma/2 \min(1,dist(x,U_n^c)^2) \\
+& \| D^m u_n\|_1 \leq C \|f-\sum_{j=1}^{n-1} D^m u_j\|_1 \\
+& \|\sum_{j=1}^{n-1} D^m u_j\|_{1,U_n\setminus K_n} = \|\sum_{j=1}^{n-1} D^m u_j\|_{1,U_{n+1}} < \eps(n) \|f\|_1,
+\end{align}
+where $U_n\setminus K_n = U_{n+1}$. Now let $C=\cup_n K_n$. Then
+\begin{align}
+|U\setminus C| \leq & |U_1\setminus (K_1\cup K_2 \cup \ldots K_n)| = |U_2\setminus (K_2 \cup K_n)| \leq |U_n\setminus K_n| \\
+\leq & |U_n|/2 = |U\setminus (K_1\cup \ldots \cup K_{n-1})|/2 \leq |U_{n-1}|/4 \leq \ldots \leq |U|/2^n \to 0.
+\end{align}
+
+Let $u=\sum_{n=1}^\infty u_n$. Notice that the same argument as in Francos implies that $u$ is differentiable a.e. and $D^m u = f$ (in particular in $C$). We only have to prove that $u\in BV$. The trick is the following: we simply evaluate
+\begin{equation}
+\|\sum_{j=1}^n D^m u_j\|_1 \leq C \|f\|_{1,\cup_{j=1}^n K_j} + C \|\sum_{j=1}^n D^m u_j \|_{1,U_{n+1}}.
+\end{equation}
+
+{\color{red} DRAFT}
+
+We need to enrich the above construction by asking that, at each $n$,
+\begin{equation}
+\|\sum_{j=1}^n D^m u_n\|_{1,U_{n+1}} \leq C \|f\|_1
+\end{equation}
+as well, for some universal constant $C>0$. But because we can control the integral over the initial terms, as we have to prove is that there is $C>0$ independent on $n$ and $f$ ({\color{red} but if depends on $f$ is still fine for $BV$, we just lose the bound}) such that
+\begin{equation}
+\|D^m u_n\|_{U_{n+1}} \leq C \|f\|_1
+\end{equation}
+
+\bibliographystyle{alphanum}
+\bibliography{bibliography}

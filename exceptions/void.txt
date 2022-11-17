@@ -2,3 +2,4 @@ centering
 small
 large
 Large
+newpage

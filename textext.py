@@ -89,6 +89,10 @@ while i<len(oldText):
                 newText = newText + oldText[j]
             if oldText[i+1] == '$':
                 i = i+1
+        case '%':
+            i = i+1
+            while oldText[i] != '\n': # comments end when I go to the next line
+                i=i+1            
         case _:
             newText = newText + oldText[i]
     i=i+1
