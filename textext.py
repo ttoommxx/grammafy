@@ -1,6 +1,11 @@
 import os
-import time
+# import time
 # import time if need to debug, time.sleep(seconds)
+
+# import easygui
+
+# filename1= easygui.fileopenbox()
+
 
 # create a list of existing exceptions
 exceptions = [e[:-3] for e in os.listdir('./exceptions/routines/')]
