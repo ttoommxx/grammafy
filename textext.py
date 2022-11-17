@@ -86,6 +86,7 @@ while i<len(oldText):
                     dicSub['asterisk'] = oldText[j-1] == '*'
                     exec(open("./exceptions/routines_custom/" + command_name + ".py").read(),dicSub)
                     # after executing the command, update j and newText
+                    oldText = oldText[:j] + dicSub['readText']
                     j = dicSub['j']
                     newText = dicSub['writeText']
                 elif os.path.exists("./exceptions/routines/" + command_name + ".py"):
@@ -95,6 +96,7 @@ while i<len(oldText):
                     dicSub['asterisk'] = oldText[j-1] == '*'
                     exec(open("./exceptions/routines/" + command_name + ".py").read(),dicSub)
                     # after executing the command, update j and newText
+                    oldText = oldText[:j] + dicSub['readText']
                     j = dicSub['j']
                     newText = dicSub['writeText']
                 elif command_name not in void:

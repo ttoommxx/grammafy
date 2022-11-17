@@ -1,177 +1,69 @@
-\documentclass[12pt]{article}
 
-%-------------------- Packages
-
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{amssymb}
-%\usepackage{amsthm}
-\usepackage{amsmath}
-\usepackage{bbold}
-\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=3cm]{geometry}
-\usepackage{listings}
-\usepackage{graphicx}
-\usepackage{mathtools}
-%\usepackage{refcheck}
-\usepackage{color}
-\usepackage{esint}
-\usepackage{enumitem}
-\usepackage{tikz}
-\usepackage{wrapfig}
-%\usepackage{natbib}
-%\usepackage{regexpatch}
-%\usepackage{xparse}
-%\usepackage{ifmtarg}
-%\usepackage{etoolbox}
-%\usepackage{xifthen}
-\usepackage[ntheorem]{empheq}
-\usepackage[thref,hyperref,thmmarks,amsmath]{ntheorem}
-\usepackage{hyperref}
-\usepackage{framed}
-\usepackage{unnumberedtotoc}
-
-%-------------------- Command and definitions
-
-\def\N{\mathbb{N}}
-\def\Z{\mathbb{Z}}
-\def\R{\mathbb{R}}
-\def\Q{\mathbb{Q}}
-\def\C{\mathbb{C}}
-\def\H{\mathcal{H}}
-\def\M{\mathcal{M}}
-\def\B{\mathbb{B}}
-\def\P{\mathcal{P}}
-\def\F{\mathcal{F}}
-\def\X{\mathrm{X}}
-\def\1{\mathbb{1}}
-\def\L{\mathcal{L}}
-\def\G{\mathbb{G}}
-\def\E{\mathbb{E}}
-\def\A{\mathbb{A}}
-\def\D{\mathcal{D}}
-\def\F{\mathcal{F}}
-\def\S{\mathbb{S}}
-\def\BUC{\mathrm{BUC}}
-\def\BC{\mathrm{BC}}
-\def\UC{\mathrm{UC}}
-\def\dx{\,\mathrm{dx}}
-\def\d{\, \mathrm{d}}
-\def\curl{\mathrm{curl}}
-\def\tr{\mathrm{tr}}
-\def\cof{\mathrm{cof}}
-\def\rank{\mathrm{rank}}
-\def\eps{\varepsilon}
-\def\ker{\mathrm{ker}}
-\def\dim{\mathrm{dim}}
-\def\spann{\mathrm{span}}
-\def\epi{\mathrm{epi}}
-\def\supp{\mathrm{supp}}
-\def\graph{\mathbb{graph}}
-\renewcommand{\div}{\mathrm{div}}
-
-\newcommand{\esssup}[1]{\, \underset{#1}{\mathrm{esssup}} \,}
-\newcommand{\mres}{\mathbin{\vrule height 1.6ex depth 0pt width 0.13ex\vrule height 0.13ex depth 0pt width 1.3ex}}
-
-\newcommand\eqrefp[1]{\textnormal{eq. \eqref{#1}, p. \pageref{#1}}}
-\newcommand\refp[1]{\textnormal{\thref{#1}, p. \pageref{#1}}}
-\newcommand\citep[2]{\textnormal{\cite{#1}, p. #2}}
-
-\newcommand{\bbox}[1]{\vspace{10pt} \fbox{\textbf{\large #1 }} \vspace{10pt}}
-
-\newcommand*\circled[1]{\tikz[baseline=(char.base)]{ \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
-
-\def\bookmark{ \vspace{2cm}
-
-{\color{red}\Large ------------------------------ FROM HERE ------------------------------}
-
-\vspace{2cm}}
-
-
-%-------------------- Environments
-
-\newenvironment{leftbarThin}[1][\hsize] {
-    \def\FrameCommand {
-        {\color{black}\vrule width 1pt}
-        \hspace{5pt} }
-    \MakeFramed{\hsize#1\advance\hsize-\width\FrameRestore} }
-{\endMakeFramed}
-
-\renewenvironment{leftbar}[1][\hsize] {
-    \def\FrameCommand {
-        {\color{black}\vrule width 3pt}
-        \hspace{5pt} }
-    \MakeFramed{\hsize#1\advance\hsize-\width\FrameRestore} }
-{\endMakeFramed}
-
-\newenvironment{leftbarThick}[1][\hsize] {
-    \def\FrameCommand {
-        {\color{black}\vrule width 5pt}
-        \hspace{5pt} }
-    \MakeFramed{\hsize#1\advance\hsize-\width\FrameRestore} }
-{\endMakeFramed}
-
-\newtheorem{theorem2}{Theorem}
-\newtheorem{proposition2}[theorem2]{Proposition}
-\newtheorem{lemma2}[theorem2]{Lemma}
-\newtheorem{corollary2}[theorem2]{Corollary}
-\newtheorem{definition2}[theorem2]{Definition}
-\newtheorem{assumption2}{Assumption}
-
-\newtheorem{exercise}{Exercise}
-
-{\theorembodyfont{\normalfont}
-%\theoremsymbol{\ensuremath{\ast}}
-\theoremsymbol{}
-\newtheorem{remark2}[theorem2]{Remark}
-
-\theoremsymbol{\ensuremath{\ast}}
-\newtheorem{example2}[exercise]{Example}
-
-\theoremstyle{nonumberbreak}
-\theoremheaderfont{\itshape}
-%\theoremsymbol{\rule{1ex}{1ex}}
-\theoremsymbol{}
-\newtheorem{proof2}{\textbf{Proof.}}}
-
-\newenvironment{theorem}{\begin{leftbar}\begin{theorem2}}{\end{theorem2}\end{leftbar}}
-\newenvironment{proposition}{\begin{leftbar}\begin{proposition2}}{\end{proposition2}\end{leftbar}}
-\newenvironment{lemma}{\begin{leftbar}\begin{lemma2}}{\end{lemma2}\end{leftbar}}
-\newenvironment{corollary}{\begin{leftbar}\begin{corollary2}}{\end{corollary2}\end{leftbar}}
-\newenvironment{proof}{\begin{proof2} \begin{leftbarThin}}{
-
-\hspace{-17pt} \noindent\rule{1cm}{1pt} \end{leftbarThin} \end{proof2}}
-\newenvironment{remark}{\begin{remark2} \begin{leftbarThin}}{\end{leftbarThin} \end{remark2}}
-
-\newenvironment{definition}{\begin{leftbarThick} \begin{definition2}}{\end{definition2} \end{leftbarThick}}
-\newenvironment{assumption}{\begin{leftbarThick} \begin{assumption2}\text{} }{\end{assumption2} \end{leftbarThick}}
-
-\newenvironment{example}{\begin{example2}\text{}}{\end{example2}}
-
-\mathtoolsset{showonlyrefs}
-%\setlist[enumerate]{leftmargin=0pt}
-
-
-%-------------------- Document
-
+\some rubbish here
 \begin{document}
 
-%-------------------- End of initial commands1
+\title{title } \author{Tommaso}
 
-\title{ TITLE }
-\author{ AUTHOR }
-\date{ DATE }
-\maketitle
-\thispagestyle{empty}
 
-\tableofcontents
+\date{11/11/11}
+\textbf{ciao come stai}
 
-\setlength{\parindent}{0pt}
-
-Describe here how to use this template
-
+prima
 \include{test.tex}
+dopo
+
+\section{what is hhappening}
+
+\begin{align*}
+e^i+1=0 hello dear
+\end{align*}
+and this is the end
+
+come stau?
+
+\begin{align}
+Io andrei al passeggio ahahah,
+\end{align}
+
+e domani mangiamo la\textbf{pastaasciutto}
+
+\begin{equation} hello \end{equation}
+\begin{equation*} hello \end{equation*}
+
+again! \centering
+
+the beginning of the theorem {\Large here}
+\begin{theorem}
+I want to show that $1+1-1 = 1$
+\end{theorem}
+\begin{proof}
+because $1-1=0$ then $1+(1-1)=1+0=0.$
+\end{proof}
+
+\section*{now we do something else}
+
+ciao! Now let's try {\small two different equations}
+
+first with the double dollar
+$$
+this is it!,
+$$
+did it work?
+
+\[ hello, \] is this now working?? \\ want to write something in red {\color{red} MOLTO ROSSO }
+
+\begin{itemize}
+
+\item pasta
+\item asciutta
+
+\item carrots
+\end{itemize}
+
+-------------------------------------------------------------
+
 
 \bibliographystyle{alphanum}
-\bibliography{biblio}
+\bibliography{bibliography}
 
 \end{document}
