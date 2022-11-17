@@ -3,3 +3,8 @@ small
 large
 Large
 newpage
+textbf
+textit
+emph
+maketitle
+tableofcontents

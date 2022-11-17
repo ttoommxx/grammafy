@@ -5,12 +5,16 @@ import time
 # create a list of existing exceptions
 exceptions = [e[:-3] for e in os.listdir('./exceptions/routines/')]
 exceptions_custom = [e[:-3] for e in os.listdir('./exceptions/routines_custom/')]
+
 # fetch list of commands that should not produce any text output
 void_temp = open('./exceptions/void.txt','r')
 void = [line[:-1] for line in void_temp.readlines()]
+void_temp.close()
+
 # list of admissible characters for commands
 admitted_temp = open('./exceptions/admitted.txt','r')
 admitted = [line[:-1] for line in admitted_temp.readlines()]
+admitted_temp.close()
 
 # this will be the final text
 newText = ''
@@ -20,7 +24,33 @@ dicSub = {'j':int, 'readText':str, 'writeText':str, 'asterisk':bool}
 # read main file latex
 text = open('main.tex', 'r')
 oldText = text.read()
+text.close()
+
 i=0
+# find the beginning of the document document
+while oldText[i:i+16] != '\\begin{document}':
+    i=i+1
+i=i+16
+
+# firstly, we look for the title
+# while oldText[i:i+7] != '\\title{':
+#     i = i+1
+# i = i+7
+# while oldText[i+1] != '}':
+#     newText = newText + oldText[i].upper()
+#     i=i+1
+# i=i+1
+# # then the author
+# while oldText[i:i+8] != '\\author{':
+#     i = i+1
+# i = i+8
+# newText + newText + 'by '
+# while oldText[i+1] != '}':
+#     newText = newText + oldText[i]
+#     i=i+1
+# i=i+1
+# and then find the beginning of document
+
 while i<len(oldText):
     match oldText[i]:
         case '\\':
@@ -68,7 +98,7 @@ while i<len(oldText):
                     j = dicSub['j']
                     newText = dicSub['writeText']
                 elif command_name not in void:
-                    print('error 404: "' + oldText[i+1:j] + '" not found in routines or void')
+                    print('error 404: "' + oldText[i+1:j] + '" not found in ./exceptions/routines/ or ./exceptions/void.txt')
                     break
                 i = j-1
         case '{':
@@ -91,8 +121,8 @@ while i<len(oldText):
                 i = i+1
         case '%':
             i = i+1
-            while oldText[i] != '\n': # comments end when I go to the next line
-                i=i+1            
+            while i < len(oldText) and oldText[i] != '\n': # comments end when I go to the next line, need to check if I am going out of the string as we might finish the documents with a comment
+                i=i+1
         case _:
             newText = newText + oldText[i]
     i=i+1

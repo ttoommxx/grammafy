@@ -1,3 +1,5 @@
+import os
+
 exceptions = [e[:-3] for e in os.listdir("./exceptions/subroutines/end/")]
 
 dicSub = {'writeEnd':str, 'asterisk':bool}
