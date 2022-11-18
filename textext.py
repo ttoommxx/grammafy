@@ -11,14 +11,26 @@ while file_path[-i] != '\\':
 folder_path = file_path[:-i+1]
 
 
+# line printer
+def line_printer(str,y):
+    m = y
+    n = y
+    while str[m] != '\n':
+        m=m-1
+    while str[n] != '\n':
+        n=n+1
+    return str[m+1:n]
+
 # create a list of existing exceptions
 exceptions = [e[:-3] for e in os.listdir('./exceptions/routines/')]
 exceptions_custom = [e[:-3] for e in os.listdir('./exceptions/routines_custom/')]
 
 # fetch list of commands that should not produce any text output
 void_temp = open('./exceptions/void.txt','r')
-void = [line[:-1] for line in void_temp.readlines()]
+void_custom_temp = open('./exceptions/void_custom.txt','r')
+void = [line[:-1] for line in void_temp.readlines()] + [line[:-1] for line in void_custom_temp.readlines()]
 void_temp.close()
+void_custom_temp.close()
 
 # list of admissible characters for commands
 admitted_temp = open('./exceptions/admitted.txt','r')
@@ -55,6 +67,8 @@ while i<len(oldText):
                 if oldText[j] in [',', ';', '.']:
                     newText = newText + oldText[j]
                 i=i+1
+            elif oldText[i+1] == ' ':
+                pass
             elif oldText[i+1] == '\\':
                 newText = newText + '\n'
                 i = i+1
@@ -93,6 +107,7 @@ while i<len(oldText):
                     newText = dicSub['writeText']
                 elif command_name not in void:
                     print('error 404: "' + oldText[i+1:j] + '" not found in ./exceptions/routines/ or ./exceptions/void.txt')
+                    print(line_printer(oldText,i))
                     break
                 i = j-1
         case '{':

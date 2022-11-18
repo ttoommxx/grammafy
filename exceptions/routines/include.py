@@ -7,6 +7,8 @@ while readText[t] != '}':
     t = t+1
 t = t+1 # skip the end of brackets for begin
 include_path = readText[1:t-1]
+if include_path[-4:] != '.tex':
+    include_path = include_path + '.tex'
 
 # we add to the previous source the included source
 included_text = open(path_main + include_path, 'r')

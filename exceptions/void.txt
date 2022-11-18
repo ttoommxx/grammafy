@@ -8,3 +8,17 @@ textit
 emph
 maketitle
 tableofcontents
+footnotesize
+selectfont
+author
+title
+date
+Huge
+huge
+underline
+chapter
+section
+subsection
+subsubsection
+text
+bbox

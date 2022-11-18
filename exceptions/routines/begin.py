@@ -4,8 +4,10 @@ import os
 exceptions = [e[:-3] for e in os.listdir("./exceptions/subroutines/begin/")]
 
 void_temp = open('./exceptions/subroutines/void_begin.txt','r')
-void_begin = [line[:-1] for line in void_temp.readlines()]
+void_custom_temp = open('./exceptions/subroutines/void_begin_custom.txt','r')
+void_begin = [line[:-1] for line in void_temp.readlines()] + [line[:-1] for line in void_custom_temp.readlines()]
 void_temp.close()
+void_custom_temp.close()
 
 dicSub = {'t':int, 'readBegin':str, 'writeBegin':str, 'asterisk':bool}
 
