@@ -38,10 +38,11 @@ elif os.path.exists("./exceptions/subroutines/begin/" + command_name + ".py"):
     t = dicSub['t']
     writeText = dicSub['writeBegin']
 elif command_name not in void_begin:
-    print('error 404: "' + readText[1:t-1] + '" not found in ./exceptions/subroutines/begin/ or ./exceptions/subroutines/void_begin.txt')
+    print(readText[1:t-1] + '" not found in ./exceptions/subroutines/begin/ or ./exceptions/subroutines/void_begin.txt')
     # we do a loop to find end of the missing package and skip the section entirely
     k = t
     while readText[k:k+6+len(readText[1:t-1])] != '\\end{'+readText[1:t-1]+'}':
         k = k+1
     t = k+6+len(readText[1:t-1])
+
 j = j + t-1

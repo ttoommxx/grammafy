@@ -53,9 +53,12 @@ text.close()
 
 i=0
 # find the beginning of the document document
-while oldText[i:i+16] != '\\begin{document}':
+while oldText[i:i+16] != '\\begin{document}' and i<len(oldText)-16:
     i=i+1
 i=i+16
+if i == len(oldText):
+    print("\\begin{document} not found")
+    i = 0
 
 while i<len(oldText):
     match oldText[i]:
@@ -110,7 +113,7 @@ while i<len(oldText):
                     j = dicSub['j']
                     newText = dicSub['writeText']
                 elif command_name not in void:
-                    print('error 404: "' + oldText[i+1:j] + '" not found in ./exceptions/routines/ or ./exceptions/void.txt')
+                    print(oldText[i+1:j] + '" not found in ./exceptions/routines/ or ./exceptions/void.txt')
                     print(line_printer(oldText,i))
                     break
                 i = j-1
@@ -139,6 +142,19 @@ while i<len(oldText):
         case _:
             newText = newText + oldText[i]
     i=i+1
+
+# sistema le equazione che vanno a capo e le mette in mezzo alle frasi
+i = 0
+while i+3 < len(newText):
+    if newText[i:i+3] == '[1]':
+        if newText[i-1] == '\n':
+            newText = newText[:i-1] + ' ' + newText[i:]
+        if newText[i+3] in [',', ';', '.']:
+            i=i+1
+        if i+3 < len(newText):
+            if newText[i+3] == '\n':
+                newText = newText[:i+3] + ' ' + newText[i+4:]
+    i = i+1
 
 output_file = open(folder_path + file_name + '_grammafied.txt','w')
 output_file.write(newText)
