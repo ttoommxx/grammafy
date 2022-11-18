@@ -6,10 +6,14 @@ import easygui
 
 file_path = easygui.fileopenbox()
 i=1
-while file_path[-i] != '\\':
-    i=i+1
+if os.name == 'nt': # for Windows
+    while file_path[-i] != '\\':
+        i=i+1
+else:
+    while file_path[-i] != '/':
+        i=i+1
+file_name = file_path[-i+1:-4]
 folder_path = file_path[:-i+1]
-
 
 # line printer
 def line_printer(str,y):
@@ -136,6 +140,6 @@ while i<len(oldText):
             newText = newText + oldText[i]
     i=i+1
 
-output_file = open(folder_path + 'main_grammafied.txt','w')
+output_file = open(folder_path + file_name + '_grammafied.txt','w')
 output_file.write(newText)
 output_file.close()
