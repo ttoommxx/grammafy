@@ -1,29 +1,21 @@
-import sys, os
-# import time if need to debug, time.sleep(seconds)
+import os # import time if need to debug, time.sleep(seconds)
 
-sys.path.append('./modules')
-import easygui
+import easygui # graphical interface for fetching the .tex file
 
 file_path = easygui.fileopenbox()
-i=1
-if os.name == 'nt': # for Windows
-    while file_path[-i] != '\\':
-        i=i+1
-else:
-    while file_path[-i] != '/':
-        i=i+1
-file_name = file_path[-i+1:-4]
-folder_path = file_path[:-i+1]
 
-# line printer
+# Windows and Unix (Linux, Mac) systems use different notation for file path. Extract the file name from the path depending on which system I am using
+i=1
+if os.name == 'nt': # Windows
+    i = file_path.rfind('\\') + 1
+else: # Unix
+    i = file_path.rfind('/') + 1
+file_name = file_path[i:-4] # .tex is excluded from file_name
+folder_path = file_path[:i]
+
+# the following function prints the line from str file containing the y-th letter
 def line_printer(str,y):
-    m = y
-    n = y
-    while str[m] != '\n':
-        m=m-1
-    while str[n] != '\n':
-        n=n+1
-    return str[m+1:n]
+    return(str[str.rfind('/n',0,y)+2 : str.find('/n',y)])
 
 # create a list of existing exceptions
 exceptions = [e[:-3] for e in os.listdir('./exceptions/routines/')]
@@ -41,9 +33,10 @@ admitted_temp = open('./exceptions/admitted.txt','r')
 admitted = [line[:-1] for line in admitted_temp.readlines()]
 admitted_temp.close()
 
-# this will be the final text
+# initialise the final text
 newText = ''
 
+# a dictionary of hereditable parameters when running the routines
 dicSub = {'j':int, 'readText':str, 'writeText':str, 'asterisk':bool, 'path_main':str}
 
 # read main file latex
@@ -51,14 +44,14 @@ text = open(file_path, 'r')
 oldText = text.read()
 text.close()
 
-i=0
-# find the beginning of the document document
-while oldText[i:i+16] != '\\begin{document}' and i<len(oldText)-16:
-    i=i+1
-i=i+16
-if i == len(oldText):
+# find the beginning of the document
+if '\\begin{document}' not in oldText:
     print("\\begin{document} not found")
-    i = 0
+    i = 0 # we start from the beginning, probably it's an included .tex file
+else:
+    i = oldText.find('\\begin{document}') + 16 # we start from right after '\\begin{document}'
+
+#FROM HERE
 
 while i<len(oldText):
     match oldText[i]:
