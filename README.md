@@ -4,8 +4,9 @@ Version 0.1
 
 ## pre-requisites
 
-Any python version should work, tested on Linux and Windows using Python 3.10 and 3.11. Install easygui module for the graphical file picker, by running
-'pip install easygui'
+Any python version should work, tested on Linux and Windows using Python 3.10 and 3.11. 
+Install easygui module for the graphical file picker, by running
+`pip install easygui`
 
 ## how to use
 
