@@ -35,7 +35,7 @@ end_command_temp.close()
 newText = ''
 
 # a dictionary of hereditable parameters when running the routines
-dicSub = {'j':int, 'readText':str, 'writeText':str, 'asterisk':bool, 'path_main':str}
+dicSub = {'j':int, 'readText':str, 'writeText':str, 'path_main':str}
 
 # read main file latex
 text = open(file_path, 'r')
@@ -69,60 +69,58 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
                 newText = newText + '[1]'
                 if oldText[:i-2].replace(' ','').replace('\n','')[-1] in [',', ';', '.']: # add punctuation to non-inline equations
                     newText = newText + oldText[:i-2].replace(' ','').replace('\n','')[-1]
+                oldText = oldText[i:]
             elif oldText[1] == ' ': # space
-                i=1
+                oldText = oldText[1:]
             elif oldText[1] == '\\': # new line
                 newText = newText + '\n'
-                i = 2
+                oldText = oldText[2:]
             else:
                 i = min( [ oldText.find(x) for x in end_command if oldText.find(x)>-1 ] )  # take note of the index of such element
-                if oldText[i] == '*': # remove asterisk if it exists at the end of the name and initialise command name
-                    command_name = oldText[1:i-1]
-                else:
-                    command_name = oldText[1:i]
+                command_name = oldText[1:i]
+                oldText = oldText[i:]
                 print(i, oldText[i], command_name)
                 input('stop')
                 if os.path.exists("./exceptions/routines_custom/" + command_name + ".py"):
                     dicSub['j'] = i
-                    dicSub['readText'] = oldText[i:]
+                    dicSub['readText'] = oldText
                     dicSub['writeText'] = newText
-                    dicSub['asterisk'] = oldText[j-1] == '*'
                     dicSub['path_main'] = folder_path
                     exec(open("./exceptions/routines_custom/" + command_name + ".py").read(),dicSub)
                     # after executing the command, update j and newText
-                    oldText = oldText[:j] + dicSub['readText']
+                    oldText = dicSub['readText']
                     j = dicSub['j']
                     newText = dicSub['writeText']
                 elif os.path.exists("./exceptions/routines/" + command_name + ".py"):
-                    dicSub['j'] = j
-                    dicSub['readText'] = oldText[j:]
+                    dicSub['j'] = i
+                    dicSub['readText'] = oldText
                     dicSub['writeText'] = newText
-                    dicSub['asterisk'] = oldText[j-1] == '*'
                     dicSub['path_main'] = folder_path
                     exec(open("./exceptions/routines/" + command_name + ".py").read(),dicSub)
                     # after executing the command, update j and newText
-                    oldText = oldText[:j] + dicSub['readText']
+                    oldText = dicSub['readText']
                     j = dicSub['j']
                     newText = dicSub['writeText']
                 elif command_name not in void:
-                    print('"' + oldText[i+1:j] + '" not found in ./exceptions/routines/ or ./exceptions/void.txt')
+                    print('"' + command_name + '" not found in ./exceptions/routines/ or ./exceptions/void.txt')
                     print(line_printer(oldText,i))
                     break
                 i = j-1
+                oldText = oldText[i:]
         case '{':
-            i=1
+            oldText = oldText[1:]
         case '}':
-            i=1
+            oldText = oldText[1:]
         case '$':
             i = oldText[2:].find('$') + ( oldText[oldText[2:].find('$')+1] == '$' ) + 1 # add 1 to the index if this happens to be an equation with double dollar
             newText = newText + '[1]'
             if oldText[:i-1].replace(' ','').replace('\n','').replace('$','')[-1] in [',', ';', '.']:
                 newText = newText + oldText[:i-1].replace(' ','').replace('\n','').replace('$','')[-1]
+            oldText = oldText[i:]
         case '%':
-            i = oldText.find('\n') + 1
+            oldText = oldText[oldText.find('\n') + 1:]
         case _:
             print('fatal error, the script match an interactive that does not know how to deal with')
-    oldText = oldText[i:]
     print(oldText[:10])
 
 # after having run my code, I fix all those equations that are followed by '/n'
