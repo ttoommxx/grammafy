@@ -52,6 +52,10 @@ else:
     i = oldText.find('\\begin{document}') + 16 # we start from right after '\\begin{document}'
 
 # FROM HERE
+# use this one instead
+# a_string = "A string is more than its parts!"
+# matches = ["more", "wholesome", "milk"]
+# if any(x in a_string for x in matches):
 
 while i<len(oldText):
     match oldText[i]:
