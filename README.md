@@ -20,6 +20,12 @@ On Windows, double click on WindowsRun.bat.
 On Linux, run LinuxRun.sh.
 Using the graphical selector, pick the main .tex file you want to clean.
 
+### debugging mode (recommended)
+
+The physolophy of the code is that once things are checked out from the old text, they are always removed. Essentially the code is made so that it's eating portion of the raw .tex file and command by command converting it into readable txt file.
+
+Every command should end with one of the following symbols: ' ', '}', '{', '.', ',', ':', ';', '\n'. If not, you can modify the end_command .txt file.
+
 
 WRITE ON HOW TO USE THE DEBUGGING TO MAKE IT WORK PERFECTLY
 

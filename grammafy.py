@@ -26,9 +26,10 @@ void_temp.close()
 void_custom_temp.close()
 
 # list of admissible characters for commands
-admitted_temp = open('./exceptions/admitted.txt','r')
-admitted = [line[:-1] for line in admitted_temp.readlines()]
-admitted_temp.close()
+end_command_temp = open('./exceptions/end_command.txt','r')
+end_command = [line[:-1] for line in end_command_temp.readlines()]
+end_command.append('\n') # don't know how to add it to the txt file
+end_command_temp.close()
 
 # initialise the final text
 newText = ''
@@ -57,41 +58,33 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
         break
     i = min([ oldText.find(x) for x in interactives ])  # take note of the index of such element
     newText = newText + oldText[:i] # we can immediately add what we skipped before any interactive element
+    oldText = oldText[i:] # remove the clean part from oldText
+
+    # WARNING - devi modificare tutto tenendo in considerazione che bisogna tagliare per intero tutti i comandi
     
-    # FROM HERE - devi modificare tutto tenendo in considerazione che bisogna tagliare per intero tutti i comandi
-    
-    match oldText[i]:
+    match oldText[0]:
         case '\\':
-            if oldText[i+1] == '[': # execute this first to check if I am within an equaiton delimited by \[ ... \]
-                i=i+2 # skip the square bracket and start checking characters
-                while oldText[i:i+2] != '\\]':
-                    i=i+1
+            if oldText[1] == '[': # equation
+                i = oldText[1:].find('\]') + 2
                 newText = newText + '[1]'
-                j = i-1
-                while oldText[j] in [' ', '\n']:
-                    j = j-1
-                if oldText[j] in [',', ';', '.']:
-                    newText = newText + oldText[j]
-                i=i+1
-            elif oldText[i+1] == ' ': # a space
-                pass
-            elif oldText[i+1] == '\\': # a new line
+                if oldText[:i-2].replace(' ','').replace('\n','')[-1] in [',', ';', '.']: # add punctuation to non-inline equations
+                    newText = newText + oldText[:i-2].replace(' ','').replace('\n','')[-1]
+            elif oldText[1] == ' ': # space
+                i=1
+            elif oldText[1] == '\\': # new line
                 newText = newText + '\n'
-                i = i+1
+                i = 2
             else:
-                # when find backslash, start reading the command with j
-                j=i+1
-                # stop when the command has characters that are not admissible for commands
-                while oldText[j] in admitted:
-                    j=j+1
-                # create path
-                if oldText[j-1] == '*': # remove asterisk if it exists at the end of the name
-                    command_name = oldText[i+1:j-1]
+                i = min( [ oldText.find(x) for x in end_command if oldText.find(x)>-1 ] )  # take note of the index of such element
+                if oldText[i] == '*': # remove asterisk if it exists at the end of the name and initialise command name
+                    command_name = oldText[1:i-1]
                 else:
-                    command_name = oldText[i+1:j]
+                    command_name = oldText[1:i]
+                print(i, oldText[i], command_name)
+                input('stop')
                 if os.path.exists("./exceptions/routines_custom/" + command_name + ".py"):
-                    dicSub['j'] = j
-                    dicSub['readText'] = oldText[j:]
+                    dicSub['j'] = i
+                    dicSub['readText'] = oldText[i:]
                     dicSub['writeText'] = newText
                     dicSub['asterisk'] = oldText[j-1] == '*'
                     dicSub['path_main'] = folder_path
@@ -112,119 +105,25 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
                     j = dicSub['j']
                     newText = dicSub['writeText']
                 elif command_name not in void:
-                    print(oldText[i+1:j] + '" not found in ./exceptions/routines/ or ./exceptions/void.txt')
-                    # print(line_printer(oldText,i))
+                    print('"' + oldText[i+1:j] + '" not found in ./exceptions/routines/ or ./exceptions/void.txt')
+                    print(line_printer(oldText,i))
                     break
                 i = j-1
         case '{':
-            pass
+            i=1
         case '}':
-            pass
+            i=1
         case '$':
-            i=i+1
-            if oldText[i] == '$':
-                i = i+1
-            while oldText[i] != '$':
-                i = i+1
+            i = oldText[2:].find('$') + ( oldText[oldText[2:].find('$')+1] == '$' ) + 1 # add 1 to the index if this happens to be an equation with double dollar
             newText = newText + '[1]'
-            j = i-1
-            while oldText[j] in [' ', '\n']:
-                j = j-1
-            if oldText[j] in [',', ';', '.']:
-                newText = newText + oldText[j]
-            if oldText[i+1] == '$':
-                i = i+1
+            if oldText[:i-1].replace(' ','').replace('\n','').replace('$','')[-1] in [',', ';', '.']:
+                newText = newText + oldText[:i-1].replace(' ','').replace('\n','').replace('$','')[-1]
         case '%':
-            i = i+1
-            while i < len(oldText) and oldText[i] != '\n': # comments end when I go to the next line, need to check if I am going out of the string as we might finish the documents with a comment
-                i=i+1
+            i = oldText.find('\n') + 1
         case _:
-            newText = newText + oldText[i]
-    i=i+1
+            print('fatal error, the script match an interactive that does not know how to deal with')
     oldText = oldText[i:]
-
-# while i<len(oldText):
-#     match oldText[i]:
-#         case '\\':
-#             if oldText[i+1] == '[': # execute this first to check if I am within an equaiton delimited by \[ ... \]
-#                 i=i+2 # skip the square bracket and start checking characters
-#                 while oldText[i:i+2] != '\\]':
-#                     i=i+1
-#                 newText = newText + '[1]'
-#                 j = i-1
-#                 while oldText[j] in [' ', '\n']:
-#                     j = j-1
-#                 if oldText[j] in [',', ';', '.']:
-#                     newText = newText + oldText[j]
-#                 i=i+1
-#             elif oldText[i+1] == ' ':
-#                 pass
-#             elif oldText[i+1] == '\\':
-#                 newText = newText + '\n'
-#                 i = i+1
-#             else:
-#                 # when find backslash, start reading the command with j
-#                 j=i+1
-#                 # stop when the command has characters that are not admissible for commands
-#                 while oldText[j] in admitted:
-#                     j=j+1
-#                 # create path
-#                 if oldText[j-1] == '*': # remove asterisk if it exists at the end of the name
-#                     command_name = oldText[i+1:j-1]
-#                 else:
-#                     command_name = oldText[i+1:j]
-#                 if os.path.exists("./exceptions/routines_custom/" + command_name + ".py"):
-#                     dicSub['j'] = j
-#                     dicSub['readText'] = oldText[j:]
-#                     dicSub['writeText'] = newText
-#                     dicSub['asterisk'] = oldText[j-1] == '*'
-#                     dicSub['path_main'] = folder_path
-#                     exec(open("./exceptions/routines_custom/" + command_name + ".py").read(),dicSub)
-#                     # after executing the command, update j and newText
-#                     oldText = oldText[:j] + dicSub['readText']
-#                     j = dicSub['j']
-#                     newText = dicSub['writeText']
-#                 elif os.path.exists("./exceptions/routines/" + command_name + ".py"):
-#                     dicSub['j'] = j
-#                     dicSub['readText'] = oldText[j:]
-#                     dicSub['writeText'] = newText
-#                     dicSub['asterisk'] = oldText[j-1] == '*'
-#                     dicSub['path_main'] = folder_path
-#                     exec(open("./exceptions/routines/" + command_name + ".py").read(),dicSub)
-#                     # after executing the command, update j and newText
-#                     oldText = oldText[:j] + dicSub['readText']
-#                     j = dicSub['j']
-#                     newText = dicSub['writeText']
-#                 elif command_name not in void:
-#                     print(oldText[i+1:j] + '" not found in ./exceptions/routines/ or ./exceptions/void.txt')
-#                     print(line_printer(oldText,i))
-#                     break
-#                 i = j-1
-#         case '{':
-#             pass
-#         case '}':
-#             pass
-#         case '$':
-#             i=i+1
-#             if oldText[i] == '$':
-#                 i = i+1
-#             while oldText[i] != '$':
-#                 i = i+1
-#             newText = newText + '[1]'
-#             j = i-1
-#             while oldText[j] in [' ', '\n']:
-#                 j = j-1
-#             if oldText[j] in [',', ';', '.']:
-#                 newText = newText + oldText[j]
-#             if oldText[i+1] == '$':
-#                 i = i+1
-#         case '%':
-#             i = i+1
-#             while i < len(oldText) and oldText[i] != '\n': # comments end when I go to the next line, need to check if I am going out of the string as we might finish the documents with a comment
-#                 i=i+1
-#         case _:
-#             newText = newText + oldText[i]
-#     i=i+1
+    print(oldText[:10])
 
 # after having run my code, I fix all those equations that are followed by '/n'
 i = 0
