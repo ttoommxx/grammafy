@@ -23,5 +23,7 @@ This script serves the purpose of cleaning up tex files to a txt file that can b
 requires tkinter
 
 To do:
-- include grammarly API directly
+- finish cleaning up
 - aggressive mode, removes all unknown commands
+- include license
+- include grammarly API directly
