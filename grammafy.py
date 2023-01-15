@@ -1,8 +1,8 @@
 import os # import time if need to debug, time.sleep(seconds)
 
-import easygui # graphical interface for fetching the .tex file
+from tkinter import filedialog # graphical interface for fetching the .tex file
 
-file_path = easygui.fileopenbox()
+file_path = filedialog.askopenfilename()
 
 # Windows and Unix (Linux, Mac) systems use different notation for file path. Extract the file name from the path depending on which system I am using
 i=1

@@ -7,22 +7,21 @@ This script serves the purpose of cleaning up tex files to a txt file that can b
 ## pre-requisites
 
 Any python version should work, tested on Linux and Windows using Python 3.10 and 3.11.
-Install easygui module for the graphical file picker, by running
-```
-pip install easygui
-```
-If any error, try installing tkinter via
+If it doesn't do anything, install tkinter via
 ```
 pip install tk
 ```
 
 ## how to use
 
-On terminal, write
-```
-python grammafy.py
-```
-and using the graphical selector, pick the main .tex file you want to clean. WRITE ON HOW TO USE THE DEBUGGING TO MAKE IT WORK PERFECTLY
+### aggressive mode
+
+On Windows, double click on WindowsRun.bat.
+On Linux, run LinuxRun.sh.
+Using the graphical selector, pick the main .tex file you want to clean.
+
+
+WRITE ON HOW TO USE THE DEBUGGING TO MAKE IT WORK PERFECTLY
 
 
 
