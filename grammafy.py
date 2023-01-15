@@ -4,12 +4,8 @@ from tkinter import filedialog # graphical interface for fetching the .tex file
 
 file_path = filedialog.askopenfilename()
 
-# Windows and Unix (Linux, Mac) systems use different notation for file path. Extract the file name from the path depending on which system I am using
-i=1
-if os.name == 'nt': # Windows
-    i = file_path.rfind('\\') + 1
-else: # Unix
-    i = file_path.rfind('/') + 1
+# we now store information on the file path, using tkinter we always have '/', even in Windows
+i = file_path.rfind('/') + 1
 file_name = file_path[i:-4] # .tex is excluded from file_name
 folder_path = file_path[:i]
 
