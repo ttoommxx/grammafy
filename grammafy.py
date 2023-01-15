@@ -51,7 +51,7 @@ if '\\begin{document}' not in oldText:
 else:
     i = oldText.find('\\begin{document}') + 16 # we start from right after '\\begin{document}'
 
-#FROM HERE
+# FROM HERE
 
 while i<len(oldText):
     match oldText[i]:
@@ -136,7 +136,7 @@ while i<len(oldText):
             newText = newText + oldText[i]
     i=i+1
 
-# sistema le equazione che vanno a capo e le mette in mezzo alle frasi
+# after having run my code, I fix all those equations that are followed by '/n'
 i = 0
 while i+3 < len(newText):
     if newText[i:i+3] == '[1]':
