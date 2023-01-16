@@ -24,7 +24,11 @@ Using the graphical selector, pick the main .tex file you want to clean.
 
 The physolophy of the code is that once things are checked out from the old text, they are always removed. Essentially the code is made so that it's eating portion of the raw .tex file and command by command converting it into readable txt file.
 
-Every command should end with one of the following symbols: ' ', '}', '{', '.', ',', ':', ';', '\n'. Ending with asterisk is reserved as a special behaviour for built-in functions, and as such custom command should not end with an asterisk.
+Every command should end with one of the following symbols:
+```
+' ', '}', '{', '.', ',', ':', ';', '\n'
+```
+Ending with asterisk is reserved as a special behaviour for built-in functions, and as such custom command should not end with an asterisk.
 end_command.txt can be modified to handle different endings.
 
 
