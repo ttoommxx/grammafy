@@ -1,8 +1,2 @@
-t = 1 # skip opening brackets
-while readText[t] != '}':
-	t = t+1
-# we expect another parenthesis
-t = t+1
-while readText[t] != '}':
-	t = t+1
-j = j+t
+# find second occurrence of '}'
+j = readText[readText.find('}')+1:].find('}') + readText.find('}')+1 + 1

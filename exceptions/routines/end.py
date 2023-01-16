@@ -1,15 +1,14 @@
+# fix the issue with the asterisk
+
 import os
 
 exceptions = [e[:-3] for e in os.listdir("./exceptions/subroutines/end/")]
 
 dicSub = {'writeEnd':str, 'asterisk':bool}
 
-t = 1
-while readText[t] != '}':
-    t = t+1
-t = t+1 # skip the end of brackets for begin
+t = readText.find('}')
 
-if readText[t-2] == '*':
+if readText[t-1] == '*':
     command = "./exceptions/subroutines/end/" + readText[1:t-2] + ".py"
 else:
     command = "./exceptions/subroutines/end/" + readText[1:t-1] + ".py"

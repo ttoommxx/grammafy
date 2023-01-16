@@ -79,34 +79,32 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
                 i = min( [ oldText.find(x) for x in end_command if oldText.find(x)>-1 ] )  # take note of the index of such element
                 command_name = oldText[1:i]
                 oldText = oldText[i:]
-                print(i, oldText[i], command_name)
+                print(i, "------>" , command_name)
+                print(oldText)
                 input('stop')
+                # be sure to modify newtext and oldtext in here within the subroutines --- maybe j is redundant
                 if os.path.exists("./exceptions/routines_custom/" + command_name + ".py"):
-                    dicSub['j'] = i
                     dicSub['readText'] = oldText
                     dicSub['writeText'] = newText
                     dicSub['path_main'] = folder_path
                     exec(open("./exceptions/routines_custom/" + command_name + ".py").read(),dicSub)
                     # after executing the command, update j and newText
                     oldText = dicSub['readText']
-                    j = dicSub['j']
+                    i = dicSub['j']
                     newText = dicSub['writeText']
                 elif os.path.exists("./exceptions/routines/" + command_name + ".py"):
-                    dicSub['j'] = i
                     dicSub['readText'] = oldText
                     dicSub['writeText'] = newText
                     dicSub['path_main'] = folder_path
                     exec(open("./exceptions/routines/" + command_name + ".py").read(),dicSub)
                     # after executing the command, update j and newText
                     oldText = dicSub['readText']
-                    j = dicSub['j']
+                    i = dicSub['j']
                     newText = dicSub['writeText']
                 elif command_name not in void:
                     print('"' + command_name + '" not found in ./exceptions/routines/ or ./exceptions/void.txt')
                     print(line_printer(oldText,i))
                     break
-                i = j-1
-                oldText = oldText[i:]
         case '{':
             oldText = oldText[1:]
         case '}':
