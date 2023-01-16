@@ -50,6 +50,8 @@ oldText = oldText[i:]
 
 # start analysing the text
 while any([ oldText.find(x) for x in interactives ]): # if any such element occurs
+    print([ oldText.find(x) for x in interactives ])
+    input('which ones?') I AM REMOVING '$' BECAUSE I RUN FIND BEFORE INCLUDE, FUCKCKCKCK, RUN INCLUDE FIRST AND THEN RUN ALL THIS :) PROBLEM SOLVED
     while min([ oldText.find(x) for x in interactives ], default = 1) == -1:
         interactives.pop( [ oldText.find(x) for x in interactives ].index(-1) )
     if len(interactives) == 0:
@@ -76,7 +78,6 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
 
                 command_name = oldText[1:i]
                 oldText = oldText[i + (oldText[i]=='*'):]
-                print('routine command', "------>" , command_name)
                 if os.path.exists("./exceptions/routines_custom/" + command_name + ".py"):
                     dicSub['readText'] = oldText
                     dicSub['writeText'] = newText
