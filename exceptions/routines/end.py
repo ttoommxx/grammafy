@@ -4,18 +4,19 @@ import os
 
 exceptions = [e[:-3] for e in os.listdir("./exceptions/subroutines/end/")]
 
-dicSub = {'writeEnd':str, 'asterisk':bool}
+dicSub = {'readEnd':str, 'writeEnd':str}
 
-t = readText.find('}')
+i = readText.find('}')+1 # right next after the brackets
 
-if readText[t-1] == '*':
-    command = "./exceptions/subroutines/end/" + readText[1:t-2] + ".py"
-else:
-    command = "./exceptions/subroutines/end/" + readText[1:t-1] + ".py"
+command_name = readText[1:i-1-(readText[i-2]=='*')] # remove asterisk if any
+command = "./exceptions/subroutines/end/" + command_name + ".py"
+
+readText = readText[i:]
 
 if os.path.exists(command):
+    dicSub['readEnd'] = readText
     dicSub['writeEnd'] = writeText
-    dicSub['asterisk'] = readText[t-2] == '*'
     exec(open(command).read(),dicSub)
     writeText = dicSub['writeEnd']
-j = j + t
+    readText = dicSub['readEnd']
+    

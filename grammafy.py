@@ -57,9 +57,6 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
     i = min([ oldText.find(x) for x in interactives ])  # take note of the index of such element
     newText = newText + oldText[:i] # we can immediately add what we skipped before any interactive element
     oldText = oldText[i:] # remove the clean part from oldText
-
-    # WARNING - devi modificare tutto tenendo in considerazione che bisogna tagliare per intero tutti i comandi
-    
     match oldText[0]:
         case '\\':
             if oldText[1] == '[': # equation
@@ -75,10 +72,10 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
                 oldText = oldText[2:]
             else:
                 i = min( [ oldText.find(x) for x in end_command if oldText.find(x)>-1 ] )  # take note of the index of such element
+
                 command_name = oldText[1:i]
-                oldText = oldText[i:]
+                oldText = oldText[i + (oldText[i]=='*'):]
                 print('routine command', "------>" , command_name)
-                # be sure to modify newtext and oldtext in here within the subroutines --- maybe j is redundant
                 if os.path.exists("./exceptions/routines_custom/" + command_name + ".py"):
                     dicSub['readText'] = oldText
                     dicSub['writeText'] = newText
@@ -110,7 +107,9 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
         case '%':
             oldText = oldText[oldText.find('\n') + 1:]
         case _:
-            print('fatal error, the script match an interactive that does not know how to deal with')
+            print('fatal error, unknown interactive')
+
+# FROM HERE
 
 # after having run my code, I fix all those equations that are followed by '/n'
 i = 0

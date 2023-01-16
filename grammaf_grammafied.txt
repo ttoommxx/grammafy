@@ -1,0 +1,27 @@
+' not in oldText:
+    print("
+begindocument not found")
+    i = 0 # we start from the beginning, probably it's an included .tex file
+else:
+    i = oldText.find('
+begindocument') + 16 # we start from right after '
+begindocument'
+oldText = oldText[i:]
+
+# start analysing the text
+while any([ oldText.find(x) for x in interactives ]): # if any such element occurs
+    while min([ oldText.find(x) for x in interactives ], default = 1) == -1:
+        interactives.pop( [ oldText.find(x) for x in interactives ].index(-1) )
+    if len(interactives) == 0:
+        break
+    i = min([ oldText.find(x) for x in interactives ])  # take note of the index of such element
+    newText = newText + oldText[:i] # we can immediately add what we skipped before any interactive element
+    oldText = oldText[i:] # remove the clean part from oldText
+
+    # WARNING - devi modificare tutto tenendo in considerazione che bisogna tagliare per intero tutti i comandi
+    
+    match oldText[0]:
+        case '
+':
+            if oldText[1] == '[': # equation
+                i = oldText[1:].find('

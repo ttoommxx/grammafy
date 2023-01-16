@@ -41,7 +41,8 @@ WRITE ON HOW TO USE THE DEBUGGING TO MAKE IT WORK PERFECTLY
 
 
 To do:
-- finish cleaning up
+- finish cleaning up (0.2)
 - aggressive mode, removes all unknown commands
+- write good doc
 - include license
 - include grammarly API directly

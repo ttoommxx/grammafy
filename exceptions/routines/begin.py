@@ -14,15 +14,16 @@ dicSub = {'readBegin':str, 'writeBegin':str}
 
 i = readText.find('}')+1 # right next after the brackets
 command_name = readText[1:i-1-(readText[i-2]=='*')] # remove asterisk if any
+readText = readText[i:]
 
 if os.path.exists("./exceptions/subroutines/begin_custom/" + command_name + ".py"):
-    dicSub['readBegin'] = readText[i:]
+    dicSub['readBegin'] = readText
     dicSub['writeBegin'] = writeText
     exec(open("./exceptions/subroutines/begin_custom/" + command_name + ".py").read(),dicSub)
     writeText = dicSub['writeBegin']
     readText = dicSub['readBegin']
 elif os.path.exists("./exceptions/subroutines/begin/" + command_name + ".py"):
-    dicSub['readBegin'] = readText[i:]
+    dicSub['readBegin'] = readText
     dicSub['writeBegin'] = writeText
     exec(open("./exceptions/subroutines/begin/" + command_name + ".py").read(),dicSub)
     writeText = dicSub['writeBegin']
