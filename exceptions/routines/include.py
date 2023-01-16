@@ -3,7 +3,7 @@
 import os
 
 i = readText.find('}')
-include_path = readText[1:i-1]
+include_path = readText[1:i]
 if include_path[-4:] != '.tex': # if the extension is not present
     include_path = include_path + '.tex'
 

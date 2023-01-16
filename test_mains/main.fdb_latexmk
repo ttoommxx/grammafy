@@ -1,0 +1,13 @@
+# Fdb version 4
+["pdflatex"] 1673890974 "/home/tommasom/GitHub/grammafy/test_mains/main.tex" "main.pdf" "main" 1673890974 2
+  "/home/tommasom/.miktex/texmfs/data/miktex/data/le/pdftex/pdflatex.fmt" 1671561458 7587970 abfcd49cc3b302a1c498fd761388c1f9 ""
+  "/home/tommasom/.miktex/texmfs/install/fonts/tfm/public/cm/cmbx10.tfm" 1666708922 1328 c834bbb027764024c09d3d2bf908b5f0 ""
+  "/home/tommasom/.miktex/texmfs/install/tex/latex/l3backend/l3backend-pdftex.def" 1669647972 30426 f2fb69fcda4dc35ed0b7dee211bce679 ""
+  "/home/tommasom/GitHub/grammafy/test_mains/main.tex" 1673890973 1023 c5c8a72e4bfe978806ffc653dfeba872 ""
+  "main.aux" 1673890974 8 a94a2480d3289e625eea47cd1b285758 "pdflatex"
+  "main.tex" 1673890973 1023 c5c8a72e4bfe978806ffc653dfeba872 ""
+  (generated)
+  "main.aux"
+  "main.log"
+  "main.pdf"
+  (rewritten before read)

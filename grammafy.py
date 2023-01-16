@@ -54,7 +54,8 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
         interactives.pop( [ oldText.find(x) for x in interactives ].index(-1) )
     if len(interactives) == 0:
         break
-    i = min([ oldText.find(x) for x in interactives ])  # take note of the index of such element
+    i = min([ oldText.find(x) for x in interactives ])  # take note of the index of such element 
+    
     newText = newText + oldText[:i] # we can immediately add what we skipped before any interactive element
     oldText = oldText[i:] # remove the clean part from oldText
     match oldText[0]:
@@ -94,6 +95,9 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
                     print('"' + command_name + '" not found in ./exceptions/routines/ or ./exceptions/void.txt')
                     print(useful_fun.line_printer(oldText,i))
                     break
+
+                # SOMETHING IS HAPPENING HERE
+
         case '{':
             oldText = oldText[1:]
         case '}':
@@ -101,8 +105,8 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
         case '$':
             i = oldText[1:].find('$') + 2 # we are starting from after the first '$'
             newText = newText + '[1]'
-            if oldText[1:i-1].replace(' ','').replace('\n','')[-1] in [',', ';', '.']:
-                newText = newText + oldText[1:i-1].replace(' ','').replace('\n','')[-1]
+            # if oldText[1:i-1].replace(' ','').replace('\n','')[-1] in [',', ';', '.']:
+            #     newText = newText + oldText[1:i-1].replace(' ','').replace('\n','')[-1]
             oldText = oldText[i:]
         case '%':
             oldText = oldText[oldText.find('\n') + 1:]

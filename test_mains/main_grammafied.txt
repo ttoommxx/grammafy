@@ -20,7 +20,7 @@ the beginning of the theorem  here
 Theorem.
 I want to show that [1] 
 Proof.
-because [1] then [1].  ■
+because [1] then [1]  ■
 
 
 now we do something else
@@ -34,7 +34,6 @@ did it work?
 
 
 
-- pasta
-- asciutta
+- pasta [1] - asciutta
 
 - carrots

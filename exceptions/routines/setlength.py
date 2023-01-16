@@ -1,3 +1,3 @@
-i = readBegin.find('}')+1
-i = readBegin[i:].find('}') + i + 1
-readBegin = readBegin[i:]
+i = readText.find('}')+1
+i = readText[i:].find('}') + i + 1
+readText = readText[i:]
