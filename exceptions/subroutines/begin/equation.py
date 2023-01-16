@@ -1,21 +1,9 @@
-tt = 0 #this time I already removed the brackets, I know I am calling a begin function
-
-if asterisk:
-    while readBegin[tt:tt+15] != '\\end{equation*}':
-        tt = tt+1
-    t = t+tt+15
-else:
-    while readBegin[tt:tt+14] != '\\end{equation}':
-        tt = tt+1
-    t = t+tt+14
-
 writeBegin = writeBegin + '[1]'
-while readBegin[tt-1] == ' ' or readBegin[tt-1] == '\n':
-    tt = tt-1
-match readBegin[tt-1]:
-    case ',':
-        writeBegin = writeBegin + ','
-    case ';':
-        writeBegin = writeBegin + ';'
-    case '.':
-        writeBegin = writeBegin + '.'
+
+# find the index where the whole portion ends
+i = min([readBegin.find(x) for x in ['\\end{equation*}', '\\end{equation}'] if readBegin.find(x)>-1])
+if readBegin[:i-1].replace(' ','').replace('\n','').replace('$','')[-1] in [',', ';', '.']:
+                writeBegin = writeBegin + readBegin[:i-1].replace(' ','').replace('\n','').replace('$','')[-1]
+
+i = i + 14 + (readBegin[14] == '*') # skipping to the end of the program 
+readBegin = readBegin[i:]

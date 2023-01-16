@@ -2,8 +2,8 @@
 
 import os
 
-t = readText.find('}')
-include_path = readText[1:t-1]
+i = readText.find('}')
+include_path = readText[1:i-1]
 if include_path[-4:] != '.tex': # if the extension is not present
     include_path = include_path + '.tex'
 
@@ -11,4 +11,4 @@ if include_path[-4:] != '.tex': # if the extension is not present
 included_text = open(path_main + include_path, 'r')
 text = included_text.read()
 included_text.close()
-readText = text + readText[t:]
+readText = text + readText[i:]

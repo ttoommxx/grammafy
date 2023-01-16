@@ -1,2 +1,3 @@
-# find second occurrence of '}'
-j = readText[readText.find('}')+1:].find('}') + readText.find('}')+1 + 1
+i = readBegin.find('}')+1
+i = readBegin[i:].find('}') + i + 1
+readBegin = readBegin[i:]

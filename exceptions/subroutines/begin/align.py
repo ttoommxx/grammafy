@@ -1,21 +1,9 @@
-tt = 0 #this time I already removed the brackets, I know I am calling a begin function
-
-if asterisk:
-    while readBegin[tt:tt+12] != '\\end{align*}':
-        tt = tt+1
-    t = t+tt+12
-else:
-    while readBegin[tt:tt+11] != '\\end{align}':
-        tt = tt+1
-    t = t+tt+11
-
 writeBegin = writeBegin + '[1]'
-while readBegin[tt-1] in [' ', '\n']:
-    tt = tt-1
-match readBegin[tt-1]:
-    case ',':
-        writeBegin = writeBegin + ','
-    case ';':
-        writeBegin = writeBegin + ';'
-    case '.':
-        writeBegin = writeBegin + '.'
+
+# find the index where the whole portion ends
+i = min([readBegin.find(x) for x in ['\\end{align*}', '\\end{align}'] if readBegin.find(x)>-1])
+if readBegin[:i-1].replace(' ','').replace('\n','').replace('$','')[-1] in [',', ';', '.']:
+                writeBegin = writeBegin + readBegin[:i-1].replace(' ','').replace('\n','').replace('$','')[-1]
+
+i = i + 11 + (readBegin[11] == '*') # skipping to the end of the program 
+readBegin = readBegin[i:]

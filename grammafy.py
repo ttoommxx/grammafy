@@ -1,15 +1,13 @@
 import os,sys # import time if need to debug, time.sleep(seconds), remove sys once stopped debugging
 from tkinter import filedialog # graphical interface for fetching the .tex file
 
+import useful_fun
+
 file_path = filedialog.askopenfilename()
 # we now store information on the file path, using tkinter we always have '/', even in Windows
 i = file_path.rfind('/') + 1
 file_name = file_path[i:-4] # .tex is excluded from file_name
 folder_path = file_path[:i]
-
-# the following function prints the line from str file containing the y-th letter
-def line_printer(str,y):
-    return(str[str.rfind('\n',0,y)+2 : str.find('\n',y)])
 
 # types of different "command" headers
 interactives = ['\\','{','}','$','%']
@@ -35,7 +33,7 @@ end_command_temp.close()
 newText = ''
 
 # a dictionary of hereditable parameters when running the routines
-dicSub = {'j':int, 'readText':str, 'writeText':str, 'path_main':str}
+dicSub = {'readText':str, 'writeText':str, 'path_main':str}
 
 # read main file latex
 text = open(file_path, 'r')
@@ -79,47 +77,40 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
                 i = min( [ oldText.find(x) for x in end_command if oldText.find(x)>-1 ] )  # take note of the index of such element
                 command_name = oldText[1:i]
                 oldText = oldText[i:]
-                print(i, "------>" , command_name)
-                print(oldText)
-                input('stop')
+                print('routine command', "------>" , command_name)
                 # be sure to modify newtext and oldtext in here within the subroutines --- maybe j is redundant
                 if os.path.exists("./exceptions/routines_custom/" + command_name + ".py"):
                     dicSub['readText'] = oldText
                     dicSub['writeText'] = newText
                     dicSub['path_main'] = folder_path
                     exec(open("./exceptions/routines_custom/" + command_name + ".py").read(),dicSub)
-                    # after executing the command, update j and newText
                     oldText = dicSub['readText']
-                    i = dicSub['j']
                     newText = dicSub['writeText']
                 elif os.path.exists("./exceptions/routines/" + command_name + ".py"):
                     dicSub['readText'] = oldText
                     dicSub['writeText'] = newText
                     dicSub['path_main'] = folder_path
                     exec(open("./exceptions/routines/" + command_name + ".py").read(),dicSub)
-                    # after executing the command, update j and newText
                     oldText = dicSub['readText']
-                    i = dicSub['j']
                     newText = dicSub['writeText']
                 elif command_name not in void:
                     print('"' + command_name + '" not found in ./exceptions/routines/ or ./exceptions/void.txt')
-                    print(line_printer(oldText,i))
+                    print(useful_fun.line_printer(oldText,i))
                     break
         case '{':
             oldText = oldText[1:]
         case '}':
             oldText = oldText[1:]
         case '$':
-            i = oldText[2:].find('$') + ( oldText[oldText[2:].find('$')+1] == '$' ) + 1 # add 1 to the index if this happens to be an equation with double dollar
+            i = oldText[1:].find('$') + 2 # we are starting from after the first '$'
             newText = newText + '[1]'
-            if oldText[:i-1].replace(' ','').replace('\n','').replace('$','')[-1] in [',', ';', '.']:
-                newText = newText + oldText[:i-1].replace(' ','').replace('\n','').replace('$','')[-1]
+            if oldText[1:i-1].replace(' ','').replace('\n','')[-1] in [',', ';', '.']:
+                newText = newText + oldText[1:i-1].replace(' ','').replace('\n','')[-1]
             oldText = oldText[i:]
         case '%':
             oldText = oldText[oldText.find('\n') + 1:]
         case _:
             print('fatal error, the script match an interactive that does not know how to deal with')
-    print(oldText[:10])
 
 # after having run my code, I fix all those equations that are followed by '/n'
 i = 0

@@ -1,1 +1,2 @@
-j = readText.find('}') + 1
+i = readBegin.find('}')+1
+readBegin = readBegin[i:]

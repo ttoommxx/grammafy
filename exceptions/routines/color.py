@@ -1,3 +1,4 @@
 writeText = writeText + 'Color:'
-j = readText.find('}') + 1
-writeText = writeText + readText[1:j-2].upper()
+i = readText.find('}') + 1
+readText = readText[i:]
+writeText = writeText + readText[1:i-2].upper()
