@@ -4,10 +4,13 @@ Version 0.2
 
 This script serves the purpose of cleaning up tex files to a txt file that can be put into online writing checking software
 
-## pre-requisites
+## installation
 
 Any python version should work, tested on Linux and Windows using Python 3.10 and 3.11.
-If it doesn't do anything, install tkinter via
+```
+git clone https://github.com/ttoommxx/grammafy
+```
+tkinter should be included within python, but if not install via
 ```
 pip install tk
 ```
