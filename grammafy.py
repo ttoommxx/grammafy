@@ -3,6 +3,8 @@ from tkinter import filedialog # graphical interface for fetching the .tex file
 
 import useful_fun
 
+aggro = input('Run in aggressive mode? Y/N \n').lower()
+
 file_path = filedialog.askopenfilename()
 # we now store information on the file path, using tkinter we always have '/', even in Windows
 i = file_path.rfind('/') + 1
@@ -19,7 +21,7 @@ exceptions_custom = [e[:-3] for e in os.listdir('./exceptions/routines_custom/')
 # fetch list of commands that should not produce any text output
 void_temp = open('./exceptions/void.txt','r')
 void_custom_temp = open('./exceptions/void_custom.txt','r')
-void = [line[:-1] for line in void_temp.readlines()] + [line[:-1] for line in void_custom_temp.readlines()]
+void = [line[:-1] for line in void_temp.readlines()] + [line[:-1] for line in void_custom_temp.readlines()] # put them together as it doesn't make a difference, there is no overriding
 void_temp.close()
 void_custom_temp.close()
 
@@ -90,21 +92,28 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
 
                 command_name = oldText[1:i]
                 oldText = oldText[i + (oldText[i]=='*'):]
-                if os.path.exists("./exceptions/routines_custom/" + command_name + ".py"):
+                if os.path.exists("./exceptions/routines_custom/" + command_name + ".py"): # first I search within custom subroutines
                     dicSub['readText'] = oldText
                     dicSub['writeText'] = newText
                     dicSub['path_main'] = folder_path
                     exec(open("./exceptions/routines_custom/" + command_name + ".py").read(),dicSub)
                     oldText = dicSub['readText']
                     newText = dicSub['writeText']
-                elif os.path.exists("./exceptions/routines/" + command_name + ".py"):
+                elif os.path.exists("./exceptions/routines/" + command_name + ".py"): # then I search within built-in subroutines
                     dicSub['readText'] = oldText
                     dicSub['writeText'] = newText
                     dicSub['path_main'] = folder_path
                     exec(open("./exceptions/routines/" + command_name + ".py").read(),dicSub)
                     oldText = dicSub['readText']
                     newText = dicSub['writeText']
-                elif command_name not in void:
+                elif command_name in void:
+                    pass
+                elif aggro == 'y': # if in aggressive mode I just remove the command with any adjacent square or curly bracket
+                    i = 0
+                    while oldText[i] in ['{','[']:
+                        i = min([oldText[i:].find(x) for x in ['}',']'] if oldText[i:].find(x) > -1])+1 + i
+                    oldText = oldText[i:]
+                else:
                     print('"' + command_name + '" not found in ./exceptions/routines/ or ./exceptions/void.txt')
                     print(useful_fun.line_printer(oldText,i))
                     break
@@ -124,23 +133,9 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
         case '%':
             oldText = oldText[oldText.find('\n') + 1:]
         case _:
-            print('fatal error, unknown interactive')
+            print('Fatal error, unknown interactive')
 
-# FROM HERE
-
-# after having run my code, I fix all those equations that are followed by '/n'
-# i = 0
-# while i+3 < len(newText):
-#     if newText[i:i+3] == '[1]':
-#         if newText[i-1] == '\n':
-#             newText = newText[:i-1] + ' ' + newText[i:]
-#         if newText[i+3] in [',', ';', '.']:
-#             i=i+1
-#         if i+3 < len(newText):
-#             if newText[i+3] == '\n':
-#                 newText = newText[:i+3] + ' ' + newText[i+4:]
-#     i = i+1
-
+# clean the file from equations that have bad spacing and newlines
 i = 0
 while newText[i+3:].find('[1]')>-1:
     i = newText[i+3:].find('[1]') + i+3
@@ -156,4 +151,6 @@ output_file = open(folder_path + file_name + '_grammafied.txt','w')
 output_file.write(newText)
 output_file.close()
 
-print('run without errors :)')
+print('Done :)')
+if aggro == 'y':
+    print('PS, the program run in aggressive mode and, as such, it could have printed incomplete or incorrect output')
