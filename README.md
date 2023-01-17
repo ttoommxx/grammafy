@@ -2,7 +2,7 @@
 
 Version 0.2
 
-This script serves the purpose of cleaning up tex files to a txt file that can be put into online writing checking software
+This script serves the purpose of cleaning up tex files by creating to a txt file, stripped of all commands, that can be put into an writing software. Formulas are substituted with the symbol [1], and the other changes should be comprehensible.
 
 ## installation
 
@@ -18,7 +18,6 @@ or on Ubuntu
 ```
 sudo apt install python3-tk
 ```
-Should be included in the Windows version of Python (tested in Python 3.11)
 
 ## how to use
 
@@ -46,7 +45,6 @@ WRITE ON HOW TO USE THE DEBUGGING TO MAKE IT WORK PERFECTLY
 
 
 To do:
-- finish cleaning up (0.2)
 - aggressive mode, removes all unknown commands
 - write good doc
 - include license
