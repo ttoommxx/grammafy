@@ -88,10 +88,10 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
     match oldText[0]:
         case '\\':
             if oldText[1] == '[': # equation
-                i = oldText[1:].find('\]') + 2
+                i = oldText[1:].find('\]') + 3
                 newText = newText + '[1]'
-                if oldText[:i-2].replace(' ','').replace('\n','')[-1] in [',', ';', '.']: # add punctuation to non-inline equations
-                    newText = newText + oldText[:i-2].replace(' ','').replace('\n','')[-1]
+                if oldText[:i-3].replace(' ','').replace('\n','')[-1] in [',', ';', '.']: # add punctuation to non-inline equations
+                    newText = newText + oldText[:i-3].replace(' ','').replace('\n','')[-1]
                 oldText = oldText[i:]
             elif oldText[1] == ' ': # space
                 oldText = oldText[1:]
@@ -135,7 +135,10 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
         case '}':
             oldText = oldText[1:]
         case '$':
-            i = oldText[1:].find('$') + 2 # we are starting from after the first '$'
+            if oldText[1] == '$':
+                i = 2 + oldText[2:].find('$$') + 2
+            else: # assuming there are no double dollars within one-dollar equations, which maybe is not even possible 
+                i = 1 + oldText[1:].find('$') + 1
             newText = newText + '[1]'
             # if oldText[1:i-1].replace(' ','').replace('\n','')[-1] in [',', ';', '.']:
             #     newText = newText + oldText[1:i-1].replace(' ','').replace('\n','')[-1]

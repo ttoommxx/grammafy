@@ -31,11 +31,10 @@ now we do something else
 
 ciao! Now let's try  two different equations
 
-first with the double dollar
-did it work?
- [1],] is this now working?? 
+first with the double dollar [1] did it work?
+ [1], is this now working?? 
  want to write something in red Color:MO MOLTO ROSSO 
-
+ [1]. 
 
 
 - pasta [1] - asciutta
