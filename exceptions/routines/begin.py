@@ -1,5 +1,4 @@
 import os
-import useful_fun
 
 # behave similarly to the main, just create a list of what could be
 exceptions = [e[:-3] for e in os.listdir("./exceptions/subroutines/begin/")]
@@ -29,5 +28,5 @@ elif os.path.exists("./exceptions/subroutines/begin/" + command_name + ".py"):
     writeText = dicSub['writeBegin']
     readText = dicSub['readBegin']
 elif command_name not in void_begin:
-    print(command_name + '" not found in ./exceptions/subroutines/begin/ or ./exceptions/subroutines/void_begin.txt')
+    print('"' + command_name + '" not found in ./exceptions/subroutines/begin/ or ./exceptions/subroutines/void_begin.txt')
     # do someething here like skip the command entirely

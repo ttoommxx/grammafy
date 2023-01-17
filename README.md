@@ -25,7 +25,7 @@ On Windows, double click on WindowsRun.bat.
 On Linux, run LinuxRun.sh.
 Using the graphical selector, pick the main .tex file you want to clean.
 
-### Easy - aggressive mode (not recommended)
+### aggressive mode (not recommended)
 
 Using aggressive mode, every time program encounters an unknown command, it would discard it along with all square [] and curly {} brackets that are consecutive to the program.
 

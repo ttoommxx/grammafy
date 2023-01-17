@@ -24,4 +24,7 @@ text
 bbox
 clearpage
 appendix
+'e
+p
+S
 

@@ -53,10 +53,21 @@ oldText = oldText[i:]
 # the way we run this code is by checking for something we call "interactives" and once we run out of one of them we discard them, so that to save time. However, if we have included some tex files we won't understand whether any of these interacties occur again. So first of all we expand the include
 
 # so far works only when the files to include belong to the same folder
-while oldText.find('\include')>-1:
-    i = oldText.find('\include') # the string will start at position i+9
+while oldText.find('\include{')>-1:
+    i = oldText.find('\include{') # the string will start at position i+9
     j = i+9+oldText[i+9:].find('}')
     include_path = oldText[i+9:j]
+    if include_path[-4:] != '.tex': # if the extension is not present
+        include_path = include_path + '.tex'
+    included_text = open(folder_path + include_path, 'r')
+    text = included_text.read()
+    included_text.close()
+    oldText = oldText[:i] + text + oldText[j+1:]
+
+while oldText.find('\input{')>-1:
+    i = oldText.find('\input{') # the string will start at position i+7
+    j = i+7+oldText[i+7:].find('}')
+    include_path = oldText[i+7:j]
     if include_path[-4:] != '.tex': # if the extension is not present
         include_path = include_path + '.tex'
     included_text = open(folder_path + include_path, 'r')
@@ -87,6 +98,8 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
             elif oldText[1] == '\\': # new line
                 newText = newText + '\n'
                 oldText = oldText[2:]
+            elif oldText[1] == '\n': # also new line
+                oldText = oldText[1:]
             else:
                 i = min( [ oldText.find(x) for x in end_command if oldText.find(x)>-1 ] )  # take note of the index of such element
 
@@ -117,9 +130,6 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
                     print('"' + command_name + '" not found in ./exceptions/routines/ or ./exceptions/void.txt')
                     print(useful_fun.line_printer(oldText,i))
                     break
-
-                # SOMETHING IS HAPPENING HERE
-
         case '{':
             oldText = oldText[1:]
         case '}':
