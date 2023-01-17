@@ -48,10 +48,22 @@ else:
     i = oldText.find('\\begin{document}') + 16 # we start from right after '\\begin{document}'
 oldText = oldText[i:]
 
+# the way we run this code is by checking for something we call "interactives" and once we run out of one of them we discard them, so that to save time. However, if we have included some tex files we won't understand whether any of these interacties occur again. So first of all we expand the include
+
+# so far works only when the files to include belong to the same folder
+while oldText.find('\include')>-1:
+    i = oldText.find('\include') # the string will start at position i+9
+    j = i+9+oldText[i+9:].find('}')
+    include_path = oldText[i+9:j]
+    if include_path[-4:] != '.tex': # if the extension is not present
+        include_path = include_path + '.tex'
+    included_text = open(folder_path + include_path, 'r')
+    text = included_text.read()
+    included_text.close()
+    oldText = oldText[:i] + text + oldText[j+1:]
+
 # start analysing the text
 while any([ oldText.find(x) for x in interactives ]): # if any such element occurs
-    print([ oldText.find(x) for x in interactives ])
-    input('which ones?') I AM REMOVING '$' BECAUSE I RUN FIND BEFORE INCLUDE, FUCKCKCKCK, RUN INCLUDE FIRST AND THEN RUN ALL THIS :) PROBLEM SOLVED
     while min([ oldText.find(x) for x in interactives ], default = 1) == -1:
         interactives.pop( [ oldText.find(x) for x in interactives ].index(-1) )
     if len(interactives) == 0:
@@ -132,3 +144,5 @@ while i+3 < len(newText):
 output_file = open(folder_path + file_name + '_grammafied.txt','w')
 output_file.write(newText)
 output_file.close()
+
+print('run without errors :)')
