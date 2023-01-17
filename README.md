@@ -10,10 +10,15 @@ Any python version should work, tested on Linux and Windows using Python 3.10 an
 ```
 git clone https://github.com/ttoommxx/grammafy
 ```
-tkinter should be included within python, but if not install via
+install tkinter on your operating system. For example, on Arch
 ```
-pip install tk
+sudo pacman -S tk
 ```
+or on Ubuntu
+```
+sudo apt install python3-tk
+```
+Should be included in the Windows version of Python (tested in Python 3.11)
 
 ## how to use
 
