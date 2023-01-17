@@ -1,6 +1,6 @@
 # grammafy
 
-Version 0.2
+Version 0.3
 
 This script serves the purpose of cleaning up tex files by creating to a txt file, stripped of all commands, that can be put into an writing software. Formulas are substituted with the symbol [1], and the other changes should be comprehensible.
 
@@ -47,7 +47,6 @@ WRITE ON HOW TO USE THE DEBUGGING TO MAKE IT WORK PERFECTLY
 
 
 To do:
-- aggressive mode, removes all unknown commands
 - write good doc
 - include license
 - include grammarly API directly
