@@ -129,17 +129,28 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
 # FROM HERE
 
 # after having run my code, I fix all those equations that are followed by '/n'
+# i = 0
+# while i+3 < len(newText):
+#     if newText[i:i+3] == '[1]':
+#         if newText[i-1] == '\n':
+#             newText = newText[:i-1] + ' ' + newText[i:]
+#         if newText[i+3] in [',', ';', '.']:
+#             i=i+1
+#         if i+3 < len(newText):
+#             if newText[i+3] == '\n':
+#                 newText = newText[:i+3] + ' ' + newText[i+4:]
+#     i = i+1
+
 i = 0
-while i+3 < len(newText):
-    if newText[i:i+3] == '[1]':
-        if newText[i-1] == '\n':
-            newText = newText[:i-1] + ' ' + newText[i:]
-        if newText[i+3] in [',', ';', '.']:
-            i=i+1
-        if i+3 < len(newText):
-            if newText[i+3] == '\n':
-                newText = newText[:i+3] + ' ' + newText[i+4:]
-    i = i+1
+while newText[i+3:].find('[1]')>-1:
+    i = newText[i+3:].find('[1]') + i+3
+    if newText[i-1] == '\n':
+        newText = newText[:i-1] + ' ' + newText[i:]
+    if newText[i+3] in [',', ';', '.']:
+             i=i+1
+    if newText[i+3] == '\n':
+        newText = newText[:i+3] + ' ' + newText[i+4:]
+
 
 output_file = open(folder_path + file_name + '_grammafied.txt','w')
 output_file.write(newText)
