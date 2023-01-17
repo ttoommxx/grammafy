@@ -33,7 +33,7 @@ ciao! Now let's try  two different equations
 
 first with the double dollar [1] did it work?
  [1], is this now working?? 
- want to write something in red Color:MO MOLTO ROSSO 
+ want to write something in red Color:RED MOLTO ROSSO 
  [1]. 
 
 

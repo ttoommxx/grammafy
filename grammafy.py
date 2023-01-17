@@ -3,7 +3,9 @@ from tkinter import filedialog # graphical interface for fetching the .tex file
 
 import useful_fun
 
+# aggessive mode, we are going to store all the skipped command in one .txt file
 aggro = input('Run in aggressive mode? Y/N \n').lower()
+list_aggro = set()
 
 file_path = filedialog.askopenfilename()
 # we now store information on the file path, using tkinter we always have '/', even in Windows
@@ -126,6 +128,7 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
                     while oldText[i] in ['{','[']:
                         i = min([oldText[i:].find(x) for x in ['}',']'] if oldText[i:].find(x) > -1])+1 + i
                     oldText = oldText[i:]
+                    list_aggro.add(command_name)
                 else:
                     print('"' + command_name + '" not found in ./exceptions/routines/ or ./exceptions/void.txt')
                     print(useful_fun.line_printer(oldText,i))
@@ -167,3 +170,4 @@ output_file.close()
 print('Done :)')
 if aggro == 'y':
     print('PS, the program run in aggressive mode and, as such, it could have printed incomplete or incorrect output')
+    print(list_aggro)

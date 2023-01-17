@@ -47,6 +47,7 @@ WRITE ON HOW TO USE THE DEBUGGING TO MAKE IT WORK PERFECTLY
 
 
 To do:
+- add an option in aggro to store all the skipped commands
 - write good doc
 - include license
 - include grammarly API directly
