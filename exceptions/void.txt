@@ -30,4 +30,5 @@ S
 compat
 bf
 em
+printbibliography
 

@@ -12,7 +12,8 @@ void_custom_temp.close()
 dicSub = {'readBegin':str, 'writeBegin':str}
 
 i = readText.find('}')+1 # right next after the brackets
-command_name = readText[1:i-1-(readText[i-2]=='*')] # remove asterisk if any
+asterisk =  readText[i-2]=='*'
+command_name = readText[1:i-1-asterisk] # remove asterisk if any
 readText = readText[i:]
 
 if os.path.exists("./exceptions/subroutines/begin_custom/" + command_name + ".py"):
@@ -28,5 +29,17 @@ elif os.path.exists("./exceptions/subroutines/begin/" + command_name + ".py"):
     writeText = dicSub['writeBegin']
     readText = dicSub['readBegin']
 elif command_name not in void_begin:
-    print('"' + command_name + '" not found in ./exceptions/subroutines/begin/ or ./exceptions/subroutines/void_begin.txt')
-    # do someething here like skip the command entirely
+    # do someething here like skip the command entirely by looking at where \end{command_name + asterisk if any} is. proble is incapsulated commands, so maybe best strategy is do nothing
+    if asterisk:
+        command_name = command_name + '*'
+    i = 0
+    j = i
+    j_alert = i
+    while i >= j and j_alert>-1:
+        i = i + readText[i:].find('\\end{' + command_name + '}') + 6 + len(command_name)
+        j_alert = readText[j:].find('\\begin{' + command_name + '}')
+        j = j + j_alert + 8 + len(command_name)
+        
+    readText = readText[i:]
+    log_command['begin'] = command_name
+    

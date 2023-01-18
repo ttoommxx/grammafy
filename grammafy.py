@@ -3,6 +3,7 @@ from tkinter import filedialog # graphical interface for fetching the .tex file
 
 # aggessive mode, we are going to store all the skipped command in one .txt file
 list_aggro = set()
+list_log_command = dict()
 
 file_path = filedialog.askopenfilename()
 # we now store information on the file path, using tkinter we always have '/', even in Windows
@@ -34,7 +35,7 @@ end_command_temp.close()
 newText = ''
 
 # a dictionary of hereditable parameters when running the routines
-dicSub = {'readText':str, 'writeText':str, 'path_main':str}
+dicSub = {'readText':str, 'writeText':str, 'path_main':str, 'log_command':dict()}
 
 # read main file latex
 text = open(file_path, 'r')
@@ -111,16 +112,20 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
                     dicSub['readText'] = oldText
                     dicSub['writeText'] = newText
                     dicSub['path_main'] = folder_path
+                    dicSub['log_command'] = list_log_command
                     exec(open("./exceptions/routines_custom/" + command_name + ".py").read(),dicSub)
                     oldText = dicSub['readText']
                     newText = dicSub['writeText']
+                    list_log_command = dicSub['log_command']
                 elif os.path.exists("./exceptions/routines/" + command_name + ".py"): # then I search within built-in subroutines
                     dicSub['readText'] = oldText
                     dicSub['writeText'] = newText
                     dicSub['path_main'] = folder_path
+                    dicSub['log_command'] = list_log_command
                     exec(open("./exceptions/routines/" + command_name + ".py").read(),dicSub)
                     oldText = dicSub['readText']
                     newText = dicSub['writeText']
+                    list_log_command = dicSub['log_command']
                 elif command_name in void:
                     pass
                 else:
@@ -151,7 +156,7 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
         case _:
             print('Fatal error, unknown interactive')
 
-# clean the file from equations that have bad spacing and newlines
+# clean the file from equations that have bad spacing and newlines, and empty brackets
 i = 0
 while newText[i+3:].find('[1]')>-1:
     i = newText[i+3:].find('[1]') + i+3
@@ -162,15 +167,33 @@ while newText[i+3:].find('[1]')>-1:
     if newText[i+3] == '\n':
         newText = newText[:i+3] + ' ' + newText[i+4:]
 
+while newText.find('[]')>-1:
+    i = newText.find('[]')
+    newText = newText[:i] + newText[i+3:]
+while newText.find('()')>-1:
+    i = newText.find('()')
+    newText = newText[:i] + newText[i+3:]
+
+
 
 output_file = open(folder_path + file_name + '_grammafied.txt','w')
 output_file.write(newText)
 output_file.close()
 
-print('Done :)')
+if os.path.exists(folder_path + file_name + '_list_unknowns.txt'):
+  os.remove(folder_path + file_name + '_list_unknowns.txt')
+if os.path.exists(folder_path + file_name + '_list_log_command.txt'):
+  os.remove(folder_path + file_name + '_list_log_command.txt')
 
 if any(list_aggro):
-    print('Unknown commands, please check list_unknowns.txt')
-    output_unknown = open(folder_path + file_name + '_list_unknowns.txt','w')
-    output_unknown.write(str(list_aggro))
-    output_unknown.close()
+    print('Unknown commands, please check' + file_name + '_list_unknowns.txt')
+    output_file = open(folder_path + file_name + '_list_unknowns.txt','w')
+    output_file.write(str(list_aggro))
+    output_file.close()
+if any(list_log_command):
+    print('Unknown commands within commands, please check' + file_name + '_list_log_command.txt')
+    output_file = open(folder_path + file_name + '_list_log_command.txt','w')
+    output_file.write(str(list_log_command))
+    output_file.close()
+
+print('Done :)')

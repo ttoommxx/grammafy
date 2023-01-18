@@ -8,7 +8,8 @@ dicSub = {'readEnd':str, 'writeEnd':str}
 
 i = readText.find('}')+1 # right next after the brackets
 
-command_name = readText[1:i-1-(readText[i-2]=='*')] # remove asterisk if any
+asterisk = readText[i-2]=='*'
+command_name = readText[1:i-1-asterisk] # remove asterisk if any
 command = "./exceptions/subroutines/end/" + command_name + ".py"
 
 readText = readText[i:]
