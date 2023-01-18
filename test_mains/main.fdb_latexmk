@@ -1,11 +1,11 @@
 # Fdb version 4
-["pdflatex"] 1673997123 "/home/tommaso/GitHub/grammafy/test_mains/main.tex" "main.pdf" "main" 1673997123 2
+["pdflatex"] 1674003507 "/home/tommaso/GitHub/grammafy/test_mains/main.tex" "main.pdf" "main" 1674003507 2
   "/home/tommaso/.miktex/texmfs/data/miktex/data/le/pdftex/pdflatex.fmt" 1673737091 19989788 6f4018ab730c5108d5fff9ca9d626ad4 ""
   "/home/tommaso/.miktex/texmfs/install/fonts/tfm/public/cm/cmbx10.tfm" 1670790521 1328 c834bbb027764024c09d3d2bf908b5f0 ""
   "/home/tommaso/.miktex/texmfs/install/tex/latex/l3backend/l3backend-pdftex.def" 1670790716 30426 f2fb69fcda4dc35ed0b7dee211bce679 ""
-  "/home/tommaso/GitHub/grammafy/test_mains/main.tex" 1673997122 1139 b6040499de0ea71ff27ffbe49a474a5f ""
-  "main.aux" 1673997123 8 a94a2480d3289e625eea47cd1b285758 "pdflatex"
-  "main.tex" 1673997122 1139 b6040499de0ea71ff27ffbe49a474a5f ""
+  "/home/tommaso/GitHub/grammafy/test_mains/main.tex" 1674003506 1195 60db21c04641cf59171261ad597a707c ""
+  "main.aux" 1674003507 8 a94a2480d3289e625eea47cd1b285758 "pdflatex"
+  "main.tex" 1674003506 1195 60db21c04641cf59171261ad597a707c ""
   (generated)
   "main.aux"
   "main.log"

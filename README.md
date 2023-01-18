@@ -47,7 +47,8 @@ WRITE ON HOW TO USE THE DEBUGGING TO MAKE IT WORK PERFECTLY
 
 
 To do:
-- add an option in aggro to store all the skipped commands
+- in begin skip completely those commands that are unrecognised
+- store the missing begin routines as well
 - write good doc
 - include license
 - include grammarly API directly

@@ -1,10 +1,7 @@
 import os,sys # import time if need to debug, time.sleep(seconds), remove sys once stopped debugging
 from tkinter import filedialog # graphical interface for fetching the .tex file
 
-import useful_fun
-
 # aggessive mode, we are going to store all the skipped command in one .txt file
-aggro = input('Run in aggressive mode? Y/N \n').lower()
 list_aggro = set()
 
 file_path = filedialog.askopenfilename()
@@ -79,11 +76,17 @@ while oldText.find('\input{')>-1:
 
 # start analysing the text
 while any([ oldText.find(x) for x in interactives ]): # if any such element occurs
-    while min([ oldText.find(x) for x in interactives ], default = 1) == -1:
-        interactives.pop( [ oldText.find(x) for x in interactives ].index(-1) )
-    if len(interactives) == 0:
+    set_interactives = set([ oldText.find(x) for x in interactives ])
+    set_interactives.discard(-1)
+    if len(set_interactives) == 0:
         break
-    i = min([ oldText.find(x) for x in interactives ])  # take note of the index of such element 
+    i = min(set_interactives)
+    
+    # while min([ oldText.find(x) for x in interactives ], default = 1) == -1:
+    #     interactives.pop( [ oldText.find(x) for x in interactives ].index(-1) )
+    # if len(interactives) == 0:
+    #     break
+    # i = min([ oldText.find(x) for x in interactives ])  # take note of the index of such element 
     
     newText = newText + oldText[:i] # we can immediately add what we skipped before any interactive element
     oldText = oldText[i:] # remove the clean part from oldText
@@ -100,11 +103,8 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
             elif oldText[1] == '\\': # new line
                 newText = newText + '\n'
                 oldText = oldText[2:]
-            elif oldText[1] == '\n': # also new line
-                oldText = oldText[1:]
             else:
                 i = min( [ oldText.find(x) for x in end_command if oldText.find(x)>-1 ] )  # take note of the index of such element
-
                 command_name = oldText[1:i]
                 oldText = oldText[i + (oldText[i]=='*'):]
                 if os.path.exists("./exceptions/routines_custom/" + command_name + ".py"): # first I search within custom subroutines
@@ -123,16 +123,17 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
                     newText = dicSub['writeText']
                 elif command_name in void:
                     pass
-                elif aggro == 'y': # if in aggressive mode I just remove the command with any adjacent square or curly bracket
-                    i = 0
+                else:
+                    i = 0 # index for closed brackets
                     while oldText[i] in ['{','[']:
-                        i = min([oldText[i:].find(x) for x in ['}',']'] if oldText[i:].find(x) > -1])+1 + i
+                        i = i+1
+                        j = i # index for open brackets
+                        while i >= j:
+                            i = min([oldText[i:].find(x) for x in ['}',']'] if oldText[i:].find(x) > -1])+1 + i
+                            j = min([oldText[j:].find(x) for x in ['{','['] if oldText[j:].find(x) > -1] , default=i)+1 + j
+                    # the explanation of the above is a little complicated: I look for a (the first) closed bracket and a (the first) open bracket. They must match, otherwise it would contradict the fact that they are the first. I keep doing it until I can't find an open one. So min will be set to i and we would break out of the internal while. As for the external, every time I get out I look for the adjacent bracket and there is another one I iterate!
                     oldText = oldText[i:]
                     list_aggro.add(command_name)
-                else:
-                    print('"' + command_name + '" not found in ./exceptions/routines/ or ./exceptions/void.txt')
-                    print(useful_fun.line_printer(oldText,i))
-                    break
         case '{':
             oldText = oldText[1:]
         case '}':
@@ -140,11 +141,10 @@ while any([ oldText.find(x) for x in interactives ]): # if any such element occu
         case '$':
             if oldText[1] == '$':
                 i = 2 + oldText[2:].find('$$') + 2
-            else: # assuming there are no double dollars within one-dollar equations, which maybe is not even possible 
+            else: # assuming there are no double dollars within one-dollar equations
                 i = 1 + oldText[1:].find('$') + 1
             newText = newText + '[1]'
-            # if oldText[1:i-1].replace(' ','').replace('\n','')[-1] in [',', ';', '.']:
-            #     newText = newText + oldText[1:i-1].replace(' ','').replace('\n','')[-1]
+            # TO DO, ADD COMMAS ETC IF THAT'S HOW THE EQUATION ENDS
             oldText = oldText[i:]
         case '%':
             oldText = oldText[oldText.find('\n') + 1:]
@@ -168,6 +168,9 @@ output_file.write(newText)
 output_file.close()
 
 print('Done :)')
-if aggro == 'y':
-    print('PS, the program run in aggressive mode and, as such, it could have printed incomplete or incorrect output')
-    print(list_aggro)
+
+if any(list_aggro):
+    print('Unknown commands, please check list_unknowns.txt')
+    output_unknown = open(folder_path + file_name + '_list_unknowns.txt','w')
+    output_unknown.write(str(list_aggro))
+    output_unknown.close()

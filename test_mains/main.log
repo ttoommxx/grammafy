@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.10) (preloaded format=pdflatex 2023.1.14)  17 JAN 2023 23:12
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.10) (preloaded format=pdflatex 2023.1.14)  18 JAN 2023 00:58
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -43,26 +43,50 @@ Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 /home/tommaso/GitHub/grammafy/test_mains/main.tex:6: Undefined control sequence.
-l.6 \hello
-          {prova1} ee
+l.6 \unknownCommand
+                   {come stai [io]}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:7: Undefined control sequence.
-l.7 \hello
-          {prova2}{ciao}
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 8.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 8.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:8: Extra }, or forgotten $.
+<recently read> \egroup 
+                        
+l.8 \textbf$
+            i don't know$
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:10: Undefined control sequence.
+l.10 \hello
+           {prova1} ee
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:8: Undefined control sequence.
-l.8 \hello
-          *{come}[ee]{stay}ciao
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:11: Undefined control sequence.
+l.11 \hello
+           {prova2}{ciao}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:12: Undefined control sequence.
+l.12 \hello
+           *{come}[ee]{stay}ciao
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
@@ -70,47 +94,43 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:12: LaTeX Error: Environment align* undefined.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:16: LaTeX Error: Environment align* undefined.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.12 \begin{align*}
+l.16 \begin{align*}
                    
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:13: Missing $ inserted.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:17: Missing $ inserted.
 <inserted text> 
                 $
-l.13 e^
+l.17 e^
        i+1=0 hello dear
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 13.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 13.
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:14: LaTeX Error: \begin{document} ended by \end{align*}.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:18: LaTeX Error: \begin{document} ended by \end{align*}.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.14 \end{align*}
+l.18 \end{align*}
                  
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:14: Missing $ inserted.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:18: Missing $ inserted.
 <inserted text> 
                 $
-l.14 \end{align*}
+l.18 \end{align*}
                  
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -118,28 +138,28 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:19: Missing $ inserted.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:23: Missing $ inserted.
 <inserted text> 
                 $
-l.19 prima_
+l.23 prima_
            __11111
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:19: Missing { inserted.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:23: Missing { inserted.
 <to be read again> 
                    _
-l.19 prima__
+l.23 prima__
             _11111
 A left brace was mandatory here, so I've put one in.
 You might want to delete and/or insert some corrections
 so that I will find a matching right brace soon.
 (If you're confused by all this, try typing `I}' now.)
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:19: Missing { inserted.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:23: Missing { inserted.
 <to be read again> 
                    _
-l.19 prima___
+l.23 prima___
              11111
 A left brace was mandatory here, so I've put one in.
 You might want to delete and/or insert some corrections
@@ -147,73 +167,73 @@ so that I will find a matching right brace soon.
 (If you're confused by all this, try typing `I}' now.)
 
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:20: LaTeX Error: Environment align undefined.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:24: LaTeX Error: Environment align undefined.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.20 \begin{align}
+l.24 \begin{align}
                   
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:22: LaTeX Error: \begin{document} ended by \end{align}.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:26: LaTeX Error: \begin{document} ended by \end{align}.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.22 \end{align}
+l.26 \end{align}
                 
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:23: Missing { inserted.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:27: Missing { inserted.
 <to be read again> 
                    _
-l.23 dopo__
+l.27 dopo__
            __22222
 A left brace was mandatory here, so I've put one in.
 You might want to delete and/or insert some corrections
 so that I will find a matching right brace soon.
 (If you're confused by all this, try typing `I}' now.)
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:23: Missing { inserted.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:27: Missing { inserted.
 <to be read again> 
                    _
-l.23 dopo___
+l.27 dopo___
             _22222
 A left brace was mandatory here, so I've put one in.
 You might want to delete and/or insert some corrections
 so that I will find a matching right brace soon.
 (If you're confused by all this, try typing `I}' now.)
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:23: Missing { inserted.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:27: Missing { inserted.
 <to be read again> 
                    _
-l.23 dopo____
+l.27 dopo____
              22222
 A left brace was mandatory here, so I've put one in.
 You might want to delete and/or insert some corrections
 so that I will find a matching right brace soon.
 (If you're confused by all this, try typing `I}' now.)
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:25: Missing $ inserted.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:29: Missing $ inserted.
 <inserted text> 
                 $
-l.25 
+l.29 
      
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:25: Missing } inserted.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:29: Missing } inserted.
 <inserted text> 
                 }
-l.25 
+l.29 
      
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -221,10 +241,10 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:25: Missing } inserted.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:29: Missing } inserted.
 <inserted text> 
                 }
-l.25 
+l.29 
      
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -232,10 +252,10 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:25: Missing } inserted.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:29: Missing } inserted.
 <inserted text> 
                 }
-l.25 
+l.29 
      
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -243,10 +263,10 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:25: Missing } inserted.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:29: Missing } inserted.
 <inserted text> 
                 }
-l.25 
+l.29 
      
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -254,10 +274,10 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:25: Missing } inserted.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:29: Missing } inserted.
 <inserted text> 
                 }
-l.25 
+l.29 
      
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -266,33 +286,33 @@ really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:30: LaTeX Error: Environment equation* undefined.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:34: LaTeX Error: Environment equation* undefined.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.30 \begin{equation*}
+l.34 \begin{equation*}
                        hello \end{equation*}
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:30: LaTeX Error: \begin{document} ended by \end{equation*}.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:34: LaTeX Error: \begin{document} ended by \end{equation*}.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.30 \begin{equation*} hello \end{equation*}
+l.34 \begin{equation*} hello \end{equation*}
                                             
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:34: Undefined control sequence.
-l.34 the beginning of the theorem {\Large
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:38: Undefined control sequence.
+l.38 the beginning of the theorem {\Large
                                           here}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -301,59 +321,59 @@ spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:35: LaTeX Error: Environment theorem undefined.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:39: LaTeX Error: Environment theorem undefined.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.35 \begin{theorem}
+l.39 \begin{theorem}
                     
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:37: LaTeX Error: \begin{document} ended by \end{theorem}.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:41: LaTeX Error: \begin{document} ended by \end{theorem}.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.37 \end{theorem}
+l.41 \end{theorem}
                   
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:38: LaTeX Error: Environment proof undefined.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:42: LaTeX Error: Environment proof undefined.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.38 \begin{proof}
+l.42 \begin{proof}
                   
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:40: LaTeX Error: \begin{document} ended by \end{proof}.
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:44: LaTeX Error: \begin{document} ended by \end{proof}.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.40 \end{proof}
+l.44 \end{proof}
                 
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:42: Undefined control sequence.
-l.42 \section
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:46: Undefined control sequence.
+l.46 \section
              *{now we do something else}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -361,8 +381,8 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:44: Undefined control sequence.
-l.44 ciao! Now let's try {\small
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:48: Undefined control sequence.
+l.48 ciao! Now let's try {\small
                                  two different equations}
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -370,8 +390,8 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-/home/tommaso/GitHub/grammafy/test_mains/main.tex:52: Undefined control sequence.
-l.52 ... \\ want to write something in red {\color
+/home/tommaso/GitHub/grammafy/test_mains/main.tex:56: Undefined control sequence.
+l.56 ... \\ want to write something in red {\color
                                                   {red} MOLTO ROSSO }
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -387,11 +407,11 @@ and I'll forget about whatever was undefined.
 
  
 Here is how much of TeX's memory you used:
- 224 strings out of 478342
- 5853 string characters out of 2841162
+ 225 strings out of 478342
+ 5865 string characters out of 2841162
  1851793 words of memory out of 3000000
- 20434 multiletter control sequences out of 15000+600000
+ 20435 multiletter control sequences out of 15000+600000
  512595 words of font info for 33 fonts, out of 8000000 for 9000
  0 hyphenation exceptions out of 8191
- 33i,8n,35p,166b,73s stack positions out of 10000i,1000n,20000p,200000b,80000s
+ 33i,8n,35p,166b,126s stack positions out of 10000i,1000n,20000p,200000b,80000s
 !  ==> Fatal error occurred, no output PDF file produced!
