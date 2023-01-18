@@ -1,1 +1,1 @@
-writeBegin = writeBegin + 'Conjecture.'
+CLEAN = CLEAN + 'Conjecture.'

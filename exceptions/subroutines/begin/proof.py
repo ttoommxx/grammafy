@@ -1,1 +1,1 @@
-writeBegin = writeBegin + 'Proof.'
+CLEAN = CLEAN + 'Proof.'

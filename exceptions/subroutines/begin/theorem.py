@@ -1,1 +1,1 @@
-writeBegin = writeBegin + 'Theorem.'
+CLEAN = CLEAN + 'Theorem.'

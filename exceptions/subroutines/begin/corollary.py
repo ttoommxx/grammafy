@@ -1,1 +1,1 @@
-writeBegin = writeBegin + 'Corollary.'
+CLEAN = CLEAN + 'Corollary.'

@@ -9,25 +9,15 @@ void_begin = [line[:-1] for line in void_temp.readlines()] + [line[:-1] for line
 void_temp.close()
 void_custom_temp.close()
 
-dicSub = {'readBegin':str, 'writeBegin':str}
-
-i = readText.find('}')+1 # right next after the brackets
-asterisk =  readText[i-2]=='*'
-command_name = readText[1:i-1-asterisk] # remove asterisk if any
-readText = readText[i:]
+i = SOURCE.find('}')+1 # right next after the brackets
+asterisk =  SOURCE[i-2]=='*'
+command_name = SOURCE[1:i-1-asterisk] # remove asterisk if any
+SOURCE = SOURCE[i:]
 
 if os.path.exists("./exceptions/subroutines/begin_custom/" + command_name + ".py"):
-    dicSub['readBegin'] = readText
-    dicSub['writeBegin'] = writeText
-    exec(open("./exceptions/subroutines/begin_custom/" + command_name + ".py").read(),dicSub)
-    writeText = dicSub['writeBegin']
-    readText = dicSub['readBegin']
+    exec(open("./exceptions/subroutines/begin_custom/" + command_name + ".py").read())
 elif os.path.exists("./exceptions/subroutines/begin/" + command_name + ".py"):
-    dicSub['readBegin'] = readText
-    dicSub['writeBegin'] = writeText
-    exec(open("./exceptions/subroutines/begin/" + command_name + ".py").read(),dicSub)
-    writeText = dicSub['writeBegin']
-    readText = dicSub['readBegin']
+    exec(open("./exceptions/subroutines/begin/" + command_name + ".py").read())
 elif command_name not in void_begin:
     # do someething here like skip the command entirely by looking at where \end{command_name + asterisk if any} is. proble is incapsulated commands, so maybe best strategy is do nothing
     if asterisk:
@@ -36,10 +26,10 @@ elif command_name not in void_begin:
     j = i
     j_alert = i
     while i >= j and j_alert>-1:
-        i = i + readText[i:].find('\\end{' + command_name + '}') + 6 + len(command_name)
-        j_alert = readText[j:].find('\\begin{' + command_name + '}')
+        i = i + SOURCE[i:].find('\\end{' + command_name + '}') + 6 + len(command_name)
+        j_alert = SOURCE[j:].find('\\begin{' + command_name + '}')
         j = j + j_alert + 8 + len(command_name)
         
-    readText = readText[i:]
-    log_command['begin'] = command_name
+    SOURCE = SOURCE[i:]
+    list_log_command.add(command_name)
     

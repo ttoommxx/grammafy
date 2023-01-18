@@ -1,1 +1,1 @@
-writeBegin = writeBegin + 'Assumption.'
+CLEAN = CLEAN + 'Assumption.'

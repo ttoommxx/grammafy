@@ -1,1 +1,1 @@
-writeBegin = writeBegin + 'Comment.'
+CLEAN = CLEAN + 'Comment.'

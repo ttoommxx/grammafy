@@ -1,1 +1,1 @@
-writeEnd = writeEnd + ' ■\n'
+CLEAN = CLEAN + ' ■\n'

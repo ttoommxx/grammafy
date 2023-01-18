@@ -3,7 +3,7 @@ from tkinter import filedialog # graphical interface for fetching the .tex file
 
 # aggessive mode, we are going to store all the skipped command in one .txt file
 list_aggro = set()
-list_log_command = dict()
+list_log_command = set()
 
 file_path = filedialog.askopenfilename()
 # we now store information on the file path, using tkinter we always have '/', even in Windows
@@ -32,152 +32,135 @@ end_command.append('\n') # don't know how to add it to the txt file
 end_command_temp.close()
 
 # initialise the final text
-newText = ''
-
-# a dictionary of hereditable parameters when running the routines
-dicSub = {'readText':str, 'writeText':str, 'path_main':str, 'log_command':dict()}
+CLEAN = ''
 
 # read main file latex
 text = open(file_path, 'r')
-oldText = text.read()
+SOURCE = text.read()
 text.close()
 
 # find the beginning of the document
-if '\\begin{document}' not in oldText:
+if '\\begin{document}' not in SOURCE:
     print("\\begin{document} not found")
     i = 0 # we start from the beginning, probably it's an included .tex file
 else:
-    i = oldText.find('\\begin{document}') + 16 # we start from right after '\\begin{document}'
-oldText = oldText[i:]
+    i = SOURCE.find('\\begin{document}') + 16 # we start from right after '\\begin{document}'
+SOURCE = SOURCE[i:]
 
 # the way we run this code is by checking for something we call "interactives" and once we run out of one of them we discard them, so that to save time. However, if we have included some tex files we won't understand whether any of these interacties occur again. So first of all we expand the include
 
 # so far works only when the files to include belong to the same folder
-while oldText.find('\include{')>-1:
-    i = oldText.find('\include{') # the string will start at position i+9
-    j = i+9+oldText[i+9:].find('}')
-    include_path = oldText[i+9:j]
+while SOURCE.find('\include{')>-1:
+    i = SOURCE.find('\include{') # the string will start at position i+9
+    j = i+9+SOURCE[i+9:].find('}')
+    include_path = SOURCE[i+9:j]
     if include_path[-4:] != '.tex': # if the extension is not present
         include_path = include_path + '.tex'
     included_text = open(folder_path + include_path, 'r')
     text = included_text.read()
     included_text.close()
-    oldText = oldText[:i] + text + oldText[j+1:]
+    SOURCE = SOURCE[:i] + text + SOURCE[j+1:]
 
-while oldText.find('\input{')>-1:
-    i = oldText.find('\input{') # the string will start at position i+7
-    j = i+7+oldText[i+7:].find('}')
-    include_path = oldText[i+7:j]
+while SOURCE.find('\input{')>-1:
+    i = SOURCE.find('\input{') # the string will start at position i+7
+    j = i+7+SOURCE[i+7:].find('}')
+    include_path = SOURCE[i+7:j]
     if include_path[-4:] != '.tex': # if the extension is not present
         include_path = include_path + '.tex'
     included_text = open(folder_path + include_path, 'r')
     text = included_text.read()
     included_text.close()
-    oldText = oldText[:i] + text + oldText[j+1:]
+    SOURCE = SOURCE[:i] + text + SOURCE[j+1:]
 
 # start analysing the text
-while any([ oldText.find(x) for x in interactives ]): # if any such element occurs
-    set_interactives = set([ oldText.find(x) for x in interactives ])
+while any([ SOURCE.find(x) for x in interactives ]): # if any such element occurs
+    set_interactives = set([ SOURCE.find(x) for x in interactives ])
     set_interactives.discard(-1)
     if len(set_interactives) == 0:
         break
     i = min(set_interactives)
     
-    # while min([ oldText.find(x) for x in interactives ], default = 1) == -1:
-    #     interactives.pop( [ oldText.find(x) for x in interactives ].index(-1) )
+    # while min([ SOURCE.find(x) for x in interactives ], default = 1) == -1:
+    #     interactives.pop( [ SOURCE.find(x) for x in interactives ].index(-1) )
     # if len(interactives) == 0:
     #     break
-    # i = min([ oldText.find(x) for x in interactives ])  # take note of the index of such element 
+    # i = min([ SOURCE.find(x) for x in interactives ])  # take note of the index of such element 
     
-    newText = newText + oldText[:i] # we can immediately add what we skipped before any interactive element
-    oldText = oldText[i:] # remove the clean part from oldText
-    match oldText[0]:
+    CLEAN = CLEAN + SOURCE[:i] # we can immediately add what we skipped before any interactive element
+    SOURCE = SOURCE[i:] # remove the clean part from SOURCE
+    match SOURCE[0]:
         case '\\':
-            if oldText[1] == '[': # equation
-                i = oldText[1:].find('\]') + 3
-                newText = newText + '[1]'
-                if oldText[:i-3].replace(' ','').replace('\n','')[-1] in [',', ';', '.']: # add punctuation to non-inline equations
-                    newText = newText + oldText[:i-3].replace(' ','').replace('\n','')[-1]
-                oldText = oldText[i:]
-            elif oldText[1] == ' ': # space
-                oldText = oldText[1:]
-            elif oldText[1] == '\\': # new line
-                newText = newText + '\n'
-                oldText = oldText[2:]
+            if SOURCE[1] == '[': # equation
+                i = SOURCE[1:].find('\]') + 3
+                CLEAN = CLEAN + '[1]'
+                if SOURCE[:i-3].replace(' ','').replace('\n','')[-1] in [',', ';', '.']: # add punctuation to non-inline equations
+                    CLEAN = CLEAN + SOURCE[:i-3].replace(' ','').replace('\n','')[-1]
+                SOURCE = SOURCE[i:]
+            elif SOURCE[1] == ' ': # space
+                SOURCE = SOURCE[1:]
+            elif SOURCE[1] == '\\': # new line
+                CLEAN = CLEAN + '\n'
+                SOURCE = SOURCE[2:]
             else:
-                i = min( [ oldText.find(x) for x in end_command if oldText.find(x)>-1 ] )  # take note of the index of such element
-                command_name = oldText[1:i]
-                oldText = oldText[i + (oldText[i]=='*'):]
+                i = min( [ SOURCE.find(x) for x in end_command if SOURCE.find(x)>-1 ] )  # take note of the index of such element
+                command_name = SOURCE[1:i]
+                SOURCE = SOURCE[i + (SOURCE[i]=='*'):]
                 if os.path.exists("./exceptions/routines_custom/" + command_name + ".py"): # first I search within custom subroutines
-                    dicSub['readText'] = oldText
-                    dicSub['writeText'] = newText
-                    dicSub['path_main'] = folder_path
-                    dicSub['log_command'] = list_log_command
-                    exec(open("./exceptions/routines_custom/" + command_name + ".py").read(),dicSub)
-                    oldText = dicSub['readText']
-                    newText = dicSub['writeText']
-                    list_log_command = dicSub['log_command']
+                    exec(open("./exceptions/routines_custom/" + command_name + ".py").read())
                 elif os.path.exists("./exceptions/routines/" + command_name + ".py"): # then I search within built-in subroutines
-                    dicSub['readText'] = oldText
-                    dicSub['writeText'] = newText
-                    dicSub['path_main'] = folder_path
-                    dicSub['log_command'] = list_log_command
-                    exec(open("./exceptions/routines/" + command_name + ".py").read(),dicSub)
-                    oldText = dicSub['readText']
-                    newText = dicSub['writeText']
-                    list_log_command = dicSub['log_command']
+                    exec(open("./exceptions/routines/" + command_name + ".py").read())
                 elif command_name in void:
                     pass
                 else:
                     i = 0 # index for closed brackets
-                    while oldText[i] in ['{','[']:
+                    while SOURCE[i] in ['{','[']:
                         i = i+1
                         j = i # index for open brackets
                         while i >= j:
-                            i = min([oldText[i:].find(x) for x in ['}',']'] if oldText[i:].find(x) > -1])+1 + i
-                            j = min([oldText[j:].find(x) for x in ['{','['] if oldText[j:].find(x) > -1] , default=i)+1 + j
+                            i = min([SOURCE[i:].find(x) for x in ['}',']'] if SOURCE[i:].find(x) > -1])+1 + i
+                            j = min([SOURCE[j:].find(x) for x in ['{','['] if SOURCE[j:].find(x) > -1] , default=i)+1 + j
                     # the explanation of the above is a little complicated: I look for a (the first) closed bracket and a (the first) open bracket. They must match, otherwise it would contradict the fact that they are the first. I keep doing it until I can't find an open one. So min will be set to i and we would break out of the internal while. As for the external, every time I get out I look for the adjacent bracket and there is another one I iterate!
-                    oldText = oldText[i:]
+                    SOURCE = SOURCE[i:]
                     list_aggro.add(command_name)
         case '{':
-            oldText = oldText[1:]
+            SOURCE = SOURCE[1:]
         case '}':
-            oldText = oldText[1:]
+            SOURCE = SOURCE[1:]
         case '$':
-            if oldText[1] == '$':
-                i = 2 + oldText[2:].find('$$') + 2
+            if SOURCE[1] == '$':
+                i = 2 + SOURCE[2:].find('$$') + 2
             else: # assuming there are no double dollars within one-dollar equations
-                i = 1 + oldText[1:].find('$') + 1
-            newText = newText + '[1]'
+                i = 1 + SOURCE[1:].find('$') + 1
+            CLEAN = CLEAN + '[1]'
             # TO DO, ADD COMMAS ETC IF THAT'S HOW THE EQUATION ENDS
-            oldText = oldText[i:]
+            SOURCE = SOURCE[i:]
         case '%':
-            oldText = oldText[oldText.find('\n') + 1:]
+            SOURCE = SOURCE[SOURCE.find('\n') + 1:]
         case _:
             print('Fatal error, unknown interactive')
 
 # clean the file from equations that have bad spacing and newlines, and empty brackets
 i = 0
-while newText[i+3:].find('[1]')>-1:
-    i = newText[i+3:].find('[1]') + i+3
-    if newText[i-1] == '\n':
-        newText = newText[:i-1] + ' ' + newText[i:]
-    if newText[i+3] in [',', ';', '.']:
+while CLEAN[i+3:].find('[1]')>-1:
+    i = CLEAN[i+3:].find('[1]') + i+3
+    if CLEAN[i-1] == '\n':
+        CLEAN = CLEAN[:i-1] + ' ' + CLEAN[i:]
+    if CLEAN[i+3] in [',', ';', '.']:
              i=i+1
-    if newText[i+3] == '\n':
-        newText = newText[:i+3] + ' ' + newText[i+4:]
+    if CLEAN[i+3] == '\n':
+        CLEAN = CLEAN[:i+3] + ' ' + CLEAN[i+4:]
 
-while newText.find('[]')>-1:
-    i = newText.find('[]')
-    newText = newText[:i] + newText[i+3:]
-while newText.find('()')>-1:
-    i = newText.find('()')
-    newText = newText[:i] + newText[i+3:]
+while CLEAN.find('[]')>-1:
+    i = CLEAN.find('[]')
+    CLEAN = CLEAN[:i] + CLEAN[i+3:]
+while CLEAN.find('()')>-1:
+    i = CLEAN.find('()')
+    CLEAN = CLEAN[:i] + CLEAN[i+3:]
 
 
 
 output_file = open(folder_path + file_name + '_grammafied.txt','w')
-output_file.write(newText)
+output_file.write(CLEAN)
 output_file.close()
 
 if os.path.exists(folder_path + file_name + '_list_unknowns.txt'):

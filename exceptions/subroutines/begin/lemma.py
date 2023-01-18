@@ -1,1 +1,1 @@
-writeBegin = writeBegin + 'Lemma. '
+CLEAN = CLEAN + 'Lemma. '

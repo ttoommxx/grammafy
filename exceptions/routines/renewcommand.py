@@ -1,3 +1,3 @@
-i = readText.find('}')+1
-i = readText[i:].find('}') + i + 1
-readText = readText[i:]
+i = SOURCE.find('}')+1
+i = SOURCE[i:].find('}') + i + 1
+SOURCE = SOURCE[i:]

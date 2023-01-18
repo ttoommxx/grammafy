@@ -1,1 +1,1 @@
-writeBegin = writeBegin + 'Example.'
+CLEAN = CLEAN + 'Example.'

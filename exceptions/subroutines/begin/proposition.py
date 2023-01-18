@@ -1,1 +1,1 @@
-writeBegin = writeBegin + 'Proposition.'
+CLEAN = CLEAN + 'Proposition.'

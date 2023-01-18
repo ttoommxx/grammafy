@@ -1,1 +1,1 @@
-writeBegin = writeBegin + 'Exercise.'
+CLEAN = CLEAN + 'Exercise.'

@@ -1,2 +1,2 @@
-writeText = writeText + '%'
-readText = readText[1:]
+CLEAN = CLEAN + '%'
+SOURCE = SOURCE[1:]

@@ -1,1 +1,1 @@
-writeBegin = writeBegin + 'Remark.'
+CLEAN = CLEAN + 'Remark.'

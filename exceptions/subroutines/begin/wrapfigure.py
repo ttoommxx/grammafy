@@ -1,4 +1,4 @@
-i = readBegin.find('}')+1
-i = readBegin[i:].find('}') + i + 1
-i = readBegin[i:].find('}') + i + 1
-readBegin = readBegin[i:]
+i = SOURCE.find('}')+1
+i = SOURCE[i:].find('}') + i + 1
+i = SOURCE[i:].find('}') + i + 1
+SOURCE = SOURCE[i:]

@@ -1,1 +1,1 @@
-writeBegin = writeBegin + 'Question.'
+CLEAN = CLEAN + 'Question.'

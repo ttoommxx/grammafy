@@ -1,1 +1,1 @@
-writeBegin = writeBegin + 'Definition.'
+CLEAN = CLEAN + 'Definition.'

@@ -1,5 +1,5 @@
-writeBegin = writeBegin + '[1]'
+CLEAN = CLEAN + '[1]'
 
 # find the index where the whole portion ends
-i = readBegin.find('\\end{figure}') + 12
-readBegin = readBegin[i:]
+i = SOURCE.find('\\end{figure}') + 12
+SOURCE = SOURCE[i:]

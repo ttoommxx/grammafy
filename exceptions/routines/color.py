@@ -1,4 +1,4 @@
-writeText = writeText + 'Color:'
-i = readText.find('}') + 1
-writeText = writeText + readText[1:i-1].upper()
-readText = readText[i:]
+CLEAN = CLEAN + 'Color:'
+i = SOURCE.find('}') + 1
+CLEAN = CLEAN + SOURCE[1:i-1].upper()
+SOURCE = SOURCE[i:]

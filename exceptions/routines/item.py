@@ -1,1 +1,1 @@
-writeText = writeText + '-'
+CLEAN = CLEAN + '-'
