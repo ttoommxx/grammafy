@@ -47,7 +47,6 @@ WRITE ON HOW TO USE THE DEBUGGING TO MAKE IT WORK PERFECTLY
 
 
 To do:
-- get rid of the copying everything in a dictionary and back, just use the dictionary to start with so that there is no coopying of memory back and forth
 - write good doc
 - include license
 - include grammarly API directly
