@@ -13,4 +13,4 @@ command = "./exceptions/subroutines/end/" + command_name + ".py"
 SOURCE = SOURCE[i:]
 
 if os.path.exists(command):
-    exec(open(command).read())
+    exec(open(command,'r').read())
