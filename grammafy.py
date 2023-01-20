@@ -87,8 +87,15 @@ while any([ SOURCE.find(x) for x in interactives ]): # if any such element occur
             elif SOURCE[1] == '\\': # new line
                 CLEAN = CLEAN + '\n'
                 SOURCE = SOURCE[2:]
+            elif SOURCE[1] == "'":
+                if SOURCE[2] in ['a','e','i','o','u']:
+                    CLEAN = CLEAN + SOURCE[2] + u'\u0301' # unicode encoding
+                    SOURCE = SOURCE[3:]
+                else:
+                    CLEAN = CLEAN + "'"
+                    SOURCE = SOURCE[2:]
             else:
-                i = min( [ SOURCE.find(x) for x in end_command if SOURCE.find(x)>-1 ] )  # take note of the index of such element
+                i = min( [ SOURCE.find(x,1) for x in end_command if SOURCE.find(x,1)>-1 ] )  # take note of the index of such element
                 command_name = SOURCE[1:i]
                 SOURCE = SOURCE[i + (SOURCE[i]=='*'):]
                 if os.path.exists("./exceptions/routines_custom/" + command_name + ".py"): # first I search within custom subroutines
@@ -146,10 +153,10 @@ if os.path.exists(folder_path + file_name + '_list_log_command.txt'):
   os.remove(folder_path + file_name + '_list_log_command.txt')
 
 if any(list_aggro):
-    print('Unknown commands, please check' + file_name + '_list_unknowns.txt')
+    print('Unknown commands, please check ' + file_name + '_list_unknowns.txt')
     open(folder_path + file_name + '_list_unknowns.txt','w').write(str(list_aggro))
 if any(list_log_command):
-    print('Unknown commands within commands, please check' + file_name + '_list_log_command.txt')
+    print('Unknown commands within commands, please check ' + file_name + '_list_log_command.txt')
     open(folder_path + file_name + '_list_log_command.txt','w').write(str(list_log_command))
 
 print('Done :)')

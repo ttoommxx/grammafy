@@ -24,11 +24,11 @@ text
 bbox
 clearpage
 appendix
-'e
 p
 S
 compat
 bf
 em
 printbibliography
+bigskip
 
