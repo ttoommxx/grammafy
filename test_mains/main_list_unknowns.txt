@@ -1,1 +1,1 @@
-{'nonSo', 'textbb', 'hello', 'unknownCommand'}
+{'notAcommand', 'textbb', 'hello', 'unknownCommand', 'nonSo'}

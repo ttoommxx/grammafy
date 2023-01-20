@@ -12,7 +12,7 @@ file_name = file_path[i:-4] # .tex is excluded from file_name
 folder_path = file_path[:i]
 
 # types of different "command" headers
-interactives = ['\\','{','}','$','%']
+interactives = ['\\','{','}','$','%','~']
 
 # create a list of existing exceptions
 exceptions = [e[:-3] for e in os.listdir('./exceptions/routines/')]
@@ -22,8 +22,7 @@ exceptions_custom = [e[:-3] for e in os.listdir('./exceptions/routines_custom/')
 void = [line[:-1] for line in open('./exceptions/void.txt','r').readlines()] + [line[:-1] for line in open('./exceptions/void_custom.txt','r').readlines()] # put them together as it doesn't make a difference, there is no overriding
 
 # list of admissible characters for commands
-end_command = [line[:-1] for line in open('./exceptions/end_command.txt','r').readlines()]
-end_command.append('\n') # don't know how to add it to the txt file
+end_command = [' ','{','}','.',',',':',';','*','[',']','(',')','$','\\','\n']
 
 # initialise the final text
 CLEAN = ''
@@ -82,8 +81,14 @@ while any([ SOURCE.find(x) for x in interactives ]): # if any such element occur
                 if SOURCE[:i-3].replace(' ','').replace('\n','')[-1] in [',', ';', '.']: # add punctuation to non-inline equations
                     CLEAN = CLEAN + SOURCE[:i-3].replace(' ','').replace('\n','')[-1]
                 SOURCE = SOURCE[i:]
+            elif SOURCE[1] == '&':
+                CLEAN = CLEAN + '&'
+                SOURCE = SOURCE[2:]
             elif SOURCE[1] == ' ': # space
                 SOURCE = SOURCE[1:]
+            elif SOURCE[1] == '"':
+                CLEAN = CLEAN + '"'
+                SOURCE = SOURCE[2:]
             elif SOURCE[1] == '\\': # new line
                 CLEAN = CLEAN + '\n'
                 SOURCE = SOURCE[2:]
@@ -111,10 +116,12 @@ while any([ SOURCE.find(x) for x in interactives ]): # if any such element occur
                         j = i # index for open brackets
                         while i >= j:
                             i = min([SOURCE.find(x,i) for x in ['}',']'] if SOURCE.find(x,i) > -1])+1
-                            j = min([SOURCE.find(x,j) for x in ['{','['] if SOURCE.find(x,j) > -1] , default=i)+1
+                            j = min([SOURCE.find(x,j) for x in ['{','['] if SOURCE.find(x,j) > -1] , default=i+1)+1
                     # the explanation of the above is a little complicated: I look for a (the first) closed bracket and a (the first) open bracket. They must match, otherwise it would contradict the fact that they are the first. I keep doing it until I can't find an open one. So min will be set to i and we would break out of the internal while. As for the external, every time I get out I look for the adjacent bracket and there is another one I iterate!
                     SOURCE = SOURCE[i:]
                     list_aggro.add(command_name)
+        case '~':
+            SOURCE = SOURCE[1:]
         case '{':
             SOURCE = SOURCE[1:]
         case '}':
