@@ -47,11 +47,6 @@ WRITE ON HOW TO USE THE DEBUGGING TO MAKE IT WORK PERFECTLY
 
 
 To do:
-- remove space after newline
 - write good doc
 - include license
 - include grammarly API directly
-
-optional/wrong philosophy
-- createa a unique function to handle any type of equation
-- add numbers in void that indicates how many parenthesis are next to the void, and what type (square or curly)
