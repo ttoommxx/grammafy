@@ -2,34 +2,33 @@
 
 Version 0.4
 
-This script serves the purpose of cleaning up tex files by creating to a txt file, stripped of all commands, that can be put into an writing software. Formulas are substituted with the symbol [1], and the other changes should be comprehensible.
+This script serves the purpose of cleaning up tex files by creating to a txt file, stripped of all commands, that can be fed to writing softwares. Formulas are substituted with the symbol [1], and the other changes should be comprehensible.
 
-## installation
+## installation and use
 
-Any python version should work, tested on Linux and Windows using Python 3.10 and 3.11.
+Any python version should work, tested on Linux and Windows using Python 3.10 and 3.11. Download the repo with
 ```
 git clone https://github.com/ttoommxx/grammafy
 ```
-install tkinter on your operating system. For example, on Arch
+and install tkinter. On Arch by typing
 ```
 sudo pacman -S tk
 ```
-or on Ubuntu
+and on Ubuntu via
 ```
 sudo apt install python3-tk
 ```
+(check for your OS). Once everything is set up, simply run
+```
+./LinuxRun.sh
+```
+and using the graphical selector, pick the main .tex of your project.
 
-## how to use
+## debugging mode
 
-On Windows, double click on WindowsRun.bat.
-On Linux, run LinuxRun.sh.
-Using the graphical selector, pick the main .tex file you want to clean.
+WRITE HOW TO USE THE DEBUGGING TO UNDERSTAND HOW TO IMPLEMENT YOUR MODULES
 
-### aggressive mode (not recommended)
-
-Using aggressive mode, every time program encounters an unknown command, it would discard it along with all square [] and curly {} brackets that are consecutive to the program.
-
-### debugging mode (recommended)
+This script follows a strict phylosophy: every command knows exactly what is doing and can only see the source tex file from where the command starts. After executing 
 
 The physolophy of the code is that once things are checked out from the old text, they are always removed. Essentially the code is made so that it's eating portion of the raw .tex file and command by command converting it into readable txt file.
 
