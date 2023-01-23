@@ -1,8 +1,8 @@
 # grammafy
 
-Version 0.4
+Version 0.5
 
-This script serves the purpose of cleaning up tex files by creating to a txt file, stripped of all commands, that can be fed to writing softwares. Formulas are substituted with the symbol [1], and the other changes should be comprehensible.
+This script serves the purpose of cleaning up tex files by creating a txt file, stripped of all commands, that can be fed to writing software. Formulas are substituted with the symbol [1], and the other changes should be comprehensible.
 
 ## installation and use
 
@@ -22,30 +22,39 @@ sudo apt install python3-tk
 ```
 ./LinuxRun.sh
 ```
-and using the graphical selector, pick the main .tex of your project.
+and using the graphical selector, pick the main tex of your project.
 
 ## debugging mode
 
-WRITE HOW TO USE THE DEBUGGING TO UNDERSTAND HOW TO IMPLEMENT YOUR MODULES
+This script follows a strict philosophy: every command knows exactly what is doing and can only see the source tex file from where the command starts.
 
-This script follows a strict phylosophy: every command knows exactly what is doing and can only see the source tex file from where the command starts. After executing 
-
-The physolophy of the code is that once things are checked out from the old text, they are always removed. Essentially the code is made so that it's eating portion of the raw .tex file and command by command converting it into readable txt file.
-
-Every command should end with one of the following symbols:
+The script computes the following instructions:
+1) Everything written before `\begin{document}` is immediately removed.
+2) After such a command, the script unpacks all the included tex files and turns the tex file into a big string (SOURCE).
+3) It starts scanning for certain symbols, which I call interactives:
 ```
-' ', '}', '{', '.', ',', ':', ';', '\n'
+['\\','{','}','$','%','~']
 ```
-Ending with asterisk is reserved as a special behaviour for built-in functions, and as such custom command should not end with an asterisk.
-end_command.txt can be modified to handle different endings.
+4) If it finds any of the above, it everything to the output file (CLEAN), and executes an action depending on the symbol.
+5) If the special character ``\\`` is selected, the script, after looking for some simple interactives, checks if the command following ``\\`` is present in the folder "./exceptions/routines_custom" first, then "./exceptions/routines" and if in neither, it skips the command with its arguments.
+6) Every time a routine is found and loaded, the SOURCE file is updated by removing everything before ``\\`` and the routine is executed as text within the script. In particular, every routine can see the SOURCE file (but it's updated, so can't see anything before the command) and can see the CLEAN string too.
+6.1) Two special routines "begin" and "end" look for subroutines within the folders "./exceptions/subroutines/".
+7) At the end of execution, the script has produced a _grammafied.txt file, which the CLEAN output, a _list_unknowns.txt, with unknown commands, and a _list_log_command.txt, with unknown "begin"-commands.
 
+-- If you want to customise the script, you can add a routine/subroutine into the _custom directories and can override default commands like that.
 
-WRITE ON HOW TO USE THE DEBUGGING TO MAKE IT WORK PERFECTLY
+## WARNING
 
+The script can handle pretty much everything and will always reach completion, under the assumption that the file compiles properly (though the script doesn't compile). There might be instances where it gives the wrong output. This is mostly when the tex file is poorly written. For example, when using nested equations like
+```
+$$ (e^x)^{-1} \text{ $$ = $$ } e^{-x} $$. 
+```
+The script does handle properly nested unknown commands such as
+```
+\begin{hello} This environemnt does nothing, \begin{hello} as you can see \end{hello} \end{hello}.
+```
+When writing a (custom) subroutine, it is not necessary to include the symbol *. The script is written so that such a symbol is simply ignored.
 
+## to do
 
-
-To do:
-- write good doc
-- include license
-- include grammarly API directly
+- include typing assistant cloud-based software APIs.

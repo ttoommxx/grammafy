@@ -8,9 +8,15 @@ i = SOURCE.find('}')+1 # right next after the brackets
 
 asterisk = SOURCE[i-2]=='*'
 command_name = SOURCE[1:i-1-asterisk] # remove asterisk if any
-command = "./exceptions/subroutines/end/" + command_name + ".py"
+# command = "./exceptions/subroutines/end/" + command_name + ".py"
 
 SOURCE = SOURCE[i:]
 
-if os.path.exists(command):
-    exec(open(command,'r').read())
+# if os.path.exists(command):
+#     exec(open(command,'r').read())
+
+
+if os.path.exists("./exceptions/subroutines/end_custom/" + command_name + ".py"):
+    exec(open("./exceptions/subroutines/end_custom/" + command_name + ".py",'r').read())
+elif os.path.exists("./exceptions/subroutines/end/" + command_name + ".py"):
+    exec(open("./exceptions/subroutines/end/" + command_name + ".py",'r').read())
