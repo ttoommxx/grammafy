@@ -1,1 +1,0 @@
-{'', 'ciaocome', 'ciaocomestai', 'unknownCommand', 'nonSo', 'hello', 'notAcommand', 'textbb'}

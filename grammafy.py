@@ -139,22 +139,22 @@ while any([ SOURCE.find(x) for x in interactives ]): # if any such element occur
         case _:
             print('Fatal error, unknown interactive')
 
-# clean the file from equations that have bad spacing and newlines, and empty brackets
-i = 0
-while CLEAN.find('[1]',i+3)>-1:
-    i = CLEAN.find('[1]',i+3)
-    if CLEAN[i-1] == '\n':
-        CLEAN = CLEAN[:i-1] + ' ' + CLEAN[i:]
-    if CLEAN[i+3] in [',', ';', '.']:
-             i=i+1
-    if CLEAN[i+3] == '\n':
-        CLEAN = CLEAN[:i+3] + ' ' + CLEAN[i+4:]
-
-CLEAN = CLEAN.replace('[]','').replace('()','')
-while '\n ' in CLEAN or '\n\t' in CLEAN or '\n\n\n' in CLEAN:
-    CLEAN = CLEAN.replace('\n ','\n').replace('\n\t','\n').replace('\n\n\n','\n\n')
-while CLEAN[0] in ['\n','\t',' ']:
+# CLEANING ROUTINES
+# remove unmatched brackets and tabbing with spaces
+CLEAN = CLEAN.replace('[]','').replace('()','').replace('\t',' ')
+# remove initial spaces and newlines
+while CLEAN[0] in ['\n',' ']:
     CLEAN = CLEAN[1:]
+# remove newline+space preliminarly to the cleaning
+while '\n ' in CLEAN:
+    CLEAN = CLEAN.replace('\n ','\n')
+# reset indentation for [1]s
+while '\n[1]' in CLEAN or '[1]\n' in CLEAN or '[1],\n' in CLEAN or '[1].\n' in CLEAN or '[1];\n' in CLEAN:
+    CLEAN = CLEAN.replace('\n[1]',' [1]').replace('[1]\n','[1] ').replace('[1],\n','[1], ').replace('[1].\n','[1]. ').replace('[1];\n','[1]; ')
+# add some space before every [1] in case we have them attached to something else
+CLEAN = CLEAN.replace('.[1]','. [1]'.replace(',[1]',', [1]')).replace(';[1]','; [1]')
+while '\n\n\n' in CLEAN or '  ' in CLEAN: # remove double lines and double spaces
+    CLEAN = CLEAN.replace('\n\n\n','\n\n').replace('  ',' ')
 
 open(folder_path + file_name + '_grammafied.txt','w').write(CLEAN)
 
