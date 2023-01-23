@@ -41,7 +41,8 @@ The script computes the following instructions:
 6.1) Two special routines "begin" and "end" look for subroutines within the folders "./exceptions/subroutines/".
 7) At the end of execution, the script has produced a _grammafied.txt file, which the CLEAN output, a _list_unknowns.txt, with unknown commands, and a _list_log_command.txt, with unknown "begin"-commands.
 
--- If you want to customise the script, you can add a routine/subroutine into the _custom directories and can override default commands like that.
+If you want to customise the script, you can add a routine/subroutine into the _custom directories and can override default commands like that.
+Commands that output nothing can be included in the void_custom.txt file, similarly for begin subroutines.
 
 ## WARNING
 
