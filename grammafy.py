@@ -153,6 +153,8 @@ while CLEAN.find('[1]',i+3)>-1:
 CLEAN = CLEAN.replace('[]','').replace('()','')
 while '\n ' in CLEAN or '\n\t' in CLEAN or '\n\n\n' in CLEAN:
     CLEAN = CLEAN.replace('\n ','\n').replace('\n\t','\n').replace('\n\n\n','\n\n')
+while CLEAN[0] in ['\n','\t',' ']:
+    CLEAN = CLEAN[1:]
 
 open(folder_path + file_name + '_grammafied.txt','w').write(CLEAN)
 
