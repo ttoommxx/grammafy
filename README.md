@@ -44,7 +44,7 @@ The script computes the following instructions:
 If you want to customise the script, you can add a routine/subroutine into the _custom directories and can override default commands like that.
 Commands that output nothing can be included in the void_custom.txt file, similarly for begin subroutines.
 
-## WARNING
+# WARNING
 
 The script can handle pretty much everything and will always reach completion, under the assumption that the file compiles properly (though the script doesn't compile). There might be instances where it gives the wrong output. This is mostly when the tex file is poorly written. For example, when using nested equations like
 ```
@@ -56,6 +56,12 @@ The script does handle properly nested unknown commands such as
 ```
 When writing a (custom) subroutine, it is not necessary to include the symbol *. The script is written so that such a symbol is simply ignored.
 
-## to do
+# to do
 
 - include typing assistant cloud-based software APIs.
+- fix Windows executable (obsolete)
+- drop tkinter dependence and make it into a terminal-centring self-contained application, for example via tools like [fff](https://github.com/dylanaraps/fff#dependencies)
+
+# disclaimers
+
+This project is not intended to be a fully working application, at least at them moment. It was developed to facilitate correcting typos on my dissertation thesis, and because it works well enough I thought sharing it with everyone would be a good idea. The idea of placing the symbol `[1]` is credited to my master thesis supervisor Diogo Gomes. If you want to help me with this project or have any suggestion, do not hesitate to reach out to me by email!
