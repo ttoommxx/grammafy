@@ -77,7 +77,7 @@ while any([ SOURCE.find(x) for x in interactives ]): # if any such element occur
         case '\\':
             if SOURCE[1] == '[': # equation
                 i = SOURCE.find('\]',1) + 3
-                CLEAN = CLEAN + '[1]'
+                CLEAN = CLEAN + '[_]'
                 if SOURCE[:i-3].replace(' ','').replace('\n','')[-1] in [',', ';', '.']: # add punctuation to non-inline equations
                     CLEAN = CLEAN + SOURCE[:i-3].replace(' ','').replace('\n','')[-1]
                 SOURCE = SOURCE[i:]
@@ -131,7 +131,7 @@ while any([ SOURCE.find(x) for x in interactives ]): # if any such element occur
                 i = SOURCE.find('$$',2) + 2
             else: # assuming there are no double dollars within one-dollar equations
                 i = SOURCE.find('$',1) + 1
-            CLEAN = CLEAN + '[1]'
+            CLEAN = CLEAN + '[_]'
             # TO DO, ADD COMMAS ETC IF THAT'S HOW THE EQUATION ENDS
             SOURCE = SOURCE[i:]
         case '%':
@@ -148,13 +148,13 @@ while CLEAN[0] in ['\n',' ']:
 # remove newline+space preliminarly to the cleaning
 while '\n ' in CLEAN:
     CLEAN = CLEAN.replace('\n ','\n')
-# reset indentation for [1]s
-while '\n[1]' in CLEAN or '[1]\n' in CLEAN or '[1],\n' in CLEAN or '[1].\n' in CLEAN or '[1];\n' in CLEAN:
-    CLEAN = CLEAN.replace('\n[1]',' [1]').replace('[1]\n','[1] ').replace('[1],\n','[1], ').replace('[1].\n','[1]. ').replace('[1];\n','[1]; ')
-# add some space before every [1] in case we have them attached to something else
-CLEAN = CLEAN.replace('.[1]','. [1]'.replace(',[1]',', [1]')).replace(';[1]','; [1]')
-while '\n\n\n' in CLEAN or '  ' in CLEAN: # remove double lines and double spaces
-    CLEAN = CLEAN.replace('\n\n\n','\n\n').replace('  ',' ')
+# reset indentation for [_]s
+while '\n[_]' in CLEAN or '[_]\n' in CLEAN or '[_],\n' in CLEAN or '[_].\n' in CLEAN or '[_];\n' in CLEAN:
+    CLEAN = CLEAN.replace('\n[_]',' [_]').replace('[_]\n','[_] ').replace('[_],\n','[_], ').replace('[_].\n','[_]. ').replace('[_];\n','[_]; ')
+# add some space before every [_] in case we have them attached to something else
+CLEAN = CLEAN.replace('.[_]','. [_]'.replace(',[_]',', [_]')).replace(';[_]','; [_]')
+while '\n\n\n' in CLEAN or '  ' in CLEAN or ' -' in CLEAN: # remove double lines and double spaces
+    CLEAN = CLEAN.replace('\n\n\n','\n\n').replace('  ',' ').replace(' -','\n-')
 
 open(folder_path + file_name + '_grammafied.txt','w').write(CLEAN)
 

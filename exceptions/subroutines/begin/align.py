@@ -1,4 +1,4 @@
-CLEAN = CLEAN + '[1]'
+CLEAN = CLEAN + '[_]'
 
 # find the index where the whole portion ends
 i = min([SOURCE.find(x) for x in ['\\end{align*}', '\\end{align}'] if SOURCE.find(x)>-1])

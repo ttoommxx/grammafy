@@ -2,7 +2,7 @@
 
 Version 0.5
 
-This script serves the purpose of cleaning up tex files by creating a txt file, stripped of all commands, that can be fed to writing software. Formulas are substituted with the symbol [1], and the other changes should be comprehensible.
+This script serves the purpose of cleaning up tex files by creating a txt file, stripped of all commands, that can be fed to writing software. Formulas are substituted with the symbol `[_]`, and the other changes should be comprehensible.
 
 ## installation and use
 
@@ -64,4 +64,4 @@ When writing a (custom) subroutine, it is not necessary to include the symbol *.
 
 # disclaimers
 
-This project is not intended to be a fully working application, at least at them moment. It was developed to facilitate correcting typos on my dissertation thesis, and because it works well enough I thought sharing it with everyone would be a good idea. The idea of placing the symbol `[1]` is credited to my master thesis supervisor Diogo Gomes. If you want to help me with this project or have any suggestion, do not hesitate to reach out to me by email!
+This project is not intended to be a fully working application, at least at them moment. It was developed to facilitate correcting typos on my dissertation thesis, and because it works well enough I thought sharing it with everyone would be a good idea. If you want to help me with this project or have any suggestion, do not hesitate to reach out to me by email!
