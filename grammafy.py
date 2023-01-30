@@ -178,5 +178,4 @@ final_path = (folder_path + file_name + '_grammafied.txt').replace(' ','\ ')
 
 from platform import system
 if system() == 'Linux':
-    print('---' + final_path + '---')
     os.system("xdg-open " + final_path)

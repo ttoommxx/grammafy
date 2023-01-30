@@ -1,26 +1,25 @@
-import os
-from pynput.keyboard import Key, Listener, KeyCode
-import time
+import os, sys, termios, tty, time
 
-local_folder = os.path.abspath(os.getcwd()) + '/'
-index = 0
+local_folder = os.path.abspath(os.getcwd()) + '/' # save original path
+index = 0 # dummy index
 
 def main():
-    print('Select a file')
+    pass
 
 if __name__ == "__main__":
-    main()
+    print('Press enter')
 
-def dir_printer():
+def dir_printer(): # priting function
     global index
-    if os.name == 'nt':
+    if os.name == 'nt': # clean terminal
         os.system('cls')
     else:
         os.system('clear')
+    # instructions on how to use it
     print('INSTRUCTIONS: (leftArrow = previous folder), (rightArrow = open folder\select file), (upArrow = up), (downArrow = down), (q = quit), (* are folders)\n')
-    
+    # path directory
     print(os.path.abspath(os.getcwd()) + '/\n')
-    
+    # folders and pointer
     if len(os.listdir()) == 0:
         print('**EMPTY FOLDER**')
     for x in os.listdir():
@@ -34,47 +33,67 @@ def dir_printer():
             print(' ', end='')
         print(x)
 
+def getch():
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    try:
+        tty.setraw(sys.stdin.fileno())
+        ch = sys.stdin.read(1)
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+    return ch
 
-def on_press(key):
-    global index
+dir_printer()
+
+while True:
+    char = getch()
     if len(os.listdir()) != 0:
-        match key:
-            case Key.up:
-                index = (index - 1) % len(os.listdir())
-            case Key.down:
-                index = (index + 1) % len(os.listdir())
-            case Key.right:
-                selection = os.path.abspath(os.getcwd()) + '/' + os.listdir()[index]
-                if os.path.isdir(selection):
-                    os.chdir(selection)
-                elif os.path.isfile(selection): # MODIFIED HERE
-                    if os.listdir()[index][-4:] == '.tex':
-                        open(local_folder + 'file_picked','w').write(selection)
-                        return False
-                    else:
-                        if os.name == 'nt':
-                            os.system('cls')
+        if char == '\x1b':
+            next_char = getch()
+            if next_char == '[':
+                next_char = getch()
+                if next_char == 'A':
+                    # print("up")
+                    index = (index - 1) % len(os.listdir())
+                elif next_char == 'B':
+                    # print("down")
+                    index = (index + 1) % len(os.listdir())
+                elif next_char == 'C':
+                    # print("right")
+                    selection = os.path.abspath(os.getcwd()) + '/' + os.listdir()[index]
+                    if os.path.isdir(selection):
+                        os.chdir(selection)
+                    elif os.path.isfile(selection): # MODIFIED HERE
+                        if os.listdir()[index][-4:] == '.tex':
+                            open(local_folder + 'file_picked','w').write(selection)
+                            break
                         else:
-                            os.system('clear')
-                        print('Not a .tex file!')
-                        time.sleep(1)
-                index = 0
-            case Key.left:
-                index = 0
-                os.chdir('..')
-            case _:
-                try:
-                    if key.char == ('q'):
-                        return False
-                except:
-                    pass
+                            if os.name == 'nt':
+                                os.system('cls')
+                            else:
+                                os.system('clear')
+                            print('Not a .tex file!')
+                            time.sleep(1)
+                    index = 0
+                elif next_char == 'D':
+                    # print("left")
+                    index = 0
+                    os.chdir('..')
+        elif char == 'q':
+            # print("q")
+            break
     else:
-        if key == Key.left:
-            index = 0
-            os.chdir('..')
+        if char == '\x1b':
+            next_char = getch()
+            if next_char == '[':
+                next_char = getch()
+                if next_char == 'D':
+                    # print("left")
+                    index = 0
+                    os.chdir('..')
+        elif char == 'q':
+            # print("q")
+            break
     dir_printer()
-
-with Listener(on_press=on_press, suppress=True) as listener:
-    listener.join()
 
 os.chdir(local_folder)

@@ -1,24 +1,20 @@
 # grammafy
 
-Version 0.7
+Version 0.8
 
 This script serves the purpose of cleaning up tex files by creating a txt file, stripped of all commands, that can be fed to writing software. Formulas are substituted with the symbol `[_]`, and the other changes should be comprehensible.
 
 ## installation and use
 
-Any new python version should work, tested on Arch Linux using Python 3.10 and 3.11. Install pynput via pip
-```
-pip install pynput
-```
-download the repo with
+Any new python version should work, tested on Arch Linux using Python 3.10 and 3.11. Download the repo with
 ```
 git clone https://github.com/ttoommxx/grammafy
 ```
-and run grammafy.py from terminal (see WARNING)
+and run grammafy.py from terminal
 ```
 python3 grammafy.py
 ```
-To select the tex file use the arrows via the [terminal file manager](https://github.com/ttoommxx/pylePicker).
+To select the tex file use the arrows via this [terminal file manager](https://github.com/ttoommxx/pylePicker) that was written pretty much by AI (ChatGPT).
 
 ## debugging mode
 
@@ -51,8 +47,6 @@ The script does handle properly nested unknown commands such as
 \begin{hello} This environemnt does nothing, \begin{hello} as you can see \end{hello} \end{hello}.
 ```
 When writing a (custom) subroutine, it is not necessary to include the symbol *. The script is written so that such a symbol is simply ignored.
-
-Because pynput hasn't been ported to Wayland yet, on Linux it is necessary to run terminal under Xwayland, for example use Xterm.
 
 ## to do
 
