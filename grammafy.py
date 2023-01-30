@@ -1,11 +1,10 @@
 import os,sys # import time if need to debug, time.sleep(seconds), remove sys once stopped debugging
-from tkinter import filedialog # graphical interface for fetching the .tex file
 
 # aggessive mode, we are going to store all the skipped command in one .txt file
 list_aggro = set()
 list_log_command = set()
 
-file_path = filedialog.askopenfilename()
+file_path = open("./opened_file",'r').read()
 # we now store information on the file path, using tkinter we always have '/', even in Windows
 i = file_path.rfind('/') + 1
 file_name = file_path[i:-4] # .tex is excluded from file_name

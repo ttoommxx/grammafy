@@ -1,6 +1,9 @@
 # grammafy
 
-Version 0.5
+remove printing last line and instead create another temporary file in the folder containing information on the path
+
+
+Version 0.6
 
 This script serves the purpose of cleaning up tex files by creating a txt file, stripped of all commands, that can be fed to writing software. Formulas are substituted with the symbol `[_]`, and the other changes should be comprehensible.
 
@@ -10,19 +13,11 @@ Any python version should work, tested on Linux and Windows using Python 3.10 an
 ```
 git clone https://github.com/ttoommxx/grammafy
 ```
-and install tkinter. On Arch by typing
-```
-sudo pacman -S tk
-```
-and on Ubuntu via
-```
-sudo apt install python3-tk
-```
-(check for your OS). Once everything is set up, simply run
+and simply run
 ```
 ./LinuxRun.sh
 ```
-and using the graphical selector, pick the main tex of your project.
+To select the tex file, move back and forth with the arrows (using fff file manager).
 
 ## debugging mode
 
@@ -56,12 +51,15 @@ The script does handle properly nested unknown commands such as
 ```
 When writing a (custom) subroutine, it is not necessary to include the symbol *. The script is written so that such a symbol is simply ignored.
 
-# to do
+## to do
 
 - include typing assistant cloud-based software APIs.
 - fix Windows executable (obsolete)
-- drop tkinter dependence and make it into a terminal-centring self-contained application, for example via tools like [fff](https://github.com/dylanaraps/fff#dependencies)
 
-# disclaimers
+## disclaimers
 
 This project is not intended to be a fully working application, at least at them moment. It was developed to facilitate correcting typos on my dissertation thesis, and because it works well enough I thought sharing it with everyone would be a good idea. If you want to help me with this project or have any suggestion, do not hesitate to reach out to me by email!
+
+# CREDITS
+
+- [fff](https://github.com/dylanaraps/fff) for their amazing bash file-manager.
