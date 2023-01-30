@@ -6,7 +6,7 @@ This script serves the purpose of cleaning up tex files by creating a txt file, 
 
 ## installation and use
 
-Any new python version should work, tested on Linux using Python 3.10 and 3.11. Download the repo with
+Any new python version should work, tested on Arch Linux using Python 3.10 and 3.11. Download the repo with
 ```
 git clone https://github.com/ttoommxx/grammafy
 ```
