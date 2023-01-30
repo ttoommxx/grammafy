@@ -1,15 +1,12 @@
 # grammafy
 
-remove printing last line and instead create another temporary file in the folder containing information on the path
-
-
 Version 0.6
 
 This script serves the purpose of cleaning up tex files by creating a txt file, stripped of all commands, that can be fed to writing software. Formulas are substituted with the symbol `[_]`, and the other changes should be comprehensible.
 
 ## installation and use
 
-Any python version should work, tested on Linux and Windows using Python 3.10 and 3.11. Download the repo with
+Any new python version should work, tested on Linux using Python 3.10 and 3.11. Download the repo with
 ```
 git clone https://github.com/ttoommxx/grammafy
 ```
@@ -54,7 +51,7 @@ When writing a (custom) subroutine, it is not necessary to include the symbol *.
 ## to do
 
 - include typing assistant cloud-based software APIs.
-- fix Windows executable (obsolete)
+- fix Windows executable (broken)
 
 ## disclaimers
 

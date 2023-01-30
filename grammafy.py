@@ -169,7 +169,5 @@ if any(list_log_command):
     print('Unknown commands within commands, please check ' + file_name + '_list_log_command.txt')
     open(folder_path + file_name + '_list_log_command.txt','w').write(str(list_log_command))
 
-print('Done :)')
-
 # printing some extra output that will help me open the cleaned file immediately
-print(folder_path + file_name + '_grammafied.txt')
+open('opened_file_grammafied','w').write(folder_path + file_name + '_grammafied.txt')
