@@ -51,7 +51,7 @@ When writing a (custom) subroutine, it is not necessary to include the symbol *.
 ## to do
 
 - include typing assistant cloud-based software APIs.
-- fix Windows executable (broken), use something like [tere](https://github.com/mgunyho/tere)
+- fix Windows executable (broken), use something like [tere](https://github.com/mgunyho/tere) or [cdir](https://github.com/EskelinenAntti/cdir) (which could make it platform independent)
 
 ## disclaimers
 
