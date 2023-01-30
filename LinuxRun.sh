@@ -6,12 +6,8 @@ read
 
 text=$(python3 grammafy.py)
 echo "$text" # print everything but the last line
-echo "Press enter to open the output"
-read -n1 KEY
-if [[ "$KEY" == "" ]]
-then
-  xdg-open "$(cat opened_file_grammafied)"
-fi
+echo "Press to open the output"
+xdg-open "$(cat opened_file_grammafied)"
 
 rm opened_file
 rm opened_file_grammafied
