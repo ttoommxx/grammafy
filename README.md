@@ -1,20 +1,24 @@
 # grammafy
 
-Version 0.6
+Version 0.7
 
 This script serves the purpose of cleaning up tex files by creating a txt file, stripped of all commands, that can be fed to writing software. Formulas are substituted with the symbol `[_]`, and the other changes should be comprehensible.
 
 ## installation and use
 
-Any new python version should work, tested on Arch Linux using Python 3.10 and 3.11. Download the repo with
+Any new python version should work, tested on Arch Linux using Python 3.10 and 3.11. Install pynput via pip
+```
+pip install pynput
+```
+download the repo with
 ```
 git clone https://github.com/ttoommxx/grammafy
 ```
-and simply run
+and run grammafy.py from terminal (see WARNING)
 ```
-./LinuxRun.sh
+python3 grammafy.py
 ```
-To select the tex file, move back and forth with the arrows (using fff file manager).
+To select the tex file use the arrows via the [terminal file manager](https://github.com/ttoommxx/pylePicker).
 
 ## debugging mode
 
@@ -48,15 +52,12 @@ The script does handle properly nested unknown commands such as
 ```
 When writing a (custom) subroutine, it is not necessary to include the symbol *. The script is written so that such a symbol is simply ignored.
 
+Because pynput hasn't been ported to Wayland yet, on Linux it is necessary to run terminal under Xwayland, for example use Xterm.
+
 ## to do
 
 - include typing assistant cloud-based software APIs.
-- fix Windows executable (broken), use something like [tere](https://github.com/mgunyho/tere) or [cdir](https://github.com/EskelinenAntti/cdir) (which could make it platform independent)
 
 ## disclaimers
 
 This project is not intended to be a fully working application, at least at them moment. It was developed to facilitate correcting typos on my dissertation thesis, and because it works well enough I thought sharing it with everyone would be a good idea. If you want to help me with this project or have any suggestion, do not hesitate to reach out to me by email!
-
-# CREDITS
-
-- [fff](https://github.com/dylanaraps/fff) for their amazing bash file-manager.

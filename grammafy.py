@@ -1,10 +1,13 @@
 import os,sys # import time if need to debug, time.sleep(seconds), remove sys once stopped debugging
 
+print('Press enter to pick a .tex file')
+import pylePicker
+
 # aggessive mode, we are going to store all the skipped command in one .txt file
 list_aggro = set()
 list_log_command = set()
 
-file_path = open("./opened_file",'r').read()
+file_path = open("./file_picked",'r').read()
 # we now store information on the file path, using tkinter we always have '/', even in Windows
 i = file_path.rfind('/') + 1
 file_name = file_path[i:-4] # .tex is excluded from file_name
@@ -169,5 +172,11 @@ if any(list_log_command):
     print('Unknown commands within commands, please check ' + file_name + '_list_log_command.txt')
     open(folder_path + file_name + '_list_log_command.txt','w').write(str(list_log_command))
 
-# printing some extra output that will help me open the cleaned file immediately
-open('opened_file_grammafied','w').write(folder_path + file_name + '_grammafied.txt')
+os.remove('file_picked')
+
+final_path = (folder_path + file_name + '_grammafied.txt').replace(' ','\ ')
+
+from platform import system
+if system() == 'Linux':
+    print('---' + final_path + '---')
+    os.system("xdg-open " + final_path)
