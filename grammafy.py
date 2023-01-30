@@ -1,7 +1,16 @@
 import os,sys # import time if need to debug, time.sleep(seconds), remove sys once stopped debugging
 
-print('Press enter to pick a .tex file')
+
+if os.name == 'nt':
+    os.system('cls')
+else:
+    os.system('clear')
+input('Press enter to pick a .tex file')
 import pylePicker
+if os.name == 'nt':
+    os.system('cls')
+else:
+    os.system('clear')
 
 # aggessive mode, we are going to store all the skipped command in one .txt file
 list_aggro = set()
