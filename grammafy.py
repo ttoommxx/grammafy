@@ -7,6 +7,9 @@ else:
     os.system('clear')
 input('Press enter to pick a .tex file')
 import pylePicker
+pylePicker.clear()
+input(pylePicker.selection + ' selected!')
+
 if os.name == 'nt':
     os.system('cls')
 else:
@@ -16,7 +19,7 @@ else:
 list_aggro = set()
 list_log_command = set()
 
-file_path = open("./file_picked",'r').read()
+file_path = pylePicker.selection
 # we now store information on the file path, using tkinter we always have '/', even in Windows
 i = file_path.rfind('/') + 1
 file_name = file_path[i:-4] # .tex is excluded from file_name
@@ -180,8 +183,6 @@ if any(list_aggro):
 if any(list_log_command):
     print('Unknown commands within commands, please check ' + file_name + '_list_log_command.txt')
     open(folder_path + file_name + '_list_log_command.txt','w').write(str(list_log_command))
-
-os.remove('file_picked')
 
 final_path = (folder_path + file_name + '_grammafied.txt').replace(' ','\ ')
 
