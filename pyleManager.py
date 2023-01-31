@@ -4,7 +4,19 @@ local_folder = os.path.abspath(os.getcwd()) + '/' # save original path
 index = 0 # dummy index
 hidden = False # toggle hidden
 dimension = False # toggle file_size
-instructions = 'INSTRUCTIONS:\n\n  leftArrow = previous folder\n  rightArrow = open folder\select file\n  upArrow = up\n  downArrow = down\n  q = quit\n  h = toggle hidden files\n  d = toggle file size\n  prefix ■ means folder\n\npress any button to continue'
+# instructions = 'INSTRUCTIONS:\n\n  leftArrow = previous folder\n  rightArrow = open folder\select file\n  upArrow = up\n  downArrow = down\n  q = quit\n  h = toggle hidden files\n  d = toggle file size\n  prefix ■ means folder\n\npress any button to continue'
+
+instructions = '''INSTRUCTIONS:
+  leftArrow = previous folder
+  rightArrow = open folder\select file
+  upArrow = up
+  downArrow = down
+  q = quit
+  h = toggle hidden files
+  d = toggle file size
+  prefix ■ means folder
+  
+press any button to continue'''
 
 def main():
     pass
