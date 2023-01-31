@@ -14,7 +14,7 @@ and run grammafy.py from terminal
 ```
 python3 grammafy.py
 ```
-To select the tex file use the arrows via this [terminal file manager](https://github.com/ttoommxx/pylePicker) that was written pretty much by AI (ChatGPT).
+To select the tex file use the arrows via this [terminal file manager](https://github.com/ttoommxx/pylePicker) that was written with the help of AI (ChatGPT).
 
 ## debugging mode
 
