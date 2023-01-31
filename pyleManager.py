@@ -77,11 +77,14 @@ while True:
                         clear()
                         print(selection)
                         break
-                    index = 0
+                    if len(directory()) > 0:
+                        index = index % len(directory())
+                    else:
+                        index = 0
                 elif next_char == 'D':
                     # left
-                    index = 0
                     os.chdir('..')
+                    index = index % len(directory())
         elif char == 'q':
             # q
             break
@@ -92,8 +95,8 @@ while True:
                 next_char = getch()
                 if next_char == 'D':
                     # print("left")
-                    index = 0
                     os.chdir('..')
+                    index = 0
         elif char == 'q':
             # print("q")
             break

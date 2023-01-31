@@ -6,15 +6,15 @@ if os.name == 'nt':
 else:
     os.system('clear')
 input('Press enter to pick a .tex file')
-import pylePicker
-pylePicker.clear()
-print(pylePicker.selection + ' selected!')
+import pyleManager
+pyleManager.clear()
+print(pyleManager.selection + ' selected!')
 
 # aggessive mode, we are going to store all the skipped command in one .txt file
 list_aggro = set()
 list_log_command = set()
 
-file_path = pylePicker.selection
+file_path = pyleManager.selection
 # we now store information on the file path, using tkinter we always have '/', even in Windows
 i = file_path.rfind('/') + 1
 file_name = file_path[i:-4] # .tex is excluded from file_name
