@@ -50,6 +50,7 @@ When writing a (custom) subroutine, it is not necessary to include the symbol *.
 
 ## to do
 
+- update pylePicker
 - include typing assistant cloud-based software APIs.
 
 ## disclaimers
