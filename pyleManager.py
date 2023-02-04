@@ -17,7 +17,6 @@ def instructions(mode):
     q = quit
     h = toggle hidden files
     d = toggle file size
-    p = print path
     e = edit using command-line editor
     enter = open using the default application launcher
 
@@ -123,7 +122,9 @@ def main(mode = '-manager'):
     dir_printer()
     while True:
         index_dir() # update index
-        selection = os.path.abspath(os.getcwd()) + '/' + directory()[index]
+        selection = os.path.abspath(os.getcwd()) + '/' # path folder
+        if len(directory()) > 0:
+            selection = selection + directory()[index] # + file name if any
         match getch():
             # quit
             case 'q' if mode == '-manager':
@@ -133,12 +134,13 @@ def main(mode = '-manager'):
                 break
             # toggle hidden
             case 'h':
-                temp_name = directory()[index]
                 hidden = not hidden
-                if temp_name in directory(): # update index
-                    index = directory().index(temp_name)
-                else:
-                    index = 0
+                if len(directory()) > 0:
+                    temp_name = directory()[index]
+                    if temp_name in directory(): # update index
+                        index = directory().index(temp_name)
+                    else:
+                        index = 0
             # instructions
             case 'i':
                 clear()
@@ -147,15 +149,6 @@ def main(mode = '-manager'):
             # size
             case 'd':
                 dimension = not dimension
-            # print
-            case 'p' if mode == 'manager':
-                selection = os.path.abspath(os.getcwd()) + '/' 
-                if len(directory()) > 0:
-                    selection = selection + directory()[index]
-                clear()
-                print(selection)
-                open(local_folder + 'settings.py','w').write('hidden = ' + str(hidden) + '\ndimension = ' + str(dimension))
-                break
             # command-line editor
             case 'e' if len(directory()) > 0 and mode == '-manager':
                 if system() == 'Linux':
