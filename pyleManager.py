@@ -1,28 +1,43 @@
 import os, sys, termios, tty
+from platform import system
 
 local_folder = os.path.abspath(os.getcwd()) + '/' # save original path
+from settings import *
 index = 0 # dummy index
-hidden = False # toggle hidden
-dimension = False # toggle file_size
-# instructions = 'INSTRUCTIONS:\n\n  leftArrow = previous folder\n  rightArrow = open folder\select file\n  upArrow = up\n  downArrow = down\n  q = quit\n  h = toggle hidden files\n  d = toggle file size\n  prefix ■ means folder\n\npress any button to continue'
+modalities = ['-picker','-manager']
 
-instructions = '''INSTRUCTIONS:
-  leftArrow = previous folder
-  rightArrow = open folder\select file
-  upArrow = up
-  downArrow = down
-  q = quit
-  h = toggle hidden files
-  d = toggle file size
-  prefix ■ means folder
-  
-press any button to continue'''
+def instructions(mode):
+    if mode == '-manager':
+        print('''file manager - INSTRUCTIONS:
 
-def main():
-    pass
+    leftArrow = previous folder
+    rightArrow = open folder
+    upArrow = up
+    downArrow = down
+    q = quit
+    h = toggle hidden files
+    d = toggle file size
+    p = print path
+    e = edit using command-line editor
+    enter = open using the default application launcher
 
-if __name__ == "__main__":
-    print('Press enter')
+    prefix ■ means folder
+
+press any button to continue''')
+    elif mode == '-picker':
+        print('''file picker - INSTRUCTIONS:
+
+    leftArrow = previous folder
+    rightArrow = open folder
+    upArrow = up
+    downArrow = down
+    h = toggle hidden files
+    d = toggle file size
+    enter = select file
+    
+    prefix ■ means folder
+
+press any button to continue''')
 
 # RETURN FILE SIZE AS A STRING
 def file_size(path):
@@ -95,55 +110,88 @@ def getch():
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
     return ch
 
-dir_printer()
-
-# MAIN ROUTINE
-while True:
-    index_dir() # update index
-    match getch():
-        # quit
-        case 'q':
-            break
-        # toggle hidden
-        case 'h':
-            temp_name = directory()[index]
-            hidden = not hidden
-            if temp_name in directory(): # update index
-                index = directory().index(temp_name)
-            else:
-                index = 0
-        # instructions
-        case 'i':
-            clear()
-            print(instructions)
-            getch()
-        case 'd':
-            dimension = not dimension
-        case '\x1b':
-            if getch() == '[':
-                match getch():
-                    # left
-                    case 'D':
-                        os.chdir('..')
-                    # up
-                    case 'A' if len(directory()) > 0:
-                        index = index - 1
-                    # down
-                    case 'B' if len(directory()) > 0:
-                        index = index + 1
-                    # right
-                    case 'C' if len(directory()) > 0:
-                        selection = os.path.abspath(os.getcwd()) + '/' + directory()[index]
-                        if os.path.isdir(selection):
-                            os.chdir(selection)
-                        elif os.path.isfile(selection):
-                            clear()
-                            print(selection)
-                            break
-                    case _:
-                        pass
-        case _:
-            pass
+# file manager
+def main(mode = '-manager'):
+    global local_folder
+    global index
+    global hidden
+    global dimension
+    global modalities
+    if mode not in modalities:
+        input('mode not recognized, selecting manager..\npress enter to continue')
+        mode = '-manager'
     dir_printer()
+    while True:
+        index_dir() # update index
+        selection = os.path.abspath(os.getcwd()) + '/' + directory()[index]
+        match getch():
+            # quit
+            case 'q' if mode == '-manager':
+                open(local_folder + 'settings.py','w').write('hidden = ' + str(hidden) + '\ndimension = ' + str(dimension)) # save config
+                clear()
+                os.chdir(local_folder)
+                break
+            # toggle hidden
+            case 'h':
+                temp_name = directory()[index]
+                hidden = not hidden
+                if temp_name in directory(): # update index
+                    index = directory().index(temp_name)
+                else:
+                    index = 0
+            # instructions
+            case 'i':
+                clear()
+                instructions(mode)
+                getch()
+            # size
+            case 'd':
+                dimension = not dimension
+            # print
+            case 'p' if mode == 'manager':
+                selection = os.path.abspath(os.getcwd()) + '/' 
+                if len(directory()) > 0:
+                    selection = selection + directory()[index]
+                clear()
+                print(selection)
+                open(local_folder + 'settings.py','w').write('hidden = ' + str(hidden) + '\ndimension = ' + str(dimension))
+                break
+            # command-line editor
+            case 'e' if len(directory()) > 0 and mode == '-manager':
+                if system() == 'Linux':
+                    os.system("$EDITOR " + selection)
+            case '\r' if len(directory()) > 0:
+                if mode == '-picker' and os.path.isfile(selection):
+                    os.chdir(local_folder)
+                    return selection
+                elif mode == '-manager':
+                    if system() == 'Linux':
+                        os.system("xdg-open " + selection)
+            case '\x1b':
+                if getch() == '[':
+                    match getch():
+                        # up
+                        case 'A' if len(directory()) > 0:
+                            index = index - 1
+                        # down
+                        case 'B' if len(directory()) > 0:
+                            index = index + 1
+                        # right
+                        case 'C' if len(directory()) > 0:
+                            if os.path.isdir(selection):
+                                os.chdir(selection)
+                        # left
+                        case 'D':
+                            os.chdir('..')
+                        case _:
+                            pass
+            case _:
+                pass
+        dir_printer()
 
-os.chdir(local_folder)
+if __name__ == "__main__":
+    try:
+        main(sys.argv[1])
+    except:
+        main()
+    

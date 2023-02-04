@@ -1,20 +1,19 @@
 import os,sys,time # import time if need to debug, time.sleep(seconds), remove sys once stopped debugging
 
-
-if os.name == 'nt':
-    os.system('cls')
-else:
-    os.system('clear')
-input('Press enter to pick a .tex file')
 import pyleManager
 pyleManager.clear()
-print(pyleManager.selection + ' selected!')
+input('Press enter to pick a .tex file')
+file_path = pyleManager.main('-picker')
+pyleManager.clear()
+print(file_path + ' selected')
+
+if file_path[-4:] != '.tex':
+    sys.exit('the file selected is not a tex file')
 
 # aggessive mode, we are going to store all the skipped command in one .txt file
 list_aggro = set()
 list_log_command = set()
 
-file_path = pyleManager.selection
 # we now store information on the file path, using tkinter we always have '/', even in Windows
 i = file_path.rfind('/') + 1
 file_name = file_path[i:-4] # .tex is excluded from file_name
