@@ -1,2 +1,1 @@
-hidden = True
-dimension = False
+settings = {'hidden': False, 'dimension': True, 'time_modified': True, 'order': 1}
