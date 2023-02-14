@@ -61,10 +61,10 @@ def file_size(path):
     metric = ['b','kb','mb','gb']
     return str(round(size,2)) + ' ' + metric[i]
 
-def order_next():
+def order_update(j):
     global settings
     vec = [1, int(settings['dimension'])*(True in [os.path.isfile(x) for x in directory()]), int(settings['time_modified'])*(True in [os.path.isfile(x) for x in directory()])]
-    settings['order'] = vec.index(1,settings['order']+1) if 1 in vec[settings['order']+1:] else 0
+    settings['order'] = vec.index(1,settings['order']+j) if 1 in vec[settings['order']+j:] else 0
 
 # LIST OF FOLDERS AND FILES
 def directory():
@@ -106,6 +106,7 @@ def dir_printer():
     if len(directory()) == 0:
         print('**EMPTY FOLDER**')
     else:
+        order_update(0)
         index_dir()
         temp = directory()[index]
         l_file = max([len(x) for x in directory()]) # max length file
@@ -177,7 +178,7 @@ def main(mode = '-manager'):
             case 'm':
                 if len(directory()) > 0:
                     temp = directory()[index]
-                order_next()
+                order_update(1)
                 if len(directory()) > 0:
                     index = directory().index(temp)
             # instructions
