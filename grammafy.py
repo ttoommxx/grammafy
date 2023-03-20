@@ -48,6 +48,10 @@ SOURCE = SOURCE[i:]
 
 # the way we run this code is by checking for something we call "interactives" and once we run out of one of them we discard them, so that to save time. However, if we have included some tex files we won't understand whether any of these interacties occur again. So first of all we expand the include
 
+# remove comments first
+while SOURCE.find('%')>-1:
+    SOURCE = SOURCE[:SOURCE.find('%')] + SOURCE[SOURCE.find('\n',SOURCE.find('%')+1) + 1:]
+
 # so far works only when the files to include belong to the same folder
 while SOURCE.find('\include{')>-1:
     i = SOURCE.find('\include{') # the string will start at position i+9
