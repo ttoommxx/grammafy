@@ -1,7 +1,7 @@
 CLEAN = CLEAN + '[_]'
 
 # find the index where the whole portion ends
-i = min([SOURCE.find(x) for x in ['\\end{equation*}', '\\end{equation}'] if SOURCE.find(x)>-1])
+i = min([SOURCE.find(x) for x in ['\\end{equation*}', '\\end{equation}'] if x in SOURCE ])
 if SOURCE[:i-1].replace(' ','').replace('\n','').replace('$','')[-1] in [',', ';', '.']:
                 CLEAN = CLEAN + SOURCE[:i-1].replace(' ','').replace('\n','').replace('$','')[-1]
 

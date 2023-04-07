@@ -49,11 +49,11 @@ SOURCE = SOURCE[i:]
 # the way we run this code is by checking for something we call "interactives" and once we run out of one of them we discard them, so that to save time. However, if we have included some tex files we won't understand whether any of these interacties occur again. So first of all we expand the include
 
 # remove comments first
-while SOURCE.find('%')>-1:
+while '%' in SOURCE:
     SOURCE = SOURCE[:SOURCE.find('%')] + SOURCE[SOURCE.find('\n',SOURCE.find('%')+1) + 1:]
 
 # so far works only when the files to include belong to the same folder
-while SOURCE.find('\include{')>-1:
+while '\include{' in SOURCE:
     i = SOURCE.find('\include{') # the string will start at position i+9
     j = SOURCE.find('}',i+9)
     include_path = SOURCE[i+9:j]
@@ -61,7 +61,7 @@ while SOURCE.find('\include{')>-1:
         include_path = include_path + '.tex'
     SOURCE = SOURCE[:i] + open(folder_path + include_path, 'r').read() + SOURCE[j+1:]
 
-while SOURCE.find('\input{')>-1:
+while '\input{' in SOURCE:
     i = SOURCE.find('\input{') # the string will start at position i+7
     j = SOURCE.find('}',i+7)
     include_path = SOURCE[i+7:j]
@@ -112,7 +112,7 @@ while any([ SOURCE.find(x) for x in interactives ]): # if any such element occur
                     CLEAN = CLEAN + "'"
                     SOURCE = SOURCE[2:]
             else:
-                i = min( [ SOURCE.find(x,1) for x in end_command if SOURCE.find(x,1)>-1 ] )  # take note of the index of such element
+                i = min( [ SOURCE.find(x,1) for x in end_command if x in SOURCE[1:] ] )  # take note of the index of such element
                 command_name = SOURCE[1:i]
                 SOURCE = SOURCE[i + (SOURCE[i]=='*'):]
                 if os.path.exists("./exceptions/routines_custom/" + command_name + ".py"): # first I search within custom subroutines
@@ -127,8 +127,8 @@ while any([ SOURCE.find(x) for x in interactives ]): # if any such element occur
                         i = i+1
                         j = i # index for open brackets
                         while i >= j:
-                            i = min([SOURCE.find(x,i) for x in ['}',']'] if SOURCE.find(x,i) > -1])+1
-                            j = min([SOURCE.find(x,j) for x in ['{','['] if SOURCE.find(x,j) > -1] , default=i+1)+1
+                            i = min([SOURCE.find(x,i) for x in ['}',']'] if x in SOURCE[i:] ])+1
+                            j = min([SOURCE.find(x,j) for x in ['{','['] if x in SOURCE[j:] ] , default=i+1)+1
                     # the explanation of the above is a little complicated: I look for a (the first) closed bracket and a (the first) open bracket. They must match, otherwise it would contradict the fact that they are the first. I keep doing it until I can't find an open one. So min will be set to i and we would break out of the internal while. As for the external, every time I get out I look for the adjacent bracket and there is another one I iterate!
                     SOURCE = SOURCE[i:]
                     list_aggro.add(command_name)

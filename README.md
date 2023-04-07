@@ -1,12 +1,12 @@
 # grammafy
 
-Version 0.8
+Version 0.8.1
 
 This script serves the purpose of cleaning up tex files by creating a txt file, stripped of all commands, that can be fed to writing software. Formulas are substituted with the symbol `[_]`, and the other changes should be comprehensible.
 
 ## installation and use
 
-Works on Linux with Python >=3.10. Download the repo with
+Needs Python >=3.10. Download the repo with
 ```
 git clone https://github.com/ttoommxx/grammafy
 ```
@@ -14,7 +14,7 @@ and run grammafy.py from terminal
 ```
 python3 grammafy.py
 ```
-Select the main tex file navigating with the arrows and pressing "p" on it. The [terminal file manager](https://github.com/ttoommxx/pylePicker) was written with the help of AI (ChatGPT).
+Select the main tex file by navigating with the arrows and pressing enter on it. The [terminal file manager](https://github.com/ttoommxx/pylePicker) was written with the help of AI (ChatGPT).
 
 ## debugging mode
 
@@ -54,4 +54,4 @@ When writing a (custom) subroutine, it is not necessary to include the symbol *.
 
 ## disclaimers
 
-This project is not intended to be a fully working application, at least at them moment. It was developed to facilitate correcting typos on my dissertation thesis, and because it works well enough I thought sharing it with everyone would be a good idea. If you want to help me with this project or have any suggestion, do not hesitate to reach out to me by email!
+This project is not intended to be a fully working application, at least at the moment. It was developed to facilitate correcting typos in my dissertation thesis, and because it works well enough I thought sharing it with everyone would be a good idea. If you want to help me with this project or have any suggestions, do not hesitate to reach out to me by email!
