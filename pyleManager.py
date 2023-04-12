@@ -22,7 +22,7 @@ def instructions(mode):
     e = edit using command-line editor
     enter = open using the default application launcher
 
-    prefix ■ means folder
+    prefix < means folder
 
 press any button to continue''')
     elif mode == '-picker':
@@ -39,7 +39,7 @@ press any button to continue''')
     m = change ordering
     enter = select file
     
-    prefix ■ means folder
+    prefix < means folder
 
 press any button to continue''')
 
@@ -125,7 +125,7 @@ def dir_printer():
             else:
                 print(' ', end='')
             if os.path.isdir(x):
-                print('■', end='')
+                print('<', end='')
             else:
                 print(' ', end='')
             print(x, end=' ')
