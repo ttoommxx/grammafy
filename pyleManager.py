@@ -113,15 +113,15 @@ def dir_printer():
         l_size = max([len(file_size(x)) for x in directory()])
         l_time = 19
         max_l = os.get_terminal_size().columns # length of terminal
-        print(' ' + '↓'*(settings['order'] == 0) + ' '*(settings['order'] != 0) + '*NAME*', end='')   
+        print(' ' + 'v'*(settings['order'] == 0) + ' '*(settings['order'] != 0) + '*NAME*', end='')   
         if settings['dimension'] and True in [os.path.isfile(x) for x in directory()]:
-            print(' '*(max_l - max(l_size,6) - (l_time + 2)*(settings['time_modified'] == True) - 10 + (settings['order'] !=1 )) + '↓'*(settings['order'] == 1) + '*SIZE*', end='')
+            print(' '*(max_l - max(l_size,6) - (l_time + 2)*(settings['time_modified'] == True) - 10 + (settings['order'] !=1 )) + 'v'*(settings['order'] == 1) + '*SIZE*', end='')
         if settings['time_modified'] and True in [os.path.isfile(x) for x in directory()]:
-            print(' '*(max(l_size - 3,3)*(settings['dimension'] == True) + (max_l - 27)*(settings['dimension'] == False) - 1 - (settings['order'] == 2)) + '↓'*(settings['order'] == 2) + '*TIME_M*', end='')
+            print(' '*(max(l_size - 3,3)*(settings['dimension'] == True) + (max_l - 27)*(settings['dimension'] == False) - 1 - (settings['order'] == 2)) + 'v'*(settings['order'] == 2) + '*TIME_M*', end='')
         print()
         for x in directory():
             if x == temp:
-                print('→', end='')
+                print('-', end='')
             else:
                 print(' ', end='')
             if os.path.isdir(x):
