@@ -101,10 +101,10 @@ def clear():
 def dir_printer():
     clear()
     # path directory
-    print('press i for instructions\n\n' + os.path.abspath(os.getcwd()) + '/\n')
+    to_print = 'press i for instructions\n\n' + os.path.abspath(os.getcwd()) + '/\n'
     # folders and pointer
     if len(directory()) == 0:
-        print('**EMPTY FOLDER**')
+        to_print += '**EMPTY FOLDER**\n'
     else:
         order_update(0)
         index_dir()
@@ -113,28 +113,29 @@ def dir_printer():
         l_size = max([len(file_size(x)) for x in directory()])
         l_time = 19
         max_l = os.get_terminal_size().columns # length of terminal
-        print(' ' + 'v'*(settings['order'] == 0) + ' '*(settings['order'] != 0) + '*NAME*', end='')   
+        to_print += ' ' + 'v'*(settings['order'] == 0) + ' '*(settings['order'] != 0) + '*NAME*'   
         if settings['dimension'] and True in [os.path.isfile(x) for x in directory()]:
-            print(' '*(max_l - max(l_size,6) - (l_time + 2)*(settings['time_modified'] == True) - 10 + (settings['order'] !=1 )) + 'v'*(settings['order'] == 1) + '*SIZE*', end='')
+            to_print += ' '*(max_l - max(l_size,6) - (l_time + 2)*(settings['time_modified'] == True) - 10 + (settings['order'] !=1 )) + 'v'*(settings['order'] == 1) + '*SIZE*'
         if settings['time_modified'] and True in [os.path.isfile(x) for x in directory()]:
-            print(' '*(max(l_size - 3,3)*(settings['dimension'] == True) + (max_l - 27)*(settings['dimension'] == False) - 1 - (settings['order'] == 2)) + 'v'*(settings['order'] == 2) + '*TIME_M*', end='')
-        print()
+            to_print += ' '*(max(l_size - 3,3)*(settings['dimension'] == True) + (max_l - 27)*(settings['dimension'] == False) - 1 - (settings['order'] == 2)) + 'v'*(settings['order'] == 2) + '*TIME_M*'
+        to_print += '\n'
         for x in directory():
             if x == temp:
-                print('-', end='')
+                to_print += '-'
             else:
-                print(' ', end='')
+                to_print += ' '
             if os.path.isdir(x):
-                print('<', end='')
+                to_print += '<'
             else:
-                print(' ', end='')
-            print(x, end=' ')
+                to_print += ' '
+            to_print += x
             if settings['dimension'] and os.path.isfile(x):
-                print(' '*(max_l - 4 - len(x) - max(l_size,6) - (l_time+2)*(settings['time_modified'] == True)) + file_size(x), end='')
+                to_print += ' '*(max_l - 4 - len(x) - max(l_size,6) - (l_time+2)*(settings['time_modified'] == True)) + file_size(x)
             if settings['time_modified'] and os.path.isfile(x):
                 time_stamp = time.strftime("%Y-%m-%d %H:%M:%S", time.strptime(time.ctime(os.lstat(x).st_mtime)))
-                print(' '*( (max(l_size,6) - len(file_size(x)) + 2 )*(settings['dimension'] == True) + (max_l - 23 - len(x))*(settings['dimension'] == False)) + time_stamp, end='')
-            print()
+                to_print += ' '*( (max(l_size,6) - len(file_size(x)) + 2 )*(settings['dimension'] == True) + (max_l - 23 - len(x))*(settings['dimension'] == False)) + time_stamp
+            to_print += '\n'
+        print(to_print)
 
 # FETCH KEYBOARD INPUT
 def getch():
