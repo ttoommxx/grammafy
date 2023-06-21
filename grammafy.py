@@ -3,9 +3,12 @@ import os,sys,time # import time if need to debug, time.sleep(seconds), remove s
 import pyleManager
 pyleManager.clear()
 input('Press enter to pick a .tex file')
-file_path = pyleManager.main('-picker')
+file_path = pyleManager.main('-p')
 pyleManager.clear()
-print(file_path + ' selected')
+if file_path:
+    print(file_path + ' selected')
+else:
+    sys.exit("File not selected")
 
 if file_path[-4:] != '.tex':
     sys.exit('the file selected is not a tex file')
