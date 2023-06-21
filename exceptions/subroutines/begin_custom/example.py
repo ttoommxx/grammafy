@@ -1,1 +1,1 @@
-CLEAN = CLEAN + 'Example.'
+CLEAN += "Example."

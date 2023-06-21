@@ -1,1 +1,1 @@
-CLEAN = CLEAN + 'Theorem.'
+CLEAN += "Theorem."

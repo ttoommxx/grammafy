@@ -1,1 +1,1 @@
-CLEAN = CLEAN + 'Assumption.'
+CLEAN += "Assumption."

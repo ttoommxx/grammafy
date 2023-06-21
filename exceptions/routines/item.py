@@ -1,1 +1,1 @@
-CLEAN = CLEAN + '-'
+CLEAN += "-"

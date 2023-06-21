@@ -1,1 +1,1 @@
-CLEAN = CLEAN + 'Lemma. '
+CLEAN += "Lemma. "

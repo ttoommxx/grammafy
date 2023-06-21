@@ -1,1 +1,1 @@
-CLEAN = CLEAN + 'Definition.'
+CLEAN += "Definition."

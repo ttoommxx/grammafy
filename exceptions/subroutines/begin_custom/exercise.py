@@ -1,1 +1,1 @@
-CLEAN = CLEAN + 'Exercise.'
+CLEAN += "Exercise."

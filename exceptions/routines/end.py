@@ -2,11 +2,11 @@
 
 import os
 
-exceptions = [e[:-3] for e in os.listdir("./exceptions/subroutines/end/")]
+exceptions = (e[:-3] for e in os.listdir("./exceptions/subroutines/end/"))
 
-i = SOURCE.find('}')+1 # right next after the brackets
+i = SOURCE.find("}")+1 # right next after the brackets
 
-asterisk = SOURCE[i-2]=='*'
+asterisk = SOURCE[i-2] == "*"
 command_name = SOURCE[1:i-1-asterisk] # remove asterisk if any
 # command = "./exceptions/subroutines/end/" + command_name + ".py"
 
@@ -16,7 +16,7 @@ SOURCE = SOURCE[i:]
 #     exec(open(command,'r').read())
 
 
-if os.path.exists("./exceptions/subroutines/end_custom/" + command_name + ".py"):
-    exec(open("./exceptions/subroutines/end_custom/" + command_name + ".py",'r').read())
-elif os.path.exists("./exceptions/subroutines/end/" + command_name + ".py"):
-    exec(open("./exceptions/subroutines/end/" + command_name + ".py",'r').read())
+if os.path.exists(f"./exceptions/subroutines/end_custom/{command_name}.py"):
+    exec(open(f"./exceptions/subroutines/end_custom/{command_name}.py").read())
+elif os.path.exists(f"./exceptions/subroutines/end/{command_name}.py"):
+    exec(open(f"./exceptions/subroutines/end/{command_name}.py").read())
