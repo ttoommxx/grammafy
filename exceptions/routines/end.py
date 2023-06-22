@@ -4,13 +4,13 @@ import os
 
 exceptions = (e[:-3] for e in os.listdir("./exceptions/subroutines/end/"))
 
-i = SOURCE.find("}")+1 # right next after the brackets
+i = SOURCE[-2].find("}", SOURCE[-1])+1 # right next after the brackets
 
-asterisk = SOURCE[i-2] == "*"
-command_name = SOURCE[1:i-1-asterisk] # remove asterisk if any
+asterisk = SOURCE[-2][i-2] == "*"
+command_name = SOURCE[-2][SOURCE[-1]+1:i-1-asterisk] # remove asterisk if any
 # command = "./exceptions/subroutines/end/" + command_name + ".py"
 
-SOURCE = SOURCE[i:]
+SOURCE[-1] = i
 
 # if os.path.exists(command):
 #     exec(open(command,'r').read())

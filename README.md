@@ -1,6 +1,6 @@
 # grammafy
 
-Version 1.0 (in progress, use last release)
+Version 0.9
 
 This script serves the purpose of cleaning up tex files by creating a txt file, stripped of all commands, that can be fed to writing software. Formulas are substituted with the symbol `[_]`, and the other changes should be comprehensible.
 
@@ -13,6 +13,8 @@ Needs Python >= 3.10. Download the last release and run grammafy.py from termina
 python3 grammafy.py
 ```
 Select the main tex file by navigating with the arrows and pressing enter on it. The [terminal file manager](https://github.com/ttoommxx/pylePicker) was written with the help of AI (ChatGPT).
+
+If you want the latest hotfixes, clone the main branch of this GitHub page.
 
 ## debugging mode
 
