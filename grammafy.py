@@ -48,7 +48,8 @@ SOURCE = [] # last entry is the index, the penultimum is the string
 
 # copy the main .tex file to a string
 with open(file_path) as SOURCE_TEMP:
-    SOURCE.extend( [SOURCE_TEMP.read(), 0] )
+    SOURCE.append( SOURCE_TEMP.read() )
+    SOURCE.append( 0 )
 
 # find the beginning of the document
 if "\\begin{document}" not in SOURCE[-2]:

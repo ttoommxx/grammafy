@@ -1,2 +1,2 @@
 CLEAN += "%"
-SOURCE[-1] = next_elem
+SOURCE[-1] += 1
