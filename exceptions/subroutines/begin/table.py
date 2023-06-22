@@ -1,6 +1,6 @@
 CLEAN += "[_]"
 
 # find the index where the whole portion ends
-i = SOURCE.find("\\end{table}") + 11
+i = SOURCE[-2].find("\\end{table}",next_elem) + 11
  
-SOURCE = SOURCE[i:]
+SOURCE[-1] = i

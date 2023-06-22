@@ -1,5 +1,5 @@
 CLEAN += "[_]"
 
 # find the index where the whole portion ends
-i = SOURCE.find("\\end{figure}") + 12
-SOURCE = SOURCE[i:]
+i = SOURCE[-2].find("\\end{figure}",next_elem) + 12
+SOURCE[-1] = i

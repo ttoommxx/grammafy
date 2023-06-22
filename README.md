@@ -1,6 +1,6 @@
 # grammafy
 
-Version 1.0 (in progress)
+Version 1.0 (in progress, use last release)
 
 This script serves the purpose of cleaning up tex files by creating a txt file, stripped of all commands, that can be fed to writing software. Formulas are substituted with the symbol `[_]`, and the other changes should be comprehensible.
 
@@ -23,7 +23,7 @@ The script computes the following instructions:
 2) After such a command, the script unpacks all the included tex files and turns the tex file into a big string (SOURCE).
 3) It starts scanning for certain symbols, which I call interactives:
 ```
-["\\","{","}","$","%","~"]
+("\\","{","}","$","%","~")
 ```
 4) If it finds any of the above, it everything to the output file (CLEAN), and executes an action depending on the symbol.
 5) If the special character ``\\`` is selected, the script, after looking for some simple interactives, checks if the command following ``\\`` is present in the folder "./exceptions/routines_custom" first, then "./exceptions/routines" and if in neither, it skips the command with its arguments.
