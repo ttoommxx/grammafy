@@ -57,26 +57,6 @@ if "\\begin{document}" not in SOURCE[-2]:
 else:
     SOURCE[-1] = SOURCE[-2].find("\\begin{document}") + 16 # we start from right after "\\begin{document}"
 
-# FROM HERE
-
-# so far works only when the files to include belong to the same folder
-# while "\include{" in SOURCE:
-#     i = SOURCE.find("\include{") # the string will start at position i+9
-#     j = SOURCE.find("}",i+9)
-#     include_path = SOURCE[i+9:j]
-#     if not include_path.endswith(".tex"): # if the extension is not present
-#         include_path = f"{include_path}.tex"
-#     with open(folder_path + include_path) as INCLUDE:
-#         SOURCE = SOURCE[:i] + INCLUDE.read() + SOURCE[j+1:]
-
-# while "\input{" in SOURCE:
-#     i = SOURCE.find("\input{") # the string will start at position i+7
-#     j = SOURCE.find("}",i+7)
-#     include_path = SOURCE[i+7:j]
-#     if not include_path.endswith(".tex"): # if the extension is not present
-#         include_path = f"{include_path}.tex"
-#     with open(folder_path + include_path) as INCLUDE:
-#         SOURCE = SOURCE[:i] + INCLUDE.read() + SOURCE[j+1:]
 
 # start analysing the text
 while SOURCE: # if any such element occurs
@@ -107,6 +87,9 @@ while SOURCE: # if any such element occurs
                 SOURCE[-1] = next_elem+1
             elif SOURCE[-2][ next_elem ] == "\\": # new line
                 CLEAN += "\n"
+                SOURCE[-1] = next_elem+1
+            elif SOURCE[-2][ next_elem ] == "%":
+                CLEAN += "%"
                 SOURCE[-1] = next_elem+1
             elif SOURCE[-2][ next_elem ] == "'":
                 if SOURCE[-2][ next_elem+1 ] in ["a","e","i","o","u"]:
@@ -155,7 +138,7 @@ while SOURCE: # if any such element occurs
             SOURCE[-1] = SOURCE[-2].find( "\n",next_elem ) + 1
         case _:
             if input(f"Fatal error, unknown interactive {SOURCE[-2][elem[0]]}. \
-                     Press Y to continue or any other button to abort").lower() != "y":
+                    Press Y to continue or any other button to abort").lower() != "y":
                 sys.exit("Aborted")
             else:
                 SOURCE[-1] = next_elem
