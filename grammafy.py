@@ -57,15 +57,22 @@ if "\\begin{document}" not in SOURCE[-2]:
 else:
     SOURCE[-1] = SOURCE[-2].find("\\begin{document}") + 16 # we start from right after "\\begin{document}"
 
+loop_control = (-1,-1)
 
 # start analysing the text
 while SOURCE: # if any such element occurs
+
+    if loop_control[0] >= SOURCE[-1] and loop_control[1] == len(SOURCE):
+        # if loops/error just go to the end of the file
+        SOURCE[-1] = len(SOURCE[-2])
+    loop_control = (SOURCE[-1], len(SOURCE))
+
     elem = inter( SOURCE[-2][ SOURCE[-1]: ] )
     if not elem:
         CLEAN += SOURCE[-2][ SOURCE[-1]: ]
         del SOURCE[-2:]
         continue
-
+    
     CLEAN += SOURCE[-2][ SOURCE[-1]:SOURCE[-1]+elem[1] ] # we can immediately add what we skipped before any interactive element
     next_elem = SOURCE[-1]+elem[1]+1
 
@@ -101,6 +108,7 @@ while SOURCE: # if any such element occurs
             else:
                 i = min( [ SOURCE[-2].find(x,next_elem) for x in end_command if x in SOURCE[-2][next_elem:] ] )  # take note of the index of such element
                 command_name = SOURCE[-2][ next_elem:i ]
+
                 if SOURCE[-2][i] == "*":
                     i+=1
                 SOURCE[-1] = i
@@ -136,6 +144,8 @@ while SOURCE: # if any such element occurs
             SOURCE[-1] = i
         case "%":
             SOURCE[-1] = SOURCE[-2].find( "\n",next_elem ) + 1
+            if SOURCE[-1] == 0:
+                SOURCE[-1] = len(SOURCE[-2])
         case _:
             if input(f"Fatal error, unknown interactive {SOURCE[-2][elem[0]]}. \
                     Press Y to continue or any other button to abort").lower() != "y":
