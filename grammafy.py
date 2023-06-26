@@ -1,10 +1,16 @@
-import os,sys,time # import time if need to debug, time.sleep(seconds), remove sys once stopped debugging
+import os, sys, argparse
 
-import pyleManager
-pyleManager.clear()
-input("Press enter to pick a .tex file")
-file_path = pyleManager.main("-p")
-pyleManager.clear()
+parser = argparse.ArgumentParser(prog="grammafy", description="clean up tex files")
+parser.add_argument("-c", "--commandline", help="select via command line argument")
+args = parser.parse_args() # args.picker contains the modality
+if not args.commandline:
+    import pyleManager
+    pyleManager.clear()
+    input("Press enter to pick a tex file")
+    file_path = pyleManager.main("-p")
+    pyleManager.clear()
+else:
+    file_path = args.commandline
 
 if not file_path:
     sys.exit("File not selected")
@@ -57,7 +63,7 @@ if "\\begin{document}" not in SOURCE[-2]:
 else:
     SOURCE[-1] = SOURCE[-2].find("\\begin{document}") + 16 # we start from right after "\\begin{document}"
 
-loop_control = (-1,-1)
+loop_control = [-1,-1]
 
 # start analysing the text
 while SOURCE: # if any such element occurs
@@ -65,7 +71,7 @@ while SOURCE: # if any such element occurs
     if loop_control[0] >= SOURCE[-1] and loop_control[1] == len(SOURCE):
         # if loops/error just go to the end of the file
         SOURCE[-1] = len(SOURCE[-2])
-    loop_control = (SOURCE[-1], len(SOURCE))
+    loop_control[:] = [SOURCE[-1], len(SOURCE)]
 
     elem = inter( SOURCE[-2][ SOURCE[-1]: ] )
     if not elem:
@@ -183,5 +189,5 @@ if any(list_log_command):
         file_log_command.write(str(list_log_command))
 
 from platform import system
-if system() == 'Linux':
+if system() == 'Linux' and input("Enter \"y\" to open the grammafied text. ").lower() == "y":
     os.system("xdg-open " + f"{folder_path}{file_name}_grammafied.txt".replace(' ','\ '))
