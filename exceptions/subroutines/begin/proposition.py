@@ -1,1 +1,1 @@
-CLEAN += "Proposition."
+clean += "Proposition."

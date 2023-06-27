@@ -1,1 +1,1 @@
-CLEAN += "Proof."
+clean += "Proof."

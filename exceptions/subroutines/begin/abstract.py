@@ -1,1 +1,1 @@
-CLEAN += "Abstract."
+clean += "Abstract."

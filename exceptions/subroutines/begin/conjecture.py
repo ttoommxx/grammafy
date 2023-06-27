@@ -1,1 +1,1 @@
-CLEAN += "Conjecture."
+clean += "Conjecture."

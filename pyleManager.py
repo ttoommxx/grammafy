@@ -80,7 +80,7 @@ def directory():
     return dirs + files
 
 
-# CLEAN TERMINAL
+# clean TERMINAL
 def clear():
     if os.name == "nt":
         os.system("cls")

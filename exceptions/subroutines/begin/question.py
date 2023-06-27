@@ -1,1 +1,1 @@
-CLEAN += "Question."
+clean += "Question."

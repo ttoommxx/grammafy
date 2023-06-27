@@ -1,2 +1,2 @@
-CLEAN += "%"
-SOURCE[-1] += 1
+clean += "%"
+source.index += 1

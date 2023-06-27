@@ -1,4 +1,5 @@
 import os, sys, argparse
+from Source import Source
 
 parser = argparse.ArgumentParser(prog="grammafy", description="clean up tex files")
 parser.add_argument("-c", "--commandline", help="select via command line argument")
@@ -27,15 +28,6 @@ list_log_command = set()
 file_name = os.path.basename(file_path)[:-4]
 folder_path = f"{os.path.dirname(file_path)}/"
 
-# types of different "command" headers
-list_inter = ("\\","{","}","$","%","~")
-def inter(string):
-    try:
-        return min( ((x, string.find(x)) for x in list_inter if x in string), key = lambda x:x[1] )
-    except ValueError:
-        return False
-
-
 # create a list of existing exceptions
 exceptions = (e[:-3] for e in os.listdir("./exceptions/routines/"))
 exceptions_custom = (e[:-3] for e in os.listdir("./exceptions/routines_custom/"))
@@ -48,76 +40,66 @@ with open("./exceptions/void.txt") as void_list, open("./exceptions/void_custom.
 end_command = (" ","{","}",".",",",":",";","*","[","]","(",")","$","\\","\n")
 
 # initialise the final text
-CLEAN = ""
-
-SOURCE = [] # last entry is the index, the penultimum is the string
+clean = ""
 
 # copy the main .tex file to a string
-with open(file_path) as SOURCE_TEMP:
-    SOURCE.append( SOURCE_TEMP.read() )
-    SOURCE.append( 0 )
+with open(file_path) as source_temp:
+    source = Source( source_temp.read() )
 
 # find the beginning of the document
-if "\\begin{document}" not in SOURCE[-2]:
+if "\\begin{document}" not in source.tex:
     print("\\begin{document} missing")
 else:
-    SOURCE[-1] = SOURCE[-2].find("\\begin{document}") + 16 # we start from right after "\\begin{document}"
-
-loop_control = [-1,-1]
+    source.move_index("\\begin{document}")
 
 # start analysing the text
-while SOURCE: # if any such element occurs
-
-    if loop_control[0] >= SOURCE[-1] and loop_control[1] == len(SOURCE):
-        # if loops/error just go to the end of the file
-        SOURCE[-1] = len(SOURCE[-2])
-    loop_control[:] = [SOURCE[-1], len(SOURCE)]
-
-    elem = inter( SOURCE[-2][ SOURCE[-1]: ] )
-    if not elem:
-        CLEAN += SOURCE[-2][ SOURCE[-1]: ]
-        del SOURCE[-2:]
+while source: # if any such element occurs
+    next_index = source.inter()
+    if next_index is False:
+        clean += source.tex
+        source = source.root
         continue
     
-    CLEAN += SOURCE[-2][ SOURCE[-1]:SOURCE[-1]+elem[1] ] # we can immediately add what we skipped before any interactive element
-    next_elem = SOURCE[-1]+elem[1]+1
+    clean += source.tex[:next_index] # we can immediately add what we skipped before any interactive element
+    source.index += next_index
 
-    match elem[0]:
+    match source.tex[0]:
         case "\\": # FROM HERE - MAKE IT INTO A MATCH
-            if SOURCE[-2][ next_elem ] == "[": # equation
-                i = SOURCE[-2].find("\]", next_elem ) + 3
-                CLEAN += "[_]"
-                if SOURCE[-2][ next_elem:i-3 ].replace(" ","").replace("\n","")[-1] in [",", ";", "."]: # add punctuation to non-inline equations
-                    CLEAN += SOURCE[-2][ next_elem:i-3 ].replace(" ","").replace("\n","")[-1]
-                SOURCE[-1] = i
-            elif SOURCE[-2][ next_elem ] == "&":
-                CLEAN += "&"
-                SOURCE[-1] = next_elem+1
-            elif SOURCE[-2][ next_elem ] == " ": # space
-                SOURCE[-1] = next_elem
-            elif SOURCE[-2][ next_elem ] == "\"":
-                CLEAN += "\""
-                SOURCE[-1] = next_elem+1
-            elif SOURCE[-2][ next_elem ] == "\\": # new line
-                CLEAN += "\n"
-                SOURCE[-1] = next_elem+1
-            elif SOURCE[-2][ next_elem ] == "%":
-                CLEAN += "%"
-                SOURCE[-1] = next_elem+1
-            elif SOURCE[-2][ next_elem ] == "'":
-                if SOURCE[-2][ next_elem+1 ] in ["a","e","i","o","u"]:
-                    CLEAN += SOURCE[-2][ next_elem+1 ] + u"\u0301" # unicode encoding
-                    SOURCE[-1] = next_elem+2
+            if source.tex[1] == "[": # equation
+                i = source.tex.find( "\\]" )
+                clean += "[_]"
+                if source.tex[:i].rstrip()[-1] in [",", ";", "."]: # add punctuation to non-inline equations
+                    clean += source.tex[:i].rstrip()[-1]
+                source.move_index( "\\]" )
+            elif source.tex[1] == "&":
+                clean += "&"
+                source.index += 2
+            elif source.tex[1] == " ": # space
+                source.index += 1
+            elif source.tex[1] == "\"":
+                clean += "\""
+                source.index += 2
+            elif source.tex[1] == "\\": # new line
+                clean += "\n"
+                source.index += 2
+            elif source.tex[1] == "%":
+                clean += "%"
+                source.index += 2
+            elif source.tex[1] == "'":
+                if source.tex[2] in ["a","e","i","o","u"]:
+                    clean += source.tex[2] + u"\u0301" # unicode encoding
+                    source.index += 3
                 else:
-                    CLEAN += "'"
-                    SOURCE[-1] = next_elem+1
+                    clean += "'"
+                    source.index += 2
             else:
-                i = min( [ SOURCE[-2].find(x,next_elem) for x in end_command if x in SOURCE[-2][next_elem:] ] )  # take note of the index of such element
-                command_name = SOURCE[-2][ next_elem:i ]
+                i = min( ( source.tex.find(x,1) for x in end_command if x in source.tex[1:] ) )  # take note of the index of such element
+                command_name = source.tex[ 1:i ]
 
-                if SOURCE[-2][i] == "*":
-                    i+=1
-                SOURCE[-1] = i
+                if source.tex[i] == "*":
+                    i += 1
+                source.index += i
+
                 if os.path.exists(f"./exceptions/routines_custom/{command_name}.py"): # first I search within custom subroutines
                     exec(open(f"./exceptions/routines_custom/{command_name}.py").read())
                 elif os.path.exists(f"./exceptions/routines/{command_name}.py"): # then I search within built-in subroutines
@@ -125,59 +107,53 @@ while SOURCE: # if any such element occurs
                 elif command_name in void:
                     pass
                 else:
-                    while SOURCE[-2][i] in ["{","["]: # check if opening and closing brackets
-                        i += 1
-                        j = i # index for open brackets
-                        while i >= j:
-                            i = min([SOURCE[-2].find(x,i) for x in ["}","]"] if x in SOURCE[-2][i:] ])+1
-                            j = min([SOURCE[-2].find(x,j) for x in ["{","["] if x in SOURCE[-2][j:] ] , default=i+1)+1
-                    # the explanation of the above is a little complicated: I look for a (the first) closed bracket and a (the first) open bracket. They must match, otherwise it would contradict the fact that they are the first. I keep doing it until I can't find an open one. So min will be set to i and we would break out of the internal while. As for the external, every time I get out I look for the adjacent bracket and there is another one I iterate!
-                    SOURCE[-1] = i
+                    while source.tex[0] in ["{","["]: # check if opening and closing brackets
+                        if source.tex[0] == "{":
+                            source.move_index("}")
+                        else:
+                            source.move_index("]")
                     list_aggro.add(command_name)
         case "~":
-            SOURCE[-1] = next_elem
+            source.index += 1
         case "{":
-            SOURCE[-1] = next_elem
+            source.index += 1
         case "}":
-            SOURCE[-1] = next_elem
+            source.index += 1
         case "$":
-            if SOURCE[-2][ next_elem ] == "$":
-                i = SOURCE[-2].find( "$$",next_elem+1 ) + 2
+            clean += "[_]"
+            source.index += 1
+            if source.tex[0] == "$":
+                source.move_index("$$")
             else: # assuming there are no double dollars within one-dollar equations
-                i = SOURCE[-2].find( "$",next_elem+1 ) + 1
-            CLEAN += "[_]"
-            # TO DO, ADD COMMAS ETC IF THAT'S HOW THE EQUATION ENDS
-            SOURCE[-1] = i
+                source.move_index("$")
         case "%":
-            SOURCE[-1] = SOURCE[-2].find( "\n",next_elem ) + 1
-            if SOURCE[-1] == 0:
-                SOURCE[-1] = len(SOURCE[-2])
+            source.move_index("\n")
         case _:
-            if input(f"Fatal error, unknown interactive {SOURCE[-2][elem[0]]}. \
+            if input(f"Fatal error, unknown interactive {source.tex[0]}. \
                     Press Y to continue or any other button to abort").lower() != "y":
                 sys.exit("Aborted")
             else:
-                SOURCE[-1] = next_elem
+                source.index += 1
 
-# CLEANING ROUTINES
+# cleanING ROUTINES
 # remove unmatched brackets and tabbing with spaces
-CLEAN = CLEAN.replace("[]","").replace("()","").replace("\t"," ")
+clean = clean.replace("[]","").replace("()","").replace("\t"," ")
 # remove initial spaces and newlines
-while len(CLEAN)>0 and CLEAN[0] in ["\n"," "]:
-    CLEAN = CLEAN[1:]
+while len(clean)>0 and clean[0] in ["\n"," "]:
+    clean = clean[1:]
 # remove newline+space preliminarly to the cleaning
-while "\n " in CLEAN:
-    CLEAN = CLEAN.replace("\n ","\n")
+while "\n " in clean:
+    clean = clean.replace("\n ","\n")
 # reset indentation for [_]s
-while "\n[_]" in CLEAN or "[_]\n" in CLEAN or "[_],\n" in CLEAN or "[_].\n" in CLEAN or "[_];\n" in CLEAN:
-    CLEAN = CLEAN.replace("\n[_]"," [_]").replace("[_]\n","[_] ").replace("[_],\n","[_], ").replace("[_].\n","[_]. ").replace("[_];\n","[_]; ")
+while "\n[_]" in clean or "[_]\n" in clean or "[_],\n" in clean or "[_].\n" in clean or "[_];\n" in clean:
+    clean = clean.replace("\n[_]"," [_]").replace("[_]\n","[_] ").replace("[_],\n","[_], ").replace("[_].\n","[_]. ").replace("[_];\n","[_]; ")
 # add some space before every [_] in case we have them attached to something else
-CLEAN = CLEAN.replace(".[_]",". [_]".replace(",[_]",", [_]")).replace(";[_]","; [_]")
-while "\n\n\n" in CLEAN or "  " in CLEAN or " -" in CLEAN: # remove double lines and double spaces
-    CLEAN = CLEAN.replace("\n\n\n","\n\n").replace("  "," ").replace(" -","\n-")
+clean = clean.replace(".[_]",". [_]".replace(",[_]",", [_]")).replace(";[_]","; [_]")
+while "\n\n\n" in clean or "  " in clean or " -" in clean: # remove double lines and double spaces
+    clean = clean.replace("\n\n\n","\n\n").replace("  "," ").replace(" -","\n-")
 
 with open(f"{folder_path}{file_name}_grammafied.txt","w") as file_output:
-    file_output.write(CLEAN)
+    file_output.write(clean)
 
 if any(list_aggro):
     print(f"Unknown commands, please check {file_name}_list_unknowns.txt")
@@ -189,5 +165,5 @@ if any(list_log_command):
         file_log_command.write(str(list_log_command))
 
 from platform import system
-if system() == 'Linux' and input("Enter \"y\" to open the grammafied text. ").lower() == "y":
+if system() == 'Linux' and input("Enter Y to open the grammafied text. ").lower() == "y":
     os.system("xdg-open " + f"{folder_path}{file_name}_grammafied.txt".replace(' ','\ '))

@@ -1,1 +1,1 @@
-CLEAN += "Corollary."
+clean += "Corollary."

@@ -1,10 +1,9 @@
-i = SOURCE[-1] + 1
+i = 1
 j = i # index for open brackets
 while i >= j and j > 0 :
-    i = SOURCE[-2].find( "}",i ) +1
-    j = SOURCE[-2].find( "{",j ) +1
+    i = source.tex.find( "}",i ) +1
+    j = source.tex.find( "{",j ) +1
 
 # add the text in the footnote to the queue in parenthesis
-SOURCE.append( "(FOOTNOTE: " + SOURCE[-2][SOURCE[-1]+1:i-1] + ")")
-SOURCE.append(0)
-SOURCE[-3] = i
+source = source.add("(FOOTNOTE: " + source.tex[ 1:i-1 ] + ")")
+source.root.index += i

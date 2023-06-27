@@ -1,1 +1,1 @@
-CLEAN += "Example."
+clean += "Example."

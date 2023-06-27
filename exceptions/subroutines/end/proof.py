@@ -1,1 +1,1 @@
-CLEAN += " ■\n"
+clean += " ■\n"

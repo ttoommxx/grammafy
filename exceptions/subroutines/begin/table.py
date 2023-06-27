@@ -1,6 +1,4 @@
-CLEAN += "[_]"
+clean += "[_]"
 
 # find the index where the whole portion ends
-i = SOURCE[-2].find("\\end{table}",SOURCE[-1]) + 11
- 
-SOURCE[-1] = i
+source.move_index("\\end{table}")
