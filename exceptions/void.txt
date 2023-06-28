@@ -37,3 +37,6 @@ affiliation
 noindent
 texorpdfstring
 it
+address
+thanks
+textsc

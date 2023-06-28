@@ -16,7 +16,8 @@ else:
 if not file_path:
     sys.exit("File not selected")
 elif not file_path.endswith(".tex"):
-    sys.exit("the file selected is not a tex file")
+    if input("the file selected is not in a tex format, enter Y to continue anyway. ").lower() != "y":
+        sys.exit("the file selected is not a tex file")
 else:
     print(f"{file_path} selected")    
 
@@ -34,7 +35,8 @@ exceptions_custom = (e[:-3] for e in os.listdir("./exceptions/routines_custom/")
 
 # fetch list of commands that should not produce any text output
 with open("./exceptions/void.txt") as void_list, open("./exceptions/void_custom.txt","r") as void_custom_list:
-    void = [line.strip() for line in void_list.readlines()] + [line.strip() for line in void_custom_list.readlines()] # put them together as it doesn't make a difference, there is no overriding
+    void = [line.strip() for line in void_list.readlines()] \
+        + [line.strip() for line in void_custom_list.readlines()] # put them together as it doesn't make a difference, there is no overriding
 
 # list of admissible characters for commands
 end_command = (" ","{","}",".",",",":",";","*","[","]","(",")","$","\\","\n")
@@ -83,7 +85,8 @@ while source: # if any such element occurs
             elif source.tex[1] == " ": # space
                 source.index += 1
             elif source.tex[1] == "\"":
-                clean += "\""
+                if source.tex[2] not in ["a","e","i","o","u"]:
+                    clean += "\""
                 source.index += 2
             elif source.tex[1] == "\\": # new line
                 clean += "\n"
@@ -92,12 +95,12 @@ while source: # if any such element occurs
                 clean += "%"
                 source.index += 2
             elif source.tex[1] == "'":
-                if source.tex[2] in ["a","e","i","o","u"]:
-                    clean += source.tex[2] + u"\u0301" # unicode encoding
-                    source.index += 3
-                else:
+                if source.tex[2] not in ["a","e","i","o","u"]:
                     clean += "'"
-                    source.index += 2
+                source.index += 2
+            elif source.tex[1] == "#":
+                clean += "#"
+                source.index += 2
             else:
                 i = min( ( source.tex.find(x,1) for x in end_command if x in source.tex[1:] ) )  # take note of the index of such element
                 command_name = source.tex[ 1:i ]
@@ -115,13 +118,19 @@ while source: # if any such element occurs
                 else:
                     while source.tex[0] in ["{","["]: # check if opening and closing brackets
                         if source.tex[0] == "{":
-                            i = 0
+                            i = source.tex.find("{",1)
                             j = source.tex.find("}",1)
-                            while i := source.tex.find("{",i+1) < j and i > 0:
+                            while 0 < i < j:
+                                i = source.tex.find("{",i+1)
                                 j = source.tex.find("}",j+1)
                             source.index += j+1
                         else:
-                            source.move_index("]")
+                            i = source.tex.find("[",1)
+                            j = source.tex.find("]",1)
+                            while 0 < i < j:
+                                i = source.tex.find("[",i+1)
+                                j = source.tex.find("]",j+1)
+                            source.index += j+1
                     list_aggro.add(command_name)
         case "~":
             source.index += 1
@@ -145,12 +154,11 @@ while source: # if any such element occurs
             else:
                 source.index += 1
 
-# cleanING ROUTINES
+# CLEANING ROUTINES
+# remove initial spaces and newlines
+clean = clean.strip()
 # remove unmatched brackets and tabbing with spaces
 clean = clean.replace("[]","").replace("()","").replace("\t"," ")
-# remove initial spaces and newlines
-while len(clean)>0 and clean[0] in ["\n"," "]:
-    clean = clean[1:]
 # remove newline+space preliminarly to the cleaning
 while "\n " in clean:
     clean = clean.replace("\n ","\n")
@@ -173,7 +181,3 @@ if any(list_log_command):
     print(f"Unknown commands within commands, please check {file_name}_list_log_command.txt")
     with open(f"{folder_path}{file_name}_list_log_command.txt","w") as file_log_command:
         file_log_command.write(str(list_log_command))
-
-from platform import system
-if system() == 'Linux' and input("Enter Y to open the grammafied text. ").lower() == "y":
-    os.system("xdg-open " + f"{folder_path}{file_name}_grammafied.txt".replace(' ','\ '))
