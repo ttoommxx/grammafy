@@ -11,10 +11,6 @@ class Source():
     @property
     def tex(self):
         return self._tex[self.index:]
-    
-    @tex.setter
-    def tex(self,text):
-        self._tex = text
 
     def move_index(self, text_to_find):
         if text_to_find not in self.tex: # go to the end
