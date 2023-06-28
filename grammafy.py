@@ -115,7 +115,11 @@ while source: # if any such element occurs
                 else:
                     while source.tex[0] in ["{","["]: # check if opening and closing brackets
                         if source.tex[0] == "{":
-                            source.move_index("}")
+                            i = 0
+                            j = souce.tex.find("}",1)
+                            while i := source.tex.find("{",i+1) < j and i > 0:
+                                j = source.tex.find("}",j+1)
+                            source.index += j+1
                         else:
                             source.move_index("]")
                     list_aggro.add(command_name)
