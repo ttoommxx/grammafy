@@ -1,6 +1,13 @@
-import os, sys, termios, tty, time
+import os, sys, time
 from platform import system
 import argparse
+
+if os.name == "nt":
+    from msvcrt import getch
+elif os.name == "posix":
+    import termios, tty
+else:
+    sys.exit("Operating system not recognised")
 
 parser = argparse.ArgumentParser(prog="pyleManager", description="file manager written in Python")
 parser.add_argument("-p", "--picker", action="store_true", help="use pyleManager as a file selector")
@@ -67,20 +74,20 @@ def directory():
     match settings["order"]:
         # size
         case 1:
-            dirs = [x[0] for x in sorted({x:os.lstat(x).st_size for x in os.listdir() if os.path.isdir(x) and (settings["hidden"] or not x.startswith(".") )}.items(), key=lambda x:x[1]) ]
-            files = [x[0] for x in sorted({x:os.lstat(x).st_size for x in os.listdir() if os.path.isfile(x) and (settings["hidden"] or not x.startswith(".") )}.items(), key=lambda x:x[1]) ]
+            dirs = [x[0] for x in sorted({x:os.lstat(x).st_size for x in os.listdir() if os.path.isdir(x) and (settings["hidden"] or not x.startswith(".") )}.items(), key=lambda x:x[1]) ] \
+                + [x[0] for x in sorted({x:os.lstat(x).st_size for x in os.listdir() if os.path.isfile(x) and (settings["hidden"] or not x.startswith(".") )}.items(), key=lambda x:x[1]) ]
         # time modified
         case 2:
-            dirs = [x[0] for x in sorted({x:os.lstat(x).st_mtime for x in os.listdir() if os.path.isdir(x) and (settings["hidden"] or not x.startswith(".") )}.items(), key=lambda x:x[1]) ]
-            files = [x[0] for x in sorted({x:os.lstat(x).st_mtime for x in os.listdir() if os.path.isfile(x) and (settings["hidden"] or not x.startswith(".") )}.items(), key=lambda x:x[1]) ]
+            dirs = [x[0] for x in sorted({x:os.lstat(x).st_mtime for x in os.listdir() if os.path.isdir(x) and (settings["hidden"] or not x.startswith(".") )}.items(), key=lambda x:x[1]) ] \
+                + [x[0] for x in sorted({x:os.lstat(x).st_mtime for x in os.listdir() if os.path.isfile(x) and (settings["hidden"] or not x.startswith(".") )}.items(), key=lambda x:x[1]) ]
         # name
         case _: # 0 and unrecognised values
-            dirs = sorted([x for x in os.listdir() if os.path.isdir(x) and (settings["hidden"] or not x.startswith(".") )], key=lambda s: s.lower())
-            files = sorted([x for x in os.listdir() if os.path.isfile(x) and (settings["hidden"] or not x.startswith(".") )], key=lambda s: s.lower())
-    return dirs + files
+            dirs = sorted([x for x in os.listdir() if os.path.isdir(x) and (settings["hidden"] or not x.startswith(".") )], key=lambda s: s.lower()) \
+                + sorted([x for x in os.listdir() if os.path.isfile(x) and (settings["hidden"] or not x.startswith(".") )], key=lambda s: s.lower())
+    return dirs
 
 
-# clean TERMINAL
+# CLEAN TERMINAL
 def clear():
     if os.name == "nt":
         os.system("cls")
@@ -92,7 +99,12 @@ def clear():
 def dir_printer():
     clear()
     # path directory
-    to_print = "pyleManager ---- press i for instructions\n\n" + os.path.abspath(os.getcwd()) + "/\n"
+    to_print = "pyleManager ---- press i for instructions\n\n"
+    max_l = os.get_terminal_size().columns # length of terminal
+    if len(os.path.abspath(os.getcwd())) > max_l:
+        to_print += "... " + os.path.abspath(os.getcwd())[-max_l+5:] + "/\n"
+    else:
+        to_print += os.path.abspath(os.getcwd()) + "/\n"
     # folders and pointer
     if len(directory()) == 0:
         to_print += "**EMPTY FOLDER**\n"
@@ -102,42 +114,70 @@ def dir_printer():
         temp = directory()[index]
         l_size = max((len(file_size(x)) for x in directory()))
         l_time = 19
-        max_l = os.get_terminal_size().columns # length of terminal
         to_print += " " + "v"*(settings["order"] == 0) + " "*(settings["order"] != 0) + "*NAME*"   
         if settings["dimension"] and True in (os.path.isfile(x) for x in directory()):
             to_print += " "*(max_l - max(l_size,6) - (l_time + 2)*(settings["time_modified"] == True) - 10 + (settings["order"] != 1 )) + "v"*(settings["order"] == 1) + "*SIZE*"
         if settings["time_modified"] and True in (os.path.isfile(x) for x in directory()):
             to_print += " "*(max(l_size - 3,3)*(settings["dimension"] == True) + (max_l - 27)*(settings["dimension"] == False) - 1 - (settings["order"] == 2)) + "v"*(settings["order"] == 2) + "*TIME_M*"
-        to_print += "\n"
         for x in directory():
+            to_print += "\n"
             if x == temp:
-                to_print += "-"
+                to_print += "+"
             else:
                 to_print += " "
             if os.path.isdir(x):
                 to_print += "<"
             else:
                 to_print += " "
-            to_print += x
+            if len(x) > max_l - 37 + l_size*(settings["dimension"] == 0) + l_time*(settings["time_modified"] == 0):
+                name_x = x[:(max_l-39)//2] + " ... " +\
+                          x[-(max_l-39)//2 - (l_size+2)*(settings["dimension"] == 0) - (l_time+2)*(settings["time_modified"] == 0):]
+            else:
+                name_x = x
+            to_print += name_x
             if settings["dimension"] and os.path.isfile(x):
-                to_print += " "*(max_l - 4 - len(x) - max(l_size,6) - (l_time+2)*(settings["time_modified"] == True)) + file_size(x)
+                to_print += " "*(max_l - 4 - len(name_x) - max(l_size,6) - (l_time+2)*(settings["time_modified"] == True)) + file_size(x)
             if settings["time_modified"] and os.path.isfile(x):
                 time_stamp = time.strftime("%Y-%m-%d %H:%M:%S", time.strptime(time.ctime(os.lstat(x).st_mtime)))
-                to_print += " "*( (max(l_size,6) - len(file_size(x)) + 2 )*(settings["dimension"] == True) + (max_l - 23 - len(x))*(settings["dimension"] == False)) + time_stamp
-            to_print += "\n"
+                to_print += " "*( (max(l_size,6) - len(file_size(x)) + 2 )*(settings["dimension"] == True) + (max_l - 23 - len(name_x))*(settings["dimension"] == False)) + time_stamp
     print(to_print)
 
 
 # FETCH KEYBOARD INPUT
-def getch():
-    fd = sys.stdin.fileno()
-    old_settings = termios.tcgetattr(fd)
-    try:
-        tty.setraw(sys.stdin.fileno())
-        ch = sys.stdin.read(1)
-    finally:
-        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-    return ch
+if os.name == "posix":
+    def getch():
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(sys.stdin.fileno())
+            ch = sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        return ch
+    conv_arrows = {"D":"left", "C":"right", "A":"up", "B":"down"}
+    def get_key():
+        key_pressed = getch()
+        match key_pressed:
+            case "\r":
+                return "enter"
+            case "\x1b":
+                if getch() == "[":
+                    return conv_arrows[getch()]
+            case _:
+                return key_pressed
+else:
+    conv_table = {
+        b"q":"q", b"h":"h", b"m":"m", b"i":"i", b"t":"t", b"d":"d", b"e":"e", b"\r":"enter",
+        b"\xe0":"arrows"
+        }
+    conv_arrows = {b"K":"left", b"M":"right", b"H":"up", b"P":"down"}
+    def get_key():
+        key_pressed = conv_table[getch()]
+        if key_pressed != "arrows":
+            return key_pressed
+        else:
+            return conv_arrows[getch()]
+        
 
 
 # FILE MANAGER
@@ -151,10 +191,11 @@ def main(*args):
     while True:
         if len(directory()) > 0:
             selection = directory()[index] # + file name if any
-        match getch():
+        match get_key():
             # quit
             case "q":
-                open(local_folder + "settings.py","w").write("settings = " + str(settings)) # save config
+                with open(local_folder + "settings.py","w") as settings_file: 
+                    settings_file.write("settings = " + str(settings)) # save config
                 clear()
                 os.chdir(local_folder)
                 return
@@ -199,7 +240,8 @@ def main(*args):
                         clear()
                         print("system not recognised, press any button to continue")
                         getch()
-            case "\r" if len(directory()) > 0:
+            # enter
+            case "enter" if len(directory()) > 0:
                 if picker:
                     path = os.getcwd() + "/" + selection
                     if  os.path.isdir(selection):
@@ -218,24 +260,19 @@ def main(*args):
                             clear()
                             print("system not recognised, press any button to continue")
                             getch()
-            case "\x1b":
-                if getch() == "[":
-                    match getch():
-                        # up
-                        case "A" if len(directory()) > 0:
-                            index = index - 1
-                        # down
-                        case "B" if len(directory()) > 0:
-                            index = index + 1
-                        # right
-                        case "C" if len(directory()) > 0:
-                            if os.path.isdir(selection):
-                                os.chdir(selection)
-                        # left
-                        case "D":
-                            os.chdir("..")
-                        case _:
-                            pass
+            # up
+            case "up" if len(directory()) > 0:
+                index = index - 1
+            # down
+            case "down" if len(directory()) > 0:
+                index = index + 1
+            # right
+            case "right" if len(directory()) > 0:
+                if os.path.isdir(selection):
+                    os.chdir(selection)
+            # left
+            case "left":
+                os.chdir("..")
             case _:
                 pass
         dir_printer()
