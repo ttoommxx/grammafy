@@ -71,6 +71,12 @@ while source: # if any such element occurs
                 if source.tex[:i].rstrip()[-1] in [",", ";", "."]: # add punctuation to non-inline equations
                     clean += source.tex[:i].rstrip()[-1]
                 source.move_index( "\\]" )
+            elif source.tex[1] == "(":
+                i = source.tex.find( "\\)" )
+                clean += "[_]"
+                if source.tex[:i].rstrip()[-1] in [",", ";", "."]:
+                    clean += source.tex[:i].rstrip()[-1]
+                source.move_index( "\\)" )
             elif source.tex[1] == "&":
                 clean += "&"
                 source.index += 2
