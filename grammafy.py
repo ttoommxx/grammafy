@@ -116,7 +116,7 @@ while source: # if any such element occurs
                     while source.tex[0] in ["{","["]: # check if opening and closing brackets
                         if source.tex[0] == "{":
                             i = 0
-                            j = souce.tex.find("}",1)
+                            j = source.tex.find("}",1)
                             while i := source.tex.find("{",i+1) < j and i > 0:
                                 j = source.tex.find("}",j+1)
                             source.index += j+1
