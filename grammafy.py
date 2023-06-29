@@ -161,13 +161,14 @@ clean = clean.strip()
 clean = clean.replace("[]","").replace("()","").replace("\t"," ")
 # pointless spaces
 clean = re.sub("( )*\n( )*", "\n", clean)
-# # too many lines
+# too many lines
 clean = re.sub("\n\n\s*", "\n\n", clean)
-# # dourble spacing
+# dourble spacing
 clean = re.sub("( )+", " ", clean)
-# # reset indentation for [_]
-clean = re.sub("(\w|\.|,|;|:)\n?\[_\]", r"\1 [_]", clean)
-clean = re.sub("\[_\](\.|,|;)?\n(?!\d.)(\w)", r"[_]\1 \2", clean)
+# remove new line before [_] unless preceded by -
+clean = re.sub("(\S)\n?(?<!-)\[_\]", r"\1 [_]", clean)
+# remove new line after [_] unless followed by bulletpoint
+clean = re.sub("\[_\](\.|,|;)?\n(?!(?:\d+\.|-))(\S)", r"[_]\1 \2", clean) 
 
 
 with open(f"{folder_path}{file_name}_grammafied.txt","w") as file_output:
