@@ -19,7 +19,15 @@ class Source():
             self.index = self._tex.find(text_to_find, self.index) + len(text_to_find)
     
     def add(self, text = ""):
-        return Source(text, root_class = self)
+        temp = self.__dict__.copy()
+        self.root = Source(self.tex,temp["root"])
+        self._tex = text
+        self.index = 0
+
+    def remove(self):
+        self._tex = self.root.tex
+        self.index = 0
+        self.root = self.root.root
         
     def inter(self):
         list_inter = ("\\","{","}","$","%","~") # types of different "command" headers
@@ -28,3 +36,14 @@ class Source():
         except ValueError:
             return False
         
+class Clean():
+
+    def __init__(self, text = ""):
+        self.tex = text
+        # aggessive mode, we are going to store all the skipped command in one .txt file
+        self.aggro = set()
+    
+    def add(self, text):
+        self.tex += text
+
+    

@@ -1,1 +1,1 @@
-clean += "■\n"
+clean.tex += "■\n"

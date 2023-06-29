@@ -1,5 +1,6 @@
 import os, sys, argparse, re
-from Source import Source
+from classes import Source, Clean
+from exceptions import interpret
 
 parser = argparse.ArgumentParser(prog="grammafy", description="clean up tex files")
 parser.add_argument("-c", "--commandline", help="select via command line argument")
@@ -21,28 +22,15 @@ elif not file_path.endswith(".tex"):
 else:
     print(f"{file_path} selected")    
 
-# aggessive mode, we are going to store all the skipped command in one .txt file
-list_aggro = set()
-list_log_command = set()
-
 # we now store information on the file path
 file_name = os.path.basename(file_path)[:-4]
 folder_path = f"{os.path.dirname(file_path)}/"
-
-# create a list of existing exceptions
-exceptions = (e[:-3] for e in os.listdir("./exceptions/routines/"))
-exceptions_custom = (e[:-3] for e in os.listdir("./exceptions/routines_custom/"))
-
-# fetch list of commands that should not produce any text output
-with open("./exceptions/void.txt") as void_list, open("./exceptions/void_custom.txt","r") as void_custom_list:
-    void = [line.strip() for line in void_list.readlines()] \
-        + [line.strip() for line in void_custom_list.readlines()] # put them together as it doesn't make a difference, there is no overriding
 
 # list of admissible characters for commands
 end_command = (" ","{","}",".",",",":",";","*","[","]","(",")","$","\\","\n")
 
 # initialise the final text
-clean = ""
+clean = Clean()
 
 # copy the main .tex file to a string
 with open(file_path) as source_temp:
@@ -58,80 +46,58 @@ else:
 while source: # if any such element occurs
     next_index = source.inter()
     if next_index is False:
-        clean += source.tex
-        source = source.root
+        clean.tex += source.tex
+        source.remove()
         continue
     
-    clean += source.tex[:next_index] # we can immediately add what we skipped before any interactive element
+    clean.tex += source.tex[:next_index] # we can immediately add what we skipped before any interactive element
     source.index += next_index
 
     match source.tex[0]:
         case "\\": # FROM HERE - MAKE IT INTO A MATCH
             if source.tex[1] == "[": # equation
                 i = source.tex.find( "\\]" )
-                clean += "[_]"
+                clean.tex += "[_]"
                 if source.tex[:i].rstrip()[-1] in [",", ";", "."]: # add punctuation to non-inline equations
-                    clean += source.tex[:i].rstrip()[-1]
+                    clean.tex += source.tex[:i].rstrip()[-1]
                 source.move_index( "\\]" )
             elif source.tex[1] == "(":
                 i = source.tex.find( "\\)" )
-                clean += "[_]"
+                clean.tex += "[_]"
                 if source.tex[:i].rstrip()[-1] in [",", ";", "."]:
-                    clean += source.tex[:i].rstrip()[-1]
+                    clean.tex += source.tex[:i].rstrip()[-1]
                 source.move_index( "\\)" )
             elif source.tex[1] == "&":
-                clean += "&"
+                clean.tex += "&"
                 source.index += 2
             elif source.tex[1] == " ": # space
                 source.index += 1
             elif source.tex[1] == "\"":
                 if source.tex[2] not in ["a","e","i","o","u"]:
-                    clean += "\""
+                    clean.tex += "\""
                 source.index += 2
             elif source.tex[1] == "\\": # new line
-                clean += "\n"
+                clean.tex += "\n"
                 source.index += 2
             elif source.tex[1] == "%":
-                clean += "%"
+                clean.tex += "%"
                 source.index += 2
             elif source.tex[1] == "'":
                 if source.tex[2] not in ["a","e","i","o","u"]:
-                    clean += "'"
+                    clean.tex += "'"
                 source.index += 2
             elif source.tex[1] == "#":
-                clean += "#"
+                clean.tex += "#"
                 source.index += 2
             else:
                 i = min( ( source.tex.find(x,1) for x in end_command if x in source.tex[1:] ) )  # take note of the index of such element
-                command_name = source.tex[ 1:i ]
+                command = source.tex[ 1:i ]
 
                 if source.tex[i] == "*":
                     i += 1
                 source.index += i
 
-                if os.path.exists(f"./exceptions/routines_custom/{command_name}.py"): # first I search within custom subroutines
-                    exec(open(f"./exceptions/routines_custom/{command_name}.py").read())
-                elif os.path.exists(f"./exceptions/routines/{command_name}.py"): # then I search within built-in subroutines
-                    exec(open(f"./exceptions/routines/{command_name}.py").read())
-                elif command_name in void:
-                    pass
-                else:
-                    while source.tex[0] in ["{","["]: # check if opening and closing brackets
-                        if source.tex[0] == "{":
-                            i = source.tex.find("{",1)
-                            j = source.tex.find("}",1)
-                            while 0 < i < j:
-                                i = source.tex.find("{",i+1)
-                                j = source.tex.find("}",j+1)
-                            source.index += j+1
-                        else:
-                            i = source.tex.find("[",1)
-                            j = source.tex.find("]",1)
-                            while 0 < i < j:
-                                i = source.tex.find("[",i+1)
-                                j = source.tex.find("]",j+1)
-                            source.index += j+1
-                    list_aggro.add(command_name)
+                interpret(source, clean, command)
         case "~":
             source.index += 1
         case "{":
@@ -139,7 +105,7 @@ while source: # if any such element occurs
         case "}":
             source.index += 1
         case "$":
-            clean += "[_]"
+            clean.tex += "[_]"
             source.index += 1
             if source.tex[0] == "$":
                 source.move_index("$$")
@@ -154,31 +120,28 @@ while source: # if any such element occurs
             else:
                 source.index += 1
 
+
 # CLEANING ROUTINES
 # trailing spaces
-clean = clean.strip()
+clean.tex = clean.tex.strip()
 # unmatched brackets and tabs
-clean = clean.replace("[]","").replace("()","").replace("\t"," ")
+clean.tex = clean.tex.replace("[]","").replace("()","").replace("\t"," ")
 # pointless spaces
-clean = re.sub("( )*\n( )*", "\n", clean)
+clean.tex = re.sub("( )*\n( )*", "\n", clean.tex)
 # too many lines
-clean = re.sub("\n\n\s*", "\n\n", clean)
+clean.tex = re.sub("\n\n\s*", "\n\n", clean.tex)
 # dourble spacing
-clean = re.sub("( )+", " ", clean)
+clean.tex = re.sub("( )+", " ", clean.tex)
 # remove new line before [_] unless preceded by -
-clean = re.sub("(\S)\n?(?<!-)\[_\]", r"\1 [_]", clean)
+clean.tex = re.sub("(\S)\n?(?<!-)\[_\]", r"\1 [_]", clean.tex)
 # remove new line after [_] unless followed by bulletpoint
-clean = re.sub("\[_\](\.|,|;)?\n(?!(?:\d+\.|-))(\S)", r"[_]\1 \2", clean) 
+clean.tex = re.sub("\[_\](\.|,|;)?\n(?!(?:\d+\.|-))(\S)", r"[_]\1 \2", clean.tex) 
 
 
 with open(f"{folder_path}{file_name}_grammafied.txt","w") as file_output:
     file_output.write(clean)
 
-if any(list_aggro):
+if any(clean.aggro):
     print(f"Unknown commands, please check {file_name}_list_unknowns.txt")
     with open(f"{folder_path}{file_name}_list_unknowns.txt","w") as file_unknowns:    
-        file_unknowns.write(str(list_aggro))
-if any(list_log_command):
-    print(f"Unknown commands within commands, please check {file_name}_list_log_command.txt")
-    with open(f"{folder_path}{file_name}_list_log_command.txt","w") as file_log_command:
-        file_log_command.write(str(list_log_command))
+        file_unknowns.write(str(clean.aggro))
