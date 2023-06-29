@@ -1,6 +1,6 @@
 # grammafy
 
-Version 1.0
+Version 0.9.9
 
 This script serves the purpose of cleaning up tex files by creating a txt file, stripped of all commands, that can be fed to writing software. Formulas are substituted with the symbol `[_]`, and the other changes should be comprehensible.
 
@@ -47,10 +47,6 @@ The script does handle properly nested unknown commands such as
 \begin{hello} This environemnt does nothing, \begin{hello} as you can see \end{hello} \end{hello}.
 ```
 When writing a (custom) subroutine, it is not necessary to include the symbol *. The script is written so that such a symbol is simply ignored.
-
-## to do
-
-- include typing assistant cloud-based software APIs.
 
 ## disclaimers
 
