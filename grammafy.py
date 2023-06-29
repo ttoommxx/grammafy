@@ -1,4 +1,4 @@
-import os, sys, argparse
+import os, sys, argparse, re
 from Source import Source
 
 parser = argparse.ArgumentParser(prog="grammafy", description="clean up tex files")
@@ -155,20 +155,20 @@ while source: # if any such element occurs
                 source.index += 1
 
 # CLEANING ROUTINES
-# remove initial spaces and newlines
+# trailing spaces
 clean = clean.strip()
-# remove unmatched brackets and tabbing with spaces
+# unmatched brackets and tabs
 clean = clean.replace("[]","").replace("()","").replace("\t"," ")
-# remove newline+space preliminarly to the cleaning
-while "\n " in clean:
-    clean = clean.replace("\n ","\n")
-# reset indentation for [_]s
-while "\n[_]" in clean or "[_]\n" in clean or "[_],\n" in clean or "[_].\n" in clean or "[_];\n" in clean:
-    clean = clean.replace("\n[_]"," [_]").replace("[_]\n","[_] ").replace("[_],\n","[_], ").replace("[_].\n","[_]. ").replace("[_];\n","[_]; ")
-# add some space before every [_] in case we have them attached to something else
-clean = clean.replace(".[_]",". [_]".replace(",[_]",", [_]")).replace(";[_]","; [_]")
-while "\n\n\n" in clean or "  " in clean or " -" in clean: # remove double lines and double spaces
-    clean = clean.replace("\n\n\n","\n\n").replace("  "," ").replace(" -","\n-")
+# pointless spaces
+clean = re.sub("( )*\n( )*", "\n", clean)
+# # too many lines
+clean = re.sub("\n\n\s*", "\n\n", clean)
+# # dourble spacing
+clean = re.sub("( )+", " ", clean)
+# # reset indentation for [_]
+clean = re.sub("(\w|\.|,|;|:)\n?\[_\]", r"\1 [_]", clean)
+clean = re.sub("\[_\](\.|,|;)?\n(?!\d.)(\w)", r"[_]\1 \2", clean)
+
 
 with open(f"{folder_path}{file_name}_grammafied.txt","w") as file_output:
     file_output.write(clean)
