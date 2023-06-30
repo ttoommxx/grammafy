@@ -27,7 +27,7 @@ file_name = os.path.basename(file_path)[:-4]
 folder_path = f"{os.path.dirname(file_path)}/"
 
 # list of admissible characters for commands
-end_command = (" ","{","}",".",",",":",";","*","[","]","(",")","$","\\","\n")
+end_command = (" ","{","}",".",",",":",";","[","]","(",")","$","\\","\n")
 
 # initialise the final text
 clean = Clean()
@@ -92,9 +92,6 @@ while source: # if any such element occurs
             else:
                 i = min( ( source.tex.find(x,1) for x in end_command if x in source.tex[1:] ) )  # take note of the index of such element
                 command = source.tex[ 1:i ]
-
-                if source.tex[i] == "*":
-                    i += 1
                 source.index += i
 
                 interpret(source, clean, command, folder_path)
