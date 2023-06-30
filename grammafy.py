@@ -19,12 +19,17 @@ if not file_path:
 elif not file_path.endswith(".tex"):
     if input("the file selected is not in a tex format, enter Y to continue anyway. ").lower() != "y":
         sys.exit("the file selected is not a tex file")
+    else:
+        file_name = os.path.basename(file_path)
 else:
-    print(f"{file_path} selected")    
+    file_name = os.path.basename(file_path)[:-4]
 
-# we now store information on the file path
-file_name = os.path.basename(file_path)[:-4]
-folder_path = f"{os.path.dirname(file_path)}/"
+if os.name == "nt":
+    folder_path = f"{os.path.dirname(file_path)}\\"
+elif os.name == "posix":
+    folder_path = f"{os.path.dirname(file_path)}/"
+else:
+    sys.exit("Operating system not recognised")
 
 # list of admissible characters for commands
 end_command = (" ","{","}",".",",",":",";","[","]","(",")","$","\\","\n","\"","'","~")
