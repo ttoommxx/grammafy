@@ -1,6 +1,10 @@
+#----------------------------------------
+# VARIABLES
+#----------------------------------------
+
 from exceptions.void_custom import void_c
 
-void = [
+void = (
     "centering",
     "small",
     "large",
@@ -43,42 +47,114 @@ void = [
     "address",
     "thanks",
     "textsc",
-]
+)
 
 from exceptions.dictionary_commands_custom import dic_commands_c
 
 dic_commands = {
-    "addchap":"routines.curly",
-    "addsec":"routines.curly",
-    "begin":"routines.begin",
-    "bibliography":"routines.curly",
-    "bibliographystyle":"routines.curly",
-    "chaptermark":"routines.curly",
-    "cite":"routines.print_square_curly",
-    "color":"routines.color",
-    "cref":"routines.print_curly",
-    "Cref":"routines.print_curly",
-    "email":"routines.curly",
-    "end":"routines.end",
-    "eqref":"routines.print_curly",
-    "fontfamily":"routines.curly",
-    "footnote":"routines.footnote",
-    "hspace":"routines.curly",
-    "include":"routines.include",
-    "includegraphics":"routines.curly",
-    "input":"routines.include",
-    "item":"routines.dash",
-    "label":"routines.curly",
-    "pagenumbering":"routines.curly",
-    "pagestyle":"routines.curly",
-    "ref":"routines.print_curly",
-    "renewcommand":"routines.curly_curly",
-    "setlength":"routines.curly_curly",
-    "thispagestyle":"routines.curly",
-    "vspace":"routines.curly"
+    "addchap":"curly",
+    "addsec":"curly",
+    "begin":"begin",
+    "bibliography":"curly",
+    "bibliographystyle":"curly",
+    "chaptermark":"curly",
+    "cite":"print_square_curly",
+    "color":"color",
+    "cref":"print_curly",
+    "Cref":"print_curly",
+    "email":"curly",
+    "end":"end",
+    "eqref":"print_curly",
+    "fontfamily":"curly",
+    "footnote":"footnote",
+    "hspace":"curly",
+    "include":"include",
+    "includegraphics":"curly",
+    "input":"include",
+    "item":"dash",
+    "label":"curly",
+    "pagenumbering":"curly",
+    "pagestyle":"curly",
+    "ref":"print_curly",
+    "renewcommand":"curly_curly",
+    "setlength":"curly_curly",
+    "thispagestyle":"curly",
+    "vspace":"curly"
 }
 
-from exceptions import routines, routines_custom
+from exceptions import routines_custom
+
+#----------------------------------------
+# BUILT-IN FUNCTIONS
+#----------------------------------------
+
+import os
+
+def curly(source, clean, command):
+    source.move_index("}")
+
+def curly_curly(source, clean, command):
+    source.move_index("}")
+    source.move_index("}")
+
+def color(source, clean, command):
+    clean.tex += "Color:"
+    i = source.tex.find( "}" )
+    clean.tex += source.tex[ 1:i ].upper()
+    source.index += i+1
+
+def dash(source, clean, command):
+    clean.tex += "-"
+
+def footnote(source, clean, command):
+    i = 1
+    j = i # index for open brackets
+    while i >= j and j > 0 :
+        i = source.tex.find( "}",i ) +1
+        j = source.tex.find( "{",j ) +1
+
+    # add the text in the footnote to the queue in parenthesis
+    source.add("(FOOTNOTE: " + source.tex[ 1:i-1 ] + ")")
+    source.root.index += i
+
+def include(source, clean, command): # included files need to be in the same folder
+    i = source.tex.find("}")
+    include_path = source.tex[ 1:i ]
+    if not include_path.endswith(".tex"): # if the extension is not present
+        include_path += ".tex"
+    with open(f"{folder_path}{include_path}") as include_tex:
+        source.add( include_tex.read() )
+    source.root.index += i+1
+
+def print_curly(source, clean, command):
+    clean.tex += "[_]"
+    source.move_index("}")
+
+def print_square_curly(source, clean, command):
+    clean.tex += "[_]"
+    if source.tex[0] == "[":
+        source.move_index("]")
+    source.move_index("}")
+
+from exceptions import sub_begin
+
+def begin(source, clean, command):
+    i = source.tex.find("}") # right next after the brackets
+    command = source.tex[ 1:i ] # remove asterisk if any
+    source.move_index("}")
+    sub_begin.interpret(source, clean, command)
+        
+from exceptions import sub_end
+        
+def end(source, clean, commmand):
+    i = source.tex.find("}")
+    command = source.tex[ 1:i ]
+    source.move_index("}")
+    sub_end.interpret(source, clean, command)
+
+#----------------------------------------
+# INTERPRETER
+#----------------------------------------
 
 def interpret(source, clean, command):
     if command in void or command in void_c:
@@ -104,3 +180,5 @@ def interpret(source, clean, command):
                     j = source.tex.find("]",j+1)
                 source.index += j+1
         clean.aggro.add(command)
+
+#----------------------------------------

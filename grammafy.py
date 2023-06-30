@@ -54,7 +54,7 @@ while source: # if any such element occurs
     source.index += next_index
 
     match source.tex[0]:
-        case "\\": # FROM HERE - MAKE IT INTO A MATCH
+        case "\\": # FROM HERE - MAKE IT INTO A MATCH and include all this into the interpret if possible
             if source.tex[1] == "[": # equation
                 i = source.tex.find( "\\]" )
                 clean.tex += "[_]"
