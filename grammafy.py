@@ -106,10 +106,10 @@ clean.text = re.sub("(\S)\n?(?<!-)\[_\]", r"\1 [_]", clean.text)
 clean.text = re.sub("\[_\](\.|,|;)?\n(?!(?:\d+\.|-))(\S)", r"[_]\1 \2", clean.text) 
 
 
-with open(f"{folder_path}{file_name}_grammafied.txt","w") as file_output:
+with open(f"{folder_path}{file_name}_grammafied.txt","w", encoding="utf-8") as file_output:
     file_output.write(clean.text)
 
 if any(clean.aggro):
     print(f"Unknown commands, please check {file_name}_list_unknowns.txt")
-    with open(f"{folder_path}{file_name}_list_unknowns.txt","w") as file_unknowns:    
+    with open(f"{folder_path}{file_name}_list_unknowns.txt","w", encoding="utf-8") as file_unknowns:    
         file_unknowns.write(str(clean.aggro))
