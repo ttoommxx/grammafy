@@ -19,7 +19,7 @@ from exceptions.sub_end import routines_custom
 #----------------------------------------
 
 def proof(source, clean, command, folder_path):
-    clean.tex += "■\n"
+    clean.text += "■\n"
 
 #----------------------------------------
 # INTERPRETER

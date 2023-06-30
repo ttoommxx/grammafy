@@ -1,6 +1,8 @@
 # grammafy
 
-Version 1
+Version 1.0
+
+FROM HERE - REMEMBER TO WRITE THAT NONE OF THE SYMBOLS (" ","{","}",".",",",":",";","[","]","(",")","$","\\","\n","\"","'","~","%") CAN BE INCLUDED IN THE PROGRAM NAME
 
 This script serves the purpose of cleaning up tex files by creating a txt file, stripped of all commands, that can be fed to writing software. Formulas are substituted with the symbol `[_]`, and the other changes should be comprehensible.
 

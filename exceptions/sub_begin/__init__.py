@@ -51,21 +51,21 @@ from exceptions.sub_begin import routines_custom
 #----------------------------------------
 
 def title(source, clean, command, folder_path):
-    clean.tex += command.title() + "."
+    clean.text += command.title() + "."
 
 def equation(source, clean, command, folder_path):
-    clean.tex += "[_]"
+    clean.text += "[_]"
     # find the index where the whole portion ends
-    i = source.tex.find("\\end{" + command + "}") # from here, use regex
-    if source.tex[:i-1].replace(" ","").replace("\n","").replace("$","")[-1] in [",", ";", "."]:
-                    clean.tex += source.tex[:i-1].replace(" ","").replace("\n","").replace("$","")[-1]
+    i = source.text.find("\\end{" + command + "}") # from here, use regex
+    if source.text[:i-1].rstrip()[-1] in [",", ";", "."]:
+        clean.text += source.text[:i-1].rstrip()[-1]
     source.move_index("\\end{" + command + "}")
 
 def enumerate(source, clean, command, folder_path):
-    if source.tex[0] == "[":
+    if source.text[0] == "[":
         source.move_index("]")
-    i = source.tex.find("\\end{enumerate}")
-    new_text = source.tex[:i]
+    i = source.text.find("\\end{enumerate}")
+    new_text = source.text[:i]
     index_enum = 1
     while "\\item" in new_text:
         new_text = new_text.replace("\\item", str(index_enum) + ".", 1)
@@ -75,10 +75,10 @@ def enumerate(source, clean, command, folder_path):
     source.root.move_index("\\end{enumerate}")
 
 def itemize(source, clean, command, folder_path):
-    if source.tex[0] == "[":
+    if source.text[0] == "[":
         source.move_index("]")
-    i = source.tex.find("\\end{itemize}")
-    new_text = source.tex[:i].replace("\\item","-")
+    i = source.text.find("\\end{itemize}")
+    new_text = source.text[:i].replace("\\item","-")
 
     source.add(new_text)
     source.root.move_index("\\end{itemize}")
@@ -107,10 +107,10 @@ def interpret(source, clean, command, folder_path):
     elif command in dic_commands:
         exec(dic_commands[command] + "(source, clean,\"" + command + "\", folder_path)")
     else:
-        i = source.tex.find("\\begin{" + command + "}", 6)
-        j = source.tex.find("\\end{" + command + "}",6)
+        i = source.text.find("\\begin{" + command + "}", 6)
+        j = source.text.find("\\end{" + command + "}",6)
         while 0 < i < j: # in case the class is nested
-            i = source.tex.find("\\begin{" + command + "}", i+6)
-            j = source.tex.find("\\end{" + command + "}", j+6)
+            i = source.text.find("\\begin{" + command + "}", i+6)
+            j = source.text.find("\\end{" + command + "}", j+6)
         source.index += j + 5 + len(command)
         clean.aggro.add("begin{" + command + "}")
