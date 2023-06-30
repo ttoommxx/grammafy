@@ -93,11 +93,9 @@ special_commands = {
     "(":"round_equation",
     "\"":"apostrofe",
     "'":"apostrofe",
-    " ":"null_function",
     "\\":"new_line",
     "\n":"new_line",
     "~":"tilde",
-    ",":"space"
 }
 
 from exceptions import routines_custom
@@ -198,10 +196,6 @@ def tilde(source, clean, folder_path):
     clean.text += "~"
     source.index += 1
 
-def space(source, clean, folder_path):
-    clean.text += " "
-    source.index += 1
-
 def null_function(source, clean, folder_path):
     pass
 
@@ -236,7 +230,11 @@ def interpret(source, clean, command, folder_path):
             clean.aggro.add(command)
     else: # empty string
         command = source.text[0]
-        exec(special_commands[command] + "(source, clean, folder_path)")
+        if command in special_commands:
+            exec(special_commands[command] + "(source, clean, folder_path)")
+        else:
+            clean.text += " "
+            source.index += 1
 
 
 #----------------------------------------
