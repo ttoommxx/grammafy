@@ -47,6 +47,7 @@ void = (
     "address",
     "thanks",
     "textsc",
+    "texttt"
 )
 
 from exceptions.dictionary_commands_custom import dic_commands_c
@@ -90,23 +91,23 @@ from exceptions import routines_custom
 
 import os
 
-def curly(source, clean, command):
+def curly(source, clean, command, folder_path):
     source.move_index("}")
 
-def curly_curly(source, clean, command):
+def curly_curly(source, clean, command, folder_path):
     source.move_index("}")
     source.move_index("}")
 
-def color(source, clean, command):
+def color(source, clean, command, folder_path):
     clean.tex += "Color:"
     i = source.tex.find( "}" )
     clean.tex += source.tex[ 1:i ].upper()
     source.index += i+1
 
-def dash(source, clean, command):
+def dash(source, clean, command, folder_path):
     clean.tex += "-"
 
-def footnote(source, clean, command):
+def footnote(source, clean, command, folder_path):
     i = 1
     j = i # index for open brackets
     while i >= j and j > 0 :
@@ -117,7 +118,7 @@ def footnote(source, clean, command):
     source.add("(FOOTNOTE: " + source.tex[ 1:i-1 ] + ")")
     source.root.index += i
 
-def include(source, clean, command): # included files need to be in the same folder
+def include(source, clean, command, folder_path): # included files need to be in the same folder
     i = source.tex.find("}")
     include_path = source.tex[ 1:i ]
     if not include_path.endswith(".tex"): # if the extension is not present
@@ -126,11 +127,11 @@ def include(source, clean, command): # included files need to be in the same fol
         source.add( include_tex.read() )
     source.root.index += i+1
 
-def print_curly(source, clean, command):
+def print_curly(source, clean, command, folder_path):
     clean.tex += "[_]"
     source.move_index("}")
 
-def print_square_curly(source, clean, command):
+def print_square_curly(source, clean, command, folder_path):
     clean.tex += "[_]"
     if source.tex[0] == "[":
         source.move_index("]")
@@ -138,31 +139,31 @@ def print_square_curly(source, clean, command):
 
 from exceptions import sub_begin
 
-def begin(source, clean, command):
+def begin(source, clean, command, folder_path):
     i = source.tex.find("}") # right next after the brackets
     command = source.tex[ 1:i ] # remove asterisk if any
     source.move_index("}")
-    sub_begin.interpret(source, clean, command)
+    sub_begin.interpret(source, clean, command, folder_path)
         
 from exceptions import sub_end
         
-def end(source, clean, commmand):
+def end(source, clean, command, folder_path):
     i = source.tex.find("}")
     command = source.tex[ 1:i ]
     source.move_index("}")
-    sub_end.interpret(source, clean, command)
+    sub_end.interpret(source, clean, command, folder_path)
 
 #----------------------------------------
 # INTERPRETER
 #----------------------------------------
 
-def interpret(source, clean, command):
+def interpret(source, clean, command, folder_path):
     if command in void or command in void_c:
         pass
     elif command in dic_commands_c:
-        exec(dic_commands_c[command] + f"(source, clean, {command})")
+        exec(dic_commands_c[command] + "(source, clean,\"" + command + "\", folder_path)")
     elif command in dic_commands:
-        exec( dic_commands[command] + f"(source, clean, {command})")
+        exec(dic_commands[command] + "(source, clean,\"" + command + "\", folder_path)")
     else:
         while source.tex[0] in ["{","["]: # check if opening and closing brackets
             if source.tex[0] == "{":

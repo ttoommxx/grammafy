@@ -18,8 +18,8 @@ dic_commands = {
     "equation*":"equation",
     "comment":"title",
     "conjecture":"title",
-    "corollary":"corollary",
-    "definition":"definition",
+    "corollary":"title",
+    "definition":"title",
     "enumerate":"enumerate",
     "eqnarray":"equation",
     "eqnarray*":"equation",
@@ -40,7 +40,8 @@ dic_commands = {
     "theorem":"title",
     "tikzpicture":"equation",
     "verbatim":"equation",
-    "wrapfigure":"curly_curly_curly"
+    "wrapfigure":"curly_curly_curly",
+    "itemize":"itemize",
 }
 
 from exceptions.sub_begin import routines_custom
@@ -49,10 +50,10 @@ from exceptions.sub_begin import routines_custom
 # BULTI-IN FUNCTIONS
 #----------------------------------------
 
-def title(source, clean, command):
+def title(source, clean, command, folder_path):
     clean.tex += command.title() + "."
 
-def equation(source, clean, command):
+def equation(source, clean, command, folder_path):
     clean.tex += "[_]"
     # find the index where the whole portion ends
     i = source.tex.find("\\end{" + command + "}") # from here, use regex
@@ -60,12 +61,11 @@ def equation(source, clean, command):
                     clean.tex += source.tex[:i-1].replace(" ","").replace("\n","").replace("$","")[-1]
     source.move_index("\\end{" + command + "}")
 
-def enumerate(source, clean, command):
+def enumerate(source, clean, command, folder_path):
     if source.tex[0] == "[":
         source.move_index("]")
     i = source.tex.find("\\end{enumerate}")
     new_text = source.tex[:i]
-
     index_enum = 1
     while "\\item" in new_text:
         new_text = new_text.replace("\\item", str(index_enum) + ".", 1)
@@ -74,42 +74,43 @@ def enumerate(source, clean, command):
     source.add(new_text)
     source.root.move_index("\\end{enumerate}")
 
-def curly_curly(source, clean, command):
+def itemize(source, clean, command, folder_path):
+    if source.tex[0] == "[":
+        source.move_index("]")
+    i = source.tex.find("\\end{itemize}")
+    new_text = source.tex[:i].replace("\\item","-")
+
+    source.add(new_text)
+    source.root.move_index("\\end{itemize}")
+    
+
+def curly_curly(source, clean, command, folder_path):
     source.move_index("}")
     source.move_index("}")
 
-def curly_curly_curly(source, clean, command):
+def curly_curly_curly(source, clean, command, folder_path):
     for _ in range(3):
         source.move_index("}")
 
-def skip(source, clean, command):
+def skip(source, clean, command, folder_path):
     source.move_index("\\end{" + command + "}")
 
 #----------------------------------------
 # INTERPRETER
 #----------------------------------------
 
-def interpret(source, clean, command):
+def interpret(source, clean, command, folder_path):
     if command in void or command in void_c:
         pass
     elif command in dic_commands_c:
-        exec(dic_commands_c[command] + f"(source, clean, {command})")
+        exec(dic_commands_c[command] + "(source, clean,\"" + command + "\", folder_path)")
     elif command in dic_commands:
-        exec(dic_commands[command] + f"(source, clean, {command})")
+        exec(dic_commands[command] + "(source, clean,\"" + command + "\", folder_path)")
     else:
-        while source.tex[0] in ["{","["]: # check if opening and closing brackets
-            if source.tex[0] == "{":
-                i = source.tex.find("{",1)
-                j = source.tex.find("}",1)
-                while 0 < i < j:
-                    i = source.tex.find("{",i+1)
-                    j = source.tex.find("}",j+1)
-                source.index += j+1
-            else:
-                i = source.tex.find("[",1)
-                j = source.tex.find("]",1)
-                while 0 < i < j:
-                    i = source.tex.find("[",i+1)
-                    j = source.tex.find("]",j+1)
-                source.index += j+1
+        i = source.tex.find("\\begin{" + command + "}", 6)
+        j = source.tex.find("\\end{" + command + "}",6)
+        while 0 < i < j: # in case the class is nested
+            i = source.tex.find("\\begin{" + command + "}", i+6)
+            j = source.tex.find("\\end{" + command + "}", j+6)
+        source.index += j + 5 + len(command)
         clean.aggro.add("begin{" + command + "}")

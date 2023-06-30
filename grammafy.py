@@ -47,7 +47,7 @@ while source: # if any such element occurs
     next_index = source.inter()
     if next_index is False:
         clean.tex += source.tex
-        source.remove()
+        source = source.root
         continue
     
     clean.tex += source.tex[:next_index] # we can immediately add what we skipped before any interactive element
@@ -97,7 +97,7 @@ while source: # if any such element occurs
                     i += 1
                 source.index += i
 
-                interpret(source, clean, command)
+                interpret(source, clean, command, folder_path)
         case "~":
             source.index += 1
         case "{":
@@ -139,7 +139,7 @@ clean.tex = re.sub("\[_\](\.|,|;)?\n(?!(?:\d+\.|-))(\S)", r"[_]\1 \2", clean.tex
 
 
 with open(f"{folder_path}{file_name}_grammafied.txt","w") as file_output:
-    file_output.write(clean)
+    file_output.write(clean.tex)
 
 if any(clean.aggro):
     print(f"Unknown commands, please check {file_name}_list_unknowns.txt")

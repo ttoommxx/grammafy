@@ -23,11 +23,6 @@ class Source():
         self.root = Source(self.tex,temp["root"])
         self._tex = text
         self.index = 0
-
-    def remove(self):
-        self._tex = self.root.tex
-        self.index = 0
-        self.root = self.root.root
         
     def inter(self):
         list_inter = ("\\","{","}","$","%","~") # types of different "command" headers

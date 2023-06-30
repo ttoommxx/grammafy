@@ -1,7 +1,8 @@
 dic_commands_c = {
     "assumption":"title",
     "example":"title",
-    "exercise":"title"
+    "exercise":"title",
+    "thm":"routines_custom.thm"
 }
 
 # TEMPLATE
