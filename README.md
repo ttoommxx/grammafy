@@ -14,7 +14,7 @@ Needs Python >= 3.10. Download the last release and run grammafy.py from termina
 ```
 python3 grammafy.py
 ```
-Select the main tex file by navigating with the arrows and pressing enter on it. The [terminal file manager](https://github.com/ttoommxx/pylePicker) was written with the help of AI (ChatGPT).
+Select the main tex file by navigating with the arrows and pressing enter on it (see [terminal file manager](https://github.com/ttoommxx/pylePicker) )
 
 If you want the latest hotfixes, clone the main branch of this GitHub page.
 
