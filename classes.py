@@ -1,6 +1,6 @@
 list_inter = ("\\","{","}","$","%","~")
 
-class Node():
+class Node:
     def __init__(self, text, root = None):
         self._text = "\n".join( filter( lambda x:not x.lstrip().startswith("%"), text.splitlines() ) ) + "\n"
         self.index = 0
@@ -23,7 +23,7 @@ class Node():
         except ValueError:
             return False
 
-class Source():
+class Source:
 
     def __init__(self, text):
         self.head = Node(text)
@@ -56,7 +56,7 @@ class Source():
     def pop(self):
         self.head = self.head.root
 
-class Clean():
+class Clean:
 
     def __init__(self, text = ""):
         self.text = text
