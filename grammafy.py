@@ -48,11 +48,11 @@ else:
     source.move_index("\\begin{document}")
 
 # start analysing the text
-while source: # if any such element occurs
+while source.head: # if any such element occurs
     next_index = source.inter()
     if next_index is False:
         clean.text += source.text
-        source = source.root
+        source.pop()
         continue
     
     clean.text += source.text[:next_index] # we can immediately add what we skipped before any interactive element
