@@ -3,18 +3,27 @@ list_inter = ("\\","{","}","$","%","~")
 class Node:
     def __init__(self, text, root = None):
         self._text = "\n".join( filter( lambda x:not x.lstrip().startswith("%"), text.splitlines() ) ) + "\n"
-        self.index = 0
+        self._index = 0
         self.root = root
 
     @property
     def text(self):
         return self._text[self.index:]
+    
+    @property
+    def index(self):
+        return self._index
+
+    @index.setter
+    def index(self, index):
+        if index < self._index:
+            print("Index has been reset because attempt of making it smaller")
+            self._index = len(self._text)
+        else:
+            self._index = index
 
     def move_index(self, text_to_find):
-        if text_to_find not in self.text: # go to the end
-            self.index = len(self._text)
-        else:
-            self.index = self._text.find(text_to_find, self.index) + len(text_to_find)
+        self.index = self._text.find(text_to_find, self.index) + len(text_to_find)
 
     def inter(self):
         # types of different "command" headers
@@ -28,6 +37,7 @@ class Source:
     def __init__(self, text):
         self.head = Node(text)
     
+    # <<< inherit properties from node  
     @property
     def root(self):
         return self.head.root
@@ -49,6 +59,7 @@ class Source:
             
     def inter(self):
         return self.head.inter()
+    # >>>
 
     def add(self, text):
         self.head = Node(text, self.head)
