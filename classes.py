@@ -1,10 +1,9 @@
-list_inter = ("\\","{","}","$","%","~")
-
 class Node:
     def __init__(self, text, root = None):
         self._text = "\n".join( filter( lambda x:not x.lstrip().startswith("%"), text.splitlines() ) ) + "\n"
         self._index = 0
         self.root = root
+        self.symbols = [ ["\\",-1], ["{",-1], ["}",-1], ["$",-1], ["%",-1], ["~",-1] ]
 
     @property
     def text(self):
@@ -26,10 +25,16 @@ class Node:
         self.index = self._text.find(text_to_find, self.index) + len(text_to_find)
 
     def inter(self):
-        # types of different "command" headers
-        try:
-            return min( ( self._text.find(x, self.index) for x in list_inter if x in self.text ) ) - self.index
-        except ValueError:
+        # this trick is so that if I remove an element from the list I don't intact the next one cause it is going backwards
+        for x in self.symbols[::-1]:
+            if x[1] < self.index: # update only those that haven't been used    
+                if x[0] not in self.text:
+                    self.symbols.remove(x)
+                else:
+                    x[1] = self._text.find(x[0], self.index)
+        if any(self.symbols):
+            return min( x[1] for x in self.symbols) - self.index
+        else:
             return False
 
 class Source:
