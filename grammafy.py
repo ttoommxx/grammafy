@@ -108,6 +108,7 @@ clean.text = re.sub("\[_\](\.|,|;)?\n(?!(?:\d+\.|-))(\S)", r"[_]\1 \2", clean.te
 
 with open(f"{folder_path}{file_name}_grammafied.txt","w", encoding="utf-8") as file_output:
     file_output.write(clean.text)
+    print(f"File written successfully, check {folder_path}{file_name}_grammafied.txt")
 
 if any(clean.aggro):
     print(f"Unknown commands, please check {file_name}_list_unknowns.txt")
