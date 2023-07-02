@@ -49,7 +49,7 @@ else:
 
 # start analysing the text
 while source.head: # if any such element occurs
-    next_index = source.inter()
+    next_index = source.inter
     if next_index is False:
         clean.text += source.text
         source.pop()

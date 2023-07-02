@@ -16,14 +16,12 @@ class Node:
     @index.setter
     def index(self, index):
         if index < self._index:
-            print("Index has been reset because attempt of making it smaller")
+            print("index overload: the index has been reset")
             self._index = len(self._text)
         else:
             self._index = index
 
-    def move_index(self, text_to_find):
-        self.index = self._text.find(text_to_find, self.index) + len(text_to_find)
-
+    @property
     def inter(self):
         # this trick is so that if I remove an element from the list I don't intact the next one cause it is going backwards
         for x in self.symbols[::-1]:
@@ -37,33 +35,38 @@ class Node:
         else:
             return False
 
+    def move_index(self, text_to_find):
+        self.index = self._text.find(text_to_find, self.index) + len(text_to_find)
+
+
 class Source:
 
     def __init__(self, text):
         self.head = Node(text)
     
-    # <<< inherit properties from node  
-    @property
-    def root(self):
-        return self.head.root
+    # <<< treat this class as the actual head of the node
+    def __getattr__(self, name):
+        if name == "head":
+            return self.head
+        elif name == "index":
+            return self.head.index
+        elif name == "text":
+            return self.head.text
+        elif name == "inter":
+            return self.head.inter
+        else:
+            return self.head.__dict__[name]
 
-    @property
-    def index(self):
-        return self.head.index
-
-    @index.setter
-    def index(self, index):
-        self.head.index = index
-
-    @property
-    def text(self):
-        return self.head.text
+    def __setattr__(self, name, value):
+        if name == "head":
+            self.__dict__[name] = value
+        elif name == "index":
+            self.head.index = value
+        else:
+            self.head.__dict__[name] = value
 
     def move_index(self, text_to_find):
         self.head.move_index(text_to_find)
-            
-    def inter(self):
-        return self.head.inter()
     # >>>
 
     def add(self, text):
