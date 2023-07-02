@@ -9,6 +9,10 @@ class Node:
     def text(self):
         return self._text[self.index:]
     
+    @text.setter
+    def text(self, text):
+        pass
+    
     @property
     def index(self):
         return self._index
