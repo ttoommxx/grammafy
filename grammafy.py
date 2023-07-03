@@ -111,6 +111,6 @@ with open(f"{folder_path}{file_name}_grammafied.txt","w", encoding="utf-8") as f
     print(f"File written successfully, check {folder_path}{file_name}_grammafied.txt")
 
 if any(clean.aggro):
-    print(f"Unknown commands, please check {file_name}_list_unknowns.txt")
-    with open(f"{folder_path}{file_name}_list_unknowns.txt","w", encoding="utf-8") as file_unknowns:    
+    print(f"Unknown commands, please check {file_name}_unknowns.txt")
+    with open(f"{folder_path}{file_name}_unknowns.txt","w", encoding="utf-8") as file_unknowns:    
         file_unknowns.write(str(clean.aggro))

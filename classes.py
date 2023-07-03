@@ -11,7 +11,7 @@ class Node:
     
     @text.setter
     def text(self, text):
-        pass
+        raise ValueError("text is a constant and should not be changed")
     
     @property
     def index(self):
@@ -66,6 +66,8 @@ class Source:
             self.__dict__[name] = value
         elif name == "index":
             self.head.index = value
+        elif name == "text":
+            self.head.text = value
         else:
             self.head.__dict__[name] = value
 
