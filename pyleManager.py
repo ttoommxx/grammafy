@@ -117,27 +117,27 @@ def dir_printer():
         l_time = 19
     
         to_print += " " + f"{'v' if order == 0 else ' '}*NAME*"
-        temp = ""
+        columns = ""
         if dimension and True in (os.path.isfile(x) for x in directory()):
-            temp += f" |{'v' if order == 1 else ' '}*SIZE*" + " "*(l_size-6)
+            columns += f" |{'v' if order == 1 else ' '}*SIZE*" + " "*(l_size-6)
         if time_modified and True in (os.path.isfile(x) for x in directory()):
-            temp += f" |{'v' if order == 2 else ' '}*TIME_M*" + " "*11
+            columns += f" |{'v' if order == 2 else ' '}*TIME_M*" + " "*11
 
-        to_print += " "*(max_l - len(temp)-8) + temp
+        to_print += " "*(max_l - len(columns)-8) + columns
 
         for x in directory():
             to_print += "\n" + f"{'+' if x == current_selection else ' '}" + f"{'<' if os.path.isdir(x) else ' '}"
-            temp = ""
+            columns = ""
             if dimension and os.path.isfile(x):
-                temp += " | " + file_size(x) + " "*(l_size - len(file_size(x)))
+                columns += " | " + file_size(x) + " "*(l_size - len(file_size(x)))
             if time_modified and os.path.isfile(x):
-                temp += " | " + time.strftime("%Y-%m-%d %H:%M:%S", time.strptime(time.ctime(os.lstat(x).st_mtime)))
-            
-            if len(x) > max_l - 6 - (l_size+3)*(dimension == True) - (l_time+3)*(time_modified == True):
-                name_x = f"... {x[-(max_l - 6 - (l_size+3)*(dimension == True) - (l_time+3)*(time_modified == True)):]}"
+                columns += " | " + time.strftime("%Y-%m-%d %H:%M:%S", time.strptime(time.ctime(os.lstat(x).st_mtime)))
+            if len(x) > max_l - 2 - len(columns):
+                name_x = "... " + x[-(max_l - 6 - len(columns)):]
             else:
                 name_x = x
-            to_print += name_x + " "*(max_l-len(name_x)-len(temp) - 2) + temp
+            # name_x = f"{'... ' if len(x) > max_l - 6 - len(columns) else ''}{x[-(max_l - 6 - len(columns)):]}"
+            to_print += name_x + " "*(max_l-len(name_x)-len(columns) - 2) + columns
     print(to_print)
 
 
