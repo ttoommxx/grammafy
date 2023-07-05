@@ -77,16 +77,16 @@ def directory():
     match order:
         # size
         case 1:
-            dirs = [x[0] for x in sorted({x:os.lstat(x).st_size for x in os.listdir() if os.path.isdir(x) and (hidden or not x.startswith(".") )}.items(), key=lambda x:x[1]) ] \
-                + [x[0] for x in sorted({x:os.lstat(x).st_size for x in os.listdir() if os.path.isfile(x) and (hidden or not x.startswith(".") )}.items(), key=lambda x:x[1]) ]
+            dirs = [x[0] for x in sorted({x:os.lstat(x).st_size for x in os.listdir() if os.path.isdir(x) and (hidden or not x.startswith(".") )}.items(), key=lambda x:x[1]) ]
+            dirs.extend(( x[0] for x in sorted({x:os.lstat(x).st_size for x in os.listdir() if os.path.isfile(x) and (hidden or not x.startswith(".") )}.items(), key=lambda x:x[1]) ))
         # time modified
         case 2:
-            dirs = [x[0] for x in sorted({x:os.lstat(x).st_mtime for x in os.listdir() if os.path.isdir(x) and (hidden or not x.startswith(".") )}.items(), key=lambda x:x[1]) ] \
-                + [x[0] for x in sorted({x:os.lstat(x).st_mtime for x in os.listdir() if os.path.isfile(x) and (hidden or not x.startswith(".") )}.items(), key=lambda x:x[1]) ]
+            dirs = [x[0] for x in sorted({x:os.lstat(x).st_mtime for x in os.listdir() if os.path.isdir(x) and (hidden or not x.startswith(".") )}.items(), key=lambda x:x[1]) ]
+            dirs.extend( (x[0] for x in sorted({x:os.lstat(x).st_mtime for x in os.listdir() if os.path.isfile(x) and (hidden or not x.startswith(".") )}.items(), key=lambda x:x[1])) )
         # name
         case _: # 0 and unrecognised values
-            dirs = sorted([x for x in os.listdir() if os.path.isdir(x) and (hidden or not x.startswith(".") )], key=lambda s: s.lower()) \
-                + sorted([x for x in os.listdir() if os.path.isfile(x) and (hidden or not x.startswith(".") )], key=lambda s: s.lower())
+            dirs = sorted([x for x in os.listdir() if os.path.isdir(x) and (hidden or not x.startswith(".") )], key=lambda s: s.lower())
+            dirs.extend( sorted((x for x in os.listdir() if os.path.isfile(x) and (hidden or not x.startswith(".") )), key=lambda s: s.lower()) )
     return dirs
 
 
@@ -132,11 +132,7 @@ def dir_printer():
                 columns += " | " + file_size(x) + " "*(l_size - len(file_size(x)))
             if time_modified and os.path.isfile(x):
                 columns += " | " + time.strftime("%Y-%m-%d %H:%M:%S", time.strptime(time.ctime(os.lstat(x).st_mtime)))
-            if len(x) > max_l - 2 - len(columns):
-                name_x = "... " + x[-(max_l - 6 - len(columns)):]
-            else:
-                name_x = x
-            # name_x = f"{'... ' if len(x) > max_l - 6 - len(columns) else ''}{x[-(max_l - 6 - len(columns)):]}"
+            name_x = f"{'... '+x[-(max_l - 6 - len(columns)):] if len(x) > max_l - 2 - len(columns) else x}"
             to_print += name_x + " "*(max_l-len(name_x)-len(columns) - 2) + columns
     print(to_print)
 
