@@ -1,52 +1,4 @@
 #----------------------------------------
-# VARIABLES
-#----------------------------------------
-
-from exceptions.sub_begin.void_custom import void_c
-
-void = (
-    "center",
-)
-
-from exceptions.sub_begin.dictionary_commands_custom import dic_commands_c
-
-dic_commands = {
-    "abstract":"title",
-    "align":"equation",
-    "align*":"equation",
-    "equation":"equation",
-    "equation*":"equation",
-    "comment":"title",
-    "conjecture":"title",
-    "corollary":"title",
-    "definition":"title",
-    "enumerate":"enumerate",
-    "eqnarray":"equation",
-    "eqnarray*":"equation",
-    "figure":"equation",
-    "figure*":"equation",
-    "gather":"equation",
-    "gather*":"equation",
-    "lemma":"title",
-    "minipage":"curly_curly",
-    "multline":"equation",
-    "multline*":"equation",
-    "proof":"title",
-    "proposition":"title",
-    "question":"title",
-    "remark":"title",
-    "table":"equation",
-    "thebibliography":"skip",
-    "theorem":"title",
-    "tikzpicture":"equation",
-    "verbatim":"equation",
-    "wrapfigure":"curly_curly_curly",
-    "itemize":"itemize",
-}
-
-from exceptions.sub_begin import routines_custom
-
-#----------------------------------------
 # BULTI-IN FUNCTIONS
 #----------------------------------------
 
@@ -96,6 +48,53 @@ def skip(source, clean, command, folder_path):
     source.move_index("\\end{" + command + "}")
 
 #----------------------------------------
+# VARIABLES
+#----------------------------------------
+
+from exceptions.sub_begin.void_custom import void_c
+
+void = (
+    "center",
+    "frame"
+)
+
+from exceptions.sub_begin.dictionary_commands_custom import dic_commands_c
+
+dic_commands = {
+    "abstract":title,
+    "align":equation,
+    "align*":equation,
+    "equation":equation,
+    "equation*":equation,
+    "comment":title,
+    "conjecture":title,
+    "corollary":title,
+    "definition":title,
+    "enumerate":enumerate,
+    "eqnarray":equation,
+    "eqnarray*":equation,
+    "figure":equation,
+    "figure*":equation,
+    "gather":equation,
+    "gather*":equation,
+    "lemma":title,
+    "minipage":curly_curly,
+    "multline":equation,
+    "multline*":equation,
+    "proof":title,
+    "proposition":title,
+    "question":title,
+    "remark":title,
+    "table":equation,
+    "thebibliography":skip,
+    "theorem":title,
+    "tikzpicture":equation,
+    "verbatim":equation,
+    "wrapfigure":curly_curly_curly,
+    "itemize":itemize,
+}
+
+#----------------------------------------
 # INTERPRETER
 #----------------------------------------
 
@@ -103,9 +102,9 @@ def interpret(source, clean, command, folder_path):
     if command in void or command in void_c:
         pass
     elif command in dic_commands_c:
-        exec(dic_commands_c[command] + "(source, clean,\"" + command + "\", folder_path)")
+        dic_commands_c[command](source, clean, command, folder_path)
     elif command in dic_commands:
-        exec(dic_commands[command] + "(source, clean,\"" + command + "\", folder_path)")
+        dic_commands[command](source, clean, command, folder_path)
     else:
         i = source.text.find("\\begin{" + command + "}", 6)
         j = source.text.find("\\end{" + command + "}",6)

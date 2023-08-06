@@ -1,106 +1,4 @@
 #----------------------------------------
-# VARIABLES
-#----------------------------------------
-
-from exceptions.void_custom import void_c
-
-void = (
-    "centering",
-    "small",
-    "large",
-    "Large",
-    "newpage",
-    "textbf",
-    "textit",
-    "emph",
-    "maketitle",
-    "tableofcontents",
-    "footnotesize",
-    "selectfont",
-    "author",
-    "title",
-    "date",
-    "Huge",
-    "huge",
-    "underline",
-    "chapter",
-    "section",
-    "subsection",
-    "subsubsection",
-    "section*",
-    "subsection*",
-    "subsubsection*",
-    "text",
-    "bbox",
-    "clearpage",
-    "appendix",
-    "p",
-    "S",
-    "compat",
-    "bf",
-    "em",
-    "printbibliography",
-    "bigskip",
-    "mbox",
-    "preprint",
-    "affiliation",
-    "noindent",
-    "texorpdfstring",
-    "it",
-    "address",
-    "thanks",
-    "textsc",
-    "texttt"
-)
-
-from exceptions.dictionary_commands_custom import dic_commands_c
-
-dic_commands = {
-    "addchap":"curly",
-    "addsec":"curly",
-    "begin":"begin",
-    "bibliography":"curly",
-    "bibliographystyle":"curly",
-    "chaptermark":"curly",
-    "cite":"print_square_curly",
-    "color":"color",
-    "cref":"print_curly",
-    "Cref":"print_curly",
-    "email":"curly",
-    "end":"end",
-    "eqref":"print_curly",
-    "fontfamily":"curly",
-    "footnote":"footnote",
-    "hspace":"curly",
-    "include":"include",
-    "includegraphics":"curly",
-    "input":"include",
-    "label":"curly",
-    "pagenumbering":"curly",
-    "pagestyle":"curly",
-    "ref":"print_curly",
-    "renewcommand":"curly_curly",
-    "setlength":"curly_curly",
-    "thispagestyle":"curly",
-    "vspace":"curly",
-    "&":"reprint",
-    "%":"reprint",
-    "#":"reprint"
-}
-
-special_commands = {
-    "[":"square_equation",
-    "(":"round_equation",
-    "\"":"apostrofe",
-    "'":"apostrofe",
-    "\\":"new_line",
-    "\n":"new_line",
-    "~":"tilde",
-}
-
-from exceptions import routines_custom
-
-#----------------------------------------
 # BUILT-IN FUNCTIONS
 #----------------------------------------
 
@@ -200,6 +98,106 @@ def null_function(source, clean, folder_path):
     pass
 
 #----------------------------------------
+# VARIABLES
+#----------------------------------------
+
+from exceptions.void_custom import void_c
+
+void = (
+    "centering",
+    "small",
+    "large",
+    "Large",
+    "newpage",
+    "textbf",
+    "textit",
+    "emph",
+    "maketitle",
+    "tableofcontents",
+    "footnotesize",
+    "selectfont",
+    "author",
+    "title",
+    "date",
+    "Huge",
+    "huge",
+    "underline",
+    "chapter",
+    "section",
+    "subsection",
+    "subsubsection",
+    "section*",
+    "subsection*",
+    "subsubsection*",
+    "text",
+    "bbox",
+    "clearpage",
+    "appendix",
+    "p",
+    "S",
+    "compat",
+    "bf",
+    "em",
+    "printbibliography",
+    "bigskip",
+    "mbox",
+    "preprint",
+    "affiliation",
+    "noindent",
+    "texorpdfstring",
+    "it",
+    "address",
+    "thanks",
+    "textsc",
+    "texttt"
+)
+
+from exceptions.dictionary_commands_custom import dic_commands_c
+
+dic_commands = {
+    "addchap":curly,
+    "addsec":curly,
+    "begin":begin,
+    "bibliography":curly,
+    "bibliographystyle":curly,
+    "chaptermark":curly,
+    "cite":print_square_curly,
+    "color":color,
+    "cref":print_curly,
+    "Cref":print_curly,
+    "email":curly,
+    "end":end,
+    "eqref":print_curly,
+    "fontfamily":curly,
+    "footnote":footnote,
+    "hspace":curly,
+    "include":include,
+    "includegraphics":curly,
+    "input":include,
+    "label":curly,
+    "pagenumbering":curly,
+    "pagestyle":curly,
+    "ref":print_curly,
+    "renewcommand":curly_curly,
+    "setlength":curly_curly,
+    "thispagestyle":curly,
+    "vspace":curly,
+    "&":reprint,
+    "%":reprint,
+    "#":reprint
+}
+
+special_commands = {
+    "[":square_equation,
+    "(":round_equation,
+    "\"":apostrofe,
+    "'":apostrofe,
+    "\\":new_line,
+    "\n":new_line,
+    "~":tilde,
+}
+
+#----------------------------------------
 # INTERPRETER
 #----------------------------------------
 
@@ -208,9 +206,9 @@ def interpret(source, clean, command, folder_path):
         if command in void or command in void_c:
             pass
         elif command in dic_commands_c:
-            exec(dic_commands_c[command] + "(source, clean,\"" + command + "\", folder_path)")
+            dic_commands_c[command](source, clean, command, folder_path)
         elif command in dic_commands:
-            exec(dic_commands[command] + "(source, clean,\"" + command + "\", folder_path)")
+            dic_commands[command](source, clean, command, folder_path)
         else:
             while source.text[0] in ["{","["]: # check if opening and closing brackets
                 if source.text[0] == "{":
@@ -231,7 +229,7 @@ def interpret(source, clean, command, folder_path):
     else: # empty string
         command = source.text[0]
         if command in special_commands:
-            exec(special_commands[command] + "(source, clean, folder_path)")
+            special_commands[command](source, clean, folder_path)
         else:
             clean.text += " "
             source.index += 1
