@@ -1,6 +1,6 @@
 # grammafy
 
-Version 1.01
+Version 1.1
 
 This script serves the purpose of cleaning up tex files by creating a txt file, stripped of all the commands, that can be fed to typying software such as Grammarly. Formulas are substituted with the symbol `[_]`, and the other changes should be comprehensible.
 
