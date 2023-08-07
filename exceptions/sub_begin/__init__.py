@@ -51,14 +51,14 @@ def skip(source, clean, command, folder_path):
 # VARIABLES
 #----------------------------------------
 
-from exceptions.sub_begin.void_custom import void_c
+from exceptions.sub_begin.begin_custom import void_c
 
 void = (
     "center",
     "frame"
 )
 
-from exceptions.sub_begin.dictionary_commands_custom import dic_commands_c
+from exceptions.sub_begin.begin_custom import dic_commands_c
 
 dic_commands = {
     "abstract":title,

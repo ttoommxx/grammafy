@@ -101,7 +101,7 @@ def null_function(source, clean, folder_path):
 # VARIABLES
 #----------------------------------------
 
-from exceptions.void_custom import void_c
+from exceptions.routines_custom import void_c
 
 void = (
     "centering",
@@ -152,7 +152,7 @@ void = (
     "texttt"
 )
 
-from exceptions.dictionary_commands_custom import dic_commands_c
+from exceptions.routines_custom import dic_commands_c
 
 dic_commands = {
     "addchap":curly,

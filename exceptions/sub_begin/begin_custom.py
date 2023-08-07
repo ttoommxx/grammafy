@@ -5,20 +5,25 @@
 def title(source, clean, command, folder_path):
     clean.text += command.title() + "."
 
+def thm(source, clean, command, folder_path):
+    clean.text += "Theorem."
+
 #----------------------------------------
 # VARIABLES
 #----------------------------------------
-
-from exceptions.sub_begin import routines_custom
 
 dic_commands_c = {
     "assumption":title,
     "example":title,
     "exercise":title,
-    "thm":routines_custom.thm
+    "thm":thm
 }
+
+void_c = (
+    
+)
 
 # TEMPLATE
 # dic_commands_c = {
-#     "{name_command}":"routines_custom.{name_function}",
+#     "{name_command}": {name_function},
 # }
