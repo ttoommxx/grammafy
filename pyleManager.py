@@ -1,6 +1,6 @@
-import os, sys, time
+import os, sys, time, argparse
 from platform import system
-import argparse
+from itertools import chain
 
 if os.name == "nt":
     from msvcrt import getch
@@ -15,7 +15,7 @@ args = parser.parse_args() # args.picker contains the modality
 picker = args.picker
 
 
-local_folder = os.path.abspath(os.getcwd()) + "/" # save original path
+local_folder = f"{os.path.abspath(os.getcwd())}/" # save original path
 index = 0 # dummy index
 dimension = False 
 time_modified = False
@@ -26,7 +26,7 @@ order = 0
 # INSTRUCTION PRINTER
 def instructions():
     print(f"""INSTRUCTIONS:
-          
+
     prefix < means folder
 
     leftArrow = previous folder
@@ -56,18 +56,18 @@ def index_dir():
 # RETURN FILE SIZE AS A STRING
 def file_size(path):
     size = os.lstat(path).st_size
-    i = 0
-    while size > 999:
-        size /= 1000
-        i += 1
-    return f"{size:.2f}" + ("b","kb","mb","gb")[i]
+    i = len(str(size)) // 3
+    if len(str(size)) % 3 == 0: i-=1
+    if i > 3: i = 3
+    size /= 1000**i
+    return f'{size:.2f}{("b","kb","mb","gb")[i]}'
 
 
 # UPDATE ORDER, 0 stay 1 next
 def order_update(j):
     global order
     vec = (1, int(dimension)*(True in (os.path.isfile(x) for x in directory())),
-           int(time_modified)*(True in (os.path.isfile(x) for x in directory())))
+            int(time_modified)*(True in (os.path.isfile(x) for x in directory())))
     order = vec.index(1,order+j) if 1 in vec[order+j:] else 0
 
 
@@ -77,16 +77,16 @@ def directory():
     match order:
         # size
         case 1:
-            dirs = [x[0] for x in sorted({x:os.lstat(x).st_size for x in os.listdir() if os.path.isdir(x) and (hidden or not x.startswith(".") )}.items(), key=lambda x:x[1]) ]
-            dirs.extend(( x[0] for x in sorted({x:os.lstat(x).st_size for x in os.listdir() if os.path.isfile(x) and (hidden or not x.startswith(".") )}.items(), key=lambda x:x[1]) ))
+            dirs = tuple( chain( (x[0] for x in sorted({x:os.lstat(x).st_size for x in os.listdir() if os.path.isdir(x) and (hidden or not x.startswith(".") )}.items(), key=lambda x:x[1])), \
+                                ( x[0] for x in sorted({x:os.lstat(x).st_size for x in os.listdir() if os.path.isfile(x) and (hidden or not x.startswith(".") )}.items(), key=lambda x:x[1])) ) )
         # time modified
         case 2:
-            dirs = [x[0] for x in sorted({x:os.lstat(x).st_mtime for x in os.listdir() if os.path.isdir(x) and (hidden or not x.startswith(".") )}.items(), key=lambda x:x[1]) ]
-            dirs.extend( (x[0] for x in sorted({x:os.lstat(x).st_mtime for x in os.listdir() if os.path.isfile(x) and (hidden or not x.startswith(".") )}.items(), key=lambda x:x[1])) )
+            dirs = tuple(chain( (x[0] for x in sorted({x:os.lstat(x).st_mtime for x in os.listdir() if os.path.isdir(x) and (hidden or not x.startswith(".") )}.items(), key=lambda x:x[1])), \
+                                (x[0] for x in sorted({x:os.lstat(x).st_mtime for x in os.listdir() if os.path.isfile(x) and (hidden or not x.startswith(".") )}.items(), key=lambda x:x[1])) ) )
         # name
         case _: # 0 and unrecognised values
-            dirs = sorted([x for x in os.listdir() if os.path.isdir(x) and (hidden or not x.startswith(".") )], key=lambda s: s.lower())
-            dirs.extend( sorted((x for x in os.listdir() if os.path.isfile(x) and (hidden or not x.startswith(".") )), key=lambda s: s.lower()) )
+            dirs = tuple( chain( sorted( (x for x in os.listdir() if os.path.isdir(x) and (hidden or not x.startswith(".") ) ), key=lambda s: s.lower()),\
+                                sorted((x for x in os.listdir() if os.path.isfile(x) and (hidden or not x.startswith(".") )), key=lambda s: s.lower()) ) )
     return dirs
 
 
@@ -102,39 +102,38 @@ def clear():
 def dir_printer():
     clear()
     # path directory
-    to_print = "pyleManager --- press i for instructions\n\n"
+    to_print = ["pyleManager --- press i for instructions\n\n"]
     max_l = os.get_terminal_size().columns # length of terminal
     # name folder
-    to_print += f"{'... ' if  len(os.path.abspath(os.getcwd())) > max_l else ''}{os.path.abspath(os.getcwd())[-max_l+5:]}/\n"
+    to_print.append( f"{'... ' if  len(os.path.abspath(os.getcwd())) > max_l else ''}{os.path.abspath(os.getcwd())[-max_l+5:]}/\n" )
     # folders and pointer
     if len(directory()) == 0:
-        to_print += "**EMPTY FOLDER**"
+        to_print.append( "**EMPTY FOLDER**" )
     else:
         order_update(0)
         index_dir()
         current_selection = directory()[index]
         l_size = max((len(file_size(x)) for x in directory()))
-        l_time = 19
     
-        to_print += " " + f"{'v' if order == 0 else ' '}*NAME*"
+        to_print.append( f" {'v' if order == 0 else ' '}*NAME*" )
         columns = ""
         if dimension and True in (os.path.isfile(x) for x in directory()):
-            columns += f" |{'v' if order == 1 else ' '}*SIZE*" + " "*(l_size-6)
+            columns += f" |{'v' if order == 1 else ' '}*SIZE*{' '*(l_size-6)}"
         if time_modified and True in (os.path.isfile(x) for x in directory()):
-            columns += f" |{'v' if order == 2 else ' '}*TIME_M*" + " "*11
+            columns += f" |{'v' if order == 2 else ' '}*TIME_M*{' '*11}"
 
-        to_print += " "*(max_l - len(columns)-8) + columns
+        to_print.append( f"{' '*(max_l - len(columns)-8)}{columns}" )
 
         for x in directory():
-            to_print += "\n" + f"{'+' if x == current_selection else ' '}" + f"{'<' if os.path.isdir(x) else ' '}"
+            to_print.append( f"\n{'+' if x == current_selection else ' '}{'<' if os.path.isdir(x) else ' '}" )
             columns = ""
             if dimension and os.path.isfile(x):
-                columns += " | " + file_size(x) + " "*(l_size - len(file_size(x)))
+                columns += f" | {file_size(x)}{' '*(l_size - len(file_size(x)))}"
             if time_modified and os.path.isfile(x):
-                columns += " | " + time.strftime("%Y-%m-%d %H:%M:%S", time.strptime(time.ctime(os.lstat(x).st_mtime)))
-            name_x = f"{'... '+x[-(max_l - 6 - len(columns)):] if len(x) > max_l - 2 - len(columns) else x}"
-            to_print += name_x + " "*(max_l-len(name_x)-len(columns) - 2) + columns
-    print(to_print)
+                columns += f" | {time.strftime('%Y-%m-%d %H:%M:%S', time.strptime(time.ctime(os.lstat(x).st_mtime)))}"
+            name_x = f"{f'... {x[-(max_l - 6 - len(columns)):]}' if len(x) > max_l - 2 - len(columns) else x}"
+            to_print.append( f"{name_x}{' '*(max_l-len(name_x)-len(columns) - 2)}{columns}" )
+    print("".join(to_print))
 
 
 # FETCH KEYBOARD INPUT
@@ -220,13 +219,13 @@ def main(*args):
             case "e" if len(directory()) > 0 and not picker:
                 match system():
                     case "Linux":
-                        os.system("$EDITOR " + selection)
+                        os.system(f"$EDITOR {selection}")
                     case "Windows":
                         clear()
                         print("Windows does not have any built-in command line editor, press any button to continue")
                         getch()
                     case "Darwin":
-                        os.system("open -e " + selection)
+                        os.system(f"open -e {selection}")
                     case _:
                         clear()
                         print("system not recognised, press any button to continue")
@@ -234,19 +233,17 @@ def main(*args):
             # enter
             case "enter" if len(directory()) > 0:
                 if picker:
-                    path = os.getcwd() + "/" + selection
-                    if  os.path.isdir(selection):
-                        path += "/"
+                    path = f"{os.getcwd()}/{selection}{'/' if  os.path.isdir(selection) else ''}"
                     os.chdir(local_folder)
                     return path
                 elif not picker:
                     match system():
                         case "Linux":
-                            os.system("xdg-open " + selection)
+                            os.system(f"xdg-open {selection}")
                         case "Windows":
                             os.system(selection)
                         case "Darwin":
-                            os.system("open " + selection)
+                            os.system(f"open {selection}")
                         case _:
                             clear()
                             print("system not recognised, press any button to continue")
