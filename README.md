@@ -26,7 +26,7 @@ The script computes the following instructions:
 ```
 \ , { , } , $ , % , ~
 ```
-3) If it finds any of the above, it prints everything to `clean.text` up until such symbol, and executes an action depending on the symbol.
+3) If it finds any of the above, it prints everything to `clean.text` up until such symbol, by calling `clean.add(text)`, and executes an action depending on the symbol.
 4) If the special character ``\`` is found, the script interprets the command as everything in between `\` and
 ```
 { , } , . , , , : , ; , [ , ] , ( , ) , $ , \ , \n , " , ' , ~

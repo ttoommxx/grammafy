@@ -3,14 +3,14 @@
 #----------------------------------------
 
 def title(source, clean, command, folder_path):
-    clean.text += command.title() + "."
+    clean.add(command.title() + ".")
 
 def equation(source, clean, command, folder_path):
-    clean.text += "[_]"
+    clean.add("[_]")
     # find the index where the whole portion ends
     i = source.text.find("\\end{" + command + "}") # from here, use regex
     if source.text[:i-1].rstrip()[-1] in [",", ";", "."]:
-        clean.text += source.text[:i-1].rstrip()[-1]
+        clean.add(source.text[:i-1].rstrip()[-1])
     source.move_index("\\end{" + command + "}")
 
 def enumerate(source, clean, command, folder_path):

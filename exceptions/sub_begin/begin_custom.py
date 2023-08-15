@@ -3,10 +3,10 @@
 #----------------------------------------
 
 def title(source, clean, command, folder_path):
-    clean.text += command.title() + "."
+    clean.add(command.title() + ".")
 
 def thm(source, clean, command, folder_path):
-    clean.text += "Theorem."
+    clean.add("Theorem.")
 
 #----------------------------------------
 # VARIABLES

@@ -3,7 +3,7 @@
 #----------------------------------------
 
 def print_curly(source, clean, command, folder_path):
-    clean.text += "[_]"
+    clean.add("[_]")
     source.move_index("}")
 
 #----------------------------------------

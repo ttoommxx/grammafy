@@ -3,7 +3,7 @@
 #----------------------------------------
 
 def proof(source, clean, command, folder_path):
-    clean.text += "■\n"
+    clean.add("■\n")
 
 #----------------------------------------
 # VARIABLES

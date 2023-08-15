@@ -51,11 +51,11 @@ else:
 while source.head: # if any such element occurs
     next_index = source.inter
     if next_index is False:
-        clean.text += source.text
+        clean.add(source.text)
         source.pop()
         continue
     
-    clean.text += source.text[:next_index] # we can immediately add what we skipped before any interactive element
+    clean.add(source.text[:next_index]) # we can immediately add what we skipped before any interactive element
     source.index += next_index
 
     match source.text[0]:
@@ -67,13 +67,13 @@ while source.head: # if any such element occurs
             interpret(source, clean, command, folder_path)
         case "~":
             source.index += 1
-            clean.text += " "
+            clean.add(" ")
         case "{":
             source.index += 1
         case "}":
             source.index += 1
         case "$":
-            clean.text += "[_]"
+            clean.add("[_]")
             source.index += 1
             if source.text[0] == "$":
                 source.move_index("$$")

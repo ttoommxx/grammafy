@@ -83,7 +83,18 @@ class Source:
 
 class Clean:
 
-    def __init__(self, text = ""):
-        self.text = text
+    def __init__(self):
+        self._text = []
         # aggessive mode, we are going to store all the skipped command in one .txt file
         self.aggro = set()
+    
+    def add(self, text):
+        self._text.append(text)
+    
+    @property
+    def text(self):
+        return ''.join(self._text)
+        
+    @text.setter
+    def text(self, text):
+        self._text = [text]

@@ -5,7 +5,7 @@
 import os
 
 def reprint(source, clean, command, folder_path):
-    clean.text += command
+    clean.add(command)
 
 def curly(source, clean, command, folder_path):
     source.move_index("}")
@@ -15,9 +15,9 @@ def curly_curly(source, clean, command, folder_path):
     source.move_index("}")
 
 def color(source, clean, command, folder_path):
-    clean.text += "Color:"
+    clean.add("Color:")
     i = source.text.find( "}" )
-    clean.text += source.text[ 1:i ].upper()
+    clean.add(source.text[ 1:i ].upper())
     source.index += i+1
 
 def footnote(source, clean, command, folder_path):
@@ -41,11 +41,11 @@ def include(source, clean, command, folder_path): # included files need to be in
     source.root.index += i+1
 
 def print_curly(source, clean, command, folder_path):
-    clean.text += "[_]"
+    clean.add("[_]")
     source.move_index("}")
 
 def print_square_curly(source, clean, command, folder_path):
-    clean.text += "[_]"
+    clean.add("[_]")
     if source.text[0] == "[":
         source.move_index("]")
     source.move_index("}")
@@ -69,21 +69,21 @@ def end(source, clean, command, folder_path):
 # special commands (not include command to avoid string problems)
 
 def new_line(source, clean, folder_path):
-    clean.text += "\n"
+    clean.add("\n")
     source.index += 1
 
 def square_equation(source, clean, folder_path):
     i = source.text.find( "\\]" )
-    clean.text += "[_]"
+    clean.add("[_]")
     if source.text[:i].rstrip()[-1] in [",", ";", "."]: # add punctuation to non-inline equations
-        clean.text += source.text[:i].rstrip()[-1]
+        clean.add(source.text[:i].rstrip()[-1])
     source.move_index( "\\]" )
 
 def round_equation(source, clean, folder_path):
     i = source.text.find( "\\)" )
-    clean.text += "[_]"
+    clean.add("[_]")
     if source.text[:i].rstrip()[-1] in [",", ";", "."]: # add punctuation to non-inline equations
-        clean.text += source.text[:i].rstrip()[-1]
+        clean.add(source.text[:i].rstrip()[-1])
     source.move_index( "\\)" )
 
 def apostrofe(source, clean, folder_path):
@@ -91,7 +91,7 @@ def apostrofe(source, clean, folder_path):
         source.index += 1
 
 def tilde(source, clean, folder_path):
-    clean.text += "~"
+    clean.add("~")
     source.index += 1
 
 def null_function(source, clean, folder_path):
@@ -231,7 +231,7 @@ def interpret(source, clean, command, folder_path):
         if command in special_commands:
             special_commands[command](source, clean, folder_path)
         else:
-            clean.text += " "
+            clean.add(" ")
             source.index += 1
 
 
