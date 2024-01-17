@@ -2,10 +2,12 @@
 # BULTI-IN FUNCTIONS
 #----------------------------------------
 
-def title(source, clean, command, folder_path):
+def _title(source, clean, command, folder_path):
+    """ add title to clean """
     clean.add(command.title() + ".")
 
-def equation(source, clean, command, folder_path):
+def _equation(source, clean, command, folder_path):
+    """ add [_] and move to the end of the equation command """
     clean.add("[_]")
     # find the index where the whole portion ends
     i = source.text.find("\\end{" + command + "}") # from here, use regex
@@ -13,7 +15,8 @@ def equation(source, clean, command, folder_path):
         clean.add(source.text[:i-1].rstrip()[-1])
     source.move_index("\\end{" + command + "}")
 
-def enumerate(source, clean, command, folder_path):
+def _enumerate(source, clean, command, folder_path):
+    """ add a new node to source, replacing item with . followed by a new number """
     if source.text[0] == "[":
         source.move_index("]")
     i = source.text.find("\\end{enumerate}")
@@ -26,7 +29,8 @@ def enumerate(source, clean, command, folder_path):
     source.add(new_text)
     source.root.move_index("\\end{enumerate}")
 
-def itemize(source, clean, command, folder_path):
+def _itemize(source, clean, command, folder_path):
+    """ add a new node to source, replacing item with - """
     if source.text[0] == "[":
         source.move_index("]")
     i = source.text.find("\\end{itemize}")
@@ -36,15 +40,18 @@ def itemize(source, clean, command, folder_path):
     source.root.move_index("\\end{itemize}")
     
 
-def curly_curly(source, clean, command, folder_path):
+def _curly_curly(source, clean, command, folder_path):
+    """ move index by two curly brackets """
     source.move_index("}")
     source.move_index("}")
 
-def curly_curly_curly(source, clean, command, folder_path):
+def _curly_curly_curly(source, clean, command, folder_path):
+    """ move index by 3 curly brackets """
     for _ in range(3):
         source.move_index("}")
 
-def skip(source, clean, command, folder_path):
+def _skip(source, clean, command, folder_path):
+    """ skip command when not recognised """
     source.move_index("\\end{" + command + "}")
 
 #----------------------------------------
@@ -61,37 +68,37 @@ void = (
 from exceptions.sub_begin.begin_custom import dic_commands_c
 
 dic_commands = {
-    "abstract":title,
-    "align":equation,
-    "align*":equation,
-    "equation":equation,
-    "equation*":equation,
-    "comment":title,
-    "conjecture":title,
-    "corollary":title,
-    "definition":title,
-    "enumerate":enumerate,
-    "eqnarray":equation,
-    "eqnarray*":equation,
-    "figure":equation,
-    "figure*":equation,
-    "gather":equation,
-    "gather*":equation,
-    "lemma":title,
-    "minipage":curly_curly,
-    "multline":equation,
-    "multline*":equation,
-    "proof":title,
-    "proposition":title,
-    "question":title,
-    "remark":title,
-    "table":equation,
-    "thebibliography":skip,
-    "theorem":title,
-    "tikzpicture":equation,
-    "verbatim":equation,
-    "wrapfigure":curly_curly_curly,
-    "itemize":itemize,
+    "abstract":_title,
+    "align":_equation,
+    "align*":_equation,
+    "equation":_equation,
+    "equation*":_equation,
+    "comment":_title,
+    "conjecture":_title,
+    "corollary":_title,
+    "definition":_title,
+    "enumerate":_enumerate,
+    "eqnarray":_equation,
+    "eqnarray*":_equation,
+    "figure":_equation,
+    "figure*":_equation,
+    "gather":_equation,
+    "gather*":_equation,
+    "lemma":_title,
+    "minipage":_curly_curly,
+    "multline":_equation,
+    "multline*":_equation,
+    "proof":_title,
+    "proposition":_title,
+    "question":_title,
+    "remark":_title,
+    "table":_equation,
+    "thebibliography":_skip,
+    "theorem":_title,
+    "tikzpicture":_equation,
+    "verbatim":_equation,
+    "wrapfigure":_curly_curly_curly,
+    "itemize":_itemize,
 }
 
 #----------------------------------------
@@ -99,6 +106,7 @@ dic_commands = {
 #----------------------------------------
 
 def interpret(source, clean, command, folder_path):
+    """ custom interpreted for the begin routine, works similarly to the main interpreter """ 
     if command in void or command in void_c:
         pass
     elif command in dic_commands_c:

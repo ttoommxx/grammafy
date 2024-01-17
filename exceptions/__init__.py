@@ -4,23 +4,28 @@
 
 import os
 
-def reprint(source, clean, command, folder_path):
+def _reprint(source, clean, command, folder_path):
+    """ add the command to clean the command """
     clean.add(command)
 
-def curly(source, clean, command, folder_path):
+def _curly(source, clean, command, folder_path):
+    """ move to the end of curly brackets """
     source.move_index("}")
 
-def curly_curly(source, clean, command, folder_path):
+def _curly_curly(source, clean, command, folder_path):
+    """ move to the end for 2 consecutive curly brackets """
     source.move_index("}")
     source.move_index("}")
 
-def color(source, clean, command, folder_path):
+def _color(source, clean, command, folder_path):
+    """ add color to source and move to the end of curly brackets """
     clean.add("Color:")
     i = source.text.find( "}" )
     clean.add(source.text[ 1:i ].upper())
     source.index += i+1
 
-def footnote(source, clean, command, folder_path):
+def _footnote(source, clean, command, folder_path):
+    """ add footnote to source and move to the end of nested curly brackets """
     i = 1
     j = i # index for open brackets
     while i >= j and j > 0 :
@@ -31,20 +36,23 @@ def footnote(source, clean, command, folder_path):
     source.add("(FOOTNOTE: " + source.text[ 1:i-1 ] + ")")
     source.root.index += i
 
-def include(source, clean, command, folder_path): # included files need to be in the same folder
+def _include(source, clean, command, folder_path):
+    """ responds to \include command and adds the new source to the head of source. The included files need to be in the same folder """
     i = source.text.find("}")
     include_path = source.text[ 1:i ]
     if not include_path.endswith(".tex"): # if the extension is not present
         include_path += ".tex"
-    with open(f"{folder_path}{include_path}") as include_tex:
+    with open(f"{folder_path}{include_path}", encoding="utf-8") as include_tex:
         source.add( include_tex.read() )
     source.root.index += i+1
 
-def print_curly(source, clean, command, folder_path):
+def _print_curly(source, clean, command, folder_path):
+    """ [_] to clean when meeting curly brackets and move to the end of curly brackets """
     clean.add("[_]")
     source.move_index("}")
 
-def print_square_curly(source, clean, command, folder_path):
+def _print_square_curly(source, clean, command, folder_path):
+    """ add [_] for clean and move to the end of square if present, and then curly brackets """
     clean.add("[_]")
     if source.text[0] == "[":
         source.move_index("]")
@@ -52,7 +60,8 @@ def print_square_curly(source, clean, command, folder_path):
 
 from exceptions import sub_begin
 
-def begin(source, clean, command, folder_path):
+def _begin(source, clean, command, folder_path):
+    """ responds to the command being and move to the function begin and its subroutines """
     i = source.text.find("}") # right next after the brackets
     command = source.text[ 1:i ] # remove asterisk if any
     source.move_index("}")
@@ -60,7 +69,8 @@ def begin(source, clean, command, folder_path):
         
 from exceptions import sub_end
         
-def end(source, clean, command, folder_path):
+def _end(source, clean, command, folder_path):
+    """ responds to the command end and move to the function end and its subroutines """
     i = source.text.find("}")
     command = source.text[ 1:i ]
     source.move_index("}")
@@ -68,34 +78,40 @@ def end(source, clean, command, folder_path):
 
 # special commands (not include command to avoid string problems)
 
-def new_line(source, clean, folder_path):
+def _new_line(source, clean, folder_path):
+    """ add a new line to clean """
     clean.add("\n")
     source.index += 1
 
-def square_equation(source, clean, folder_path):
+def _square_equation(source, clean, folder_path):
+    """ add [_] when meeting an equation called via \[ and move index to the end if it """
     i = source.text.find( "\\]" )
     clean.add("[_]")
     if source.text[:i].rstrip()[-1] in [",", ";", "."]: # add punctuation to non-inline equations
         clean.add(source.text[:i].rstrip()[-1])
     source.move_index( "\\]" )
 
-def round_equation(source, clean, folder_path):
+def _round_equation(source, clean, folder_path):
+    """ add [_] when meeting an equation called via \( and move index to the end if it """
     i = source.text.find( "\\)" )
     clean.add("[_]")
     if source.text[:i].rstrip()[-1] in [",", ";", "."]: # add punctuation to non-inline equations
         clean.add(source.text[:i].rstrip()[-1])
     source.move_index( "\\)" )
 
-def apostrofe(source, clean, folder_path):
-    if source.text[1] in ["a","e","i","o","u"]:
+def _apostrofe(source, clean, folder_path):
+    """ skip letter when meeting an apostrofe """
+    if source.text[1] in ("a","e","i","o","u"):
         source.index += 1
 
-def tilde(source, clean, folder_path):
+def _tilde(source, clean, folder_path):
+    """ add tilde to clean """
     clean.add("~")
     source.index += 1
 
-def null_function(source, clean, folder_path):
-    pass
+def _null_function(source, clean, folder_path):
+    """ null function, does nothing """
+
 
 #----------------------------------------
 # VARIABLES
@@ -155,46 +171,46 @@ void = (
 from exceptions.routines_custom import dic_commands_c
 
 dic_commands = {
-    "addchap":curly,
-    "addsec":curly,
-    "begin":begin,
-    "bibliography":curly,
-    "bibliographystyle":curly,
-    "chaptermark":curly,
-    "cite":print_square_curly,
-    "color":color,
-    "cref":print_curly,
-    "Cref":print_curly,
-    "email":curly,
-    "end":end,
-    "eqref":print_curly,
-    "fontfamily":curly,
-    "footnote":footnote,
-    "hspace":curly,
-    "include":include,
-    "includegraphics":curly,
-    "input":include,
-    "label":curly,
-    "pagenumbering":curly,
-    "pagestyle":curly,
-    "ref":print_curly,
-    "renewcommand":curly_curly,
-    "setlength":curly_curly,
-    "thispagestyle":curly,
-    "vspace":curly,
-    "&":reprint,
-    "%":reprint,
-    "#":reprint
+    "addchap":_curly,
+    "addsec":_curly,
+    "begin":_begin,
+    "bibliography":_curly,
+    "bibliographystyle":_curly,
+    "chaptermark":_curly,
+    "cite":_print_square_curly,
+    "color":_color,
+    "cref":_print_curly,
+    "Cref":_print_curly,
+    "email":_curly,
+    "end":_end,
+    "eqref":_print_curly,
+    "fontfamily":_curly,
+    "footnote":_footnote,
+    "hspace":_curly,
+    "include":_include,
+    "includegraphics":_curly,
+    "input":_include,
+    "label":_curly,
+    "pagenumbering":_curly,
+    "pagestyle":_curly,
+    "ref":_print_curly,
+    "renewcommand":_curly_curly,
+    "setlength":_curly_curly,
+    "thispagestyle":_curly,
+    "vspace":_curly,
+    "&":_reprint,
+    "%":_reprint,
+    "#":_reprint
 }
 
 special_commands = {
-    "[":square_equation,
-    "(":round_equation,
-    "\"":apostrofe,
-    "'":apostrofe,
-    "\\":new_line,
-    "\n":new_line,
-    "~":tilde,
+    "[":_square_equation,
+    "(":_round_equation,
+    "\"":_apostrofe,
+    "'":_apostrofe,
+    "\\":_new_line,
+    "\n":_new_line,
+    "~":_tilde,
 }
 
 #----------------------------------------
@@ -202,6 +218,7 @@ special_commands = {
 #----------------------------------------
 
 def interpret(source, clean, command, folder_path):
+    """ this is the custom interpreter that recalls first custom subroutines, then built-in subroutines and then skip the command if not recognised """
     if command:
         if command in void or command in void_c:
             pass

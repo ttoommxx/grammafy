@@ -2,7 +2,8 @@
 # BULTI-IN FUNCTIONS
 #----------------------------------------
 
-def proof(source, clean, command, folder_path):
+def _proof(source, clean, command, folder_path):
+    """ add proof to clean """
     clean.add("■\n")
 
 #----------------------------------------
@@ -16,7 +17,7 @@ from exceptions.sub_end.end_custom import void_c
 from exceptions.sub_end.end_custom import dic_commands_c
 
 dic_commands = {
-    "proof":proof
+    "proof":_proof
 }
 
 #----------------------------------------
@@ -24,6 +25,7 @@ dic_commands = {
 #----------------------------------------
 
 def interpret(source, clean, command, folder_path):
+    """ custom interpreter for the end routine """
     if command in void_c:
         pass
     elif command in dic_commands_c:

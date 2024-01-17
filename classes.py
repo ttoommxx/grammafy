@@ -1,24 +1,30 @@
 class Node:
+    """ NodeList class contained source code to be cleaned, ordered from head """
+
     def __init__(self, text, root = None):
         self._text = "\n".join( filter( lambda x:not x.lstrip().startswith("%"), text.splitlines() ) ) + "\n"
         self._index = 0
         self.root = root
-        self.symbols = [ ["\\",-1], ["{",-1], ["}",-1], ["$",-1], ["%",-1], ["~",-1] ]
+        self.symbols = { "\\":-1, "{":-1, "}":-1, "$":-1, "%":-1, "~":-1 }
 
     @property
     def text(self):
+        """ return the text from the current index """
         return self._text[self.index:]
     
     @text.setter
     def text(self, text):
+        """ does not allow for modifying the source code """
         raise ValueError("text is a constant and should not be changed")
     
     @property
     def index(self):
+        """ return the current index """
         return self._index
 
     @index.setter
     def index(self, index):
+        """ set the index and reset if analysing backwards, this way if functions are poorly programmer the script won't loop """
         if index < self._index:
             print("index overload: the index has been reset")
             self._index = len(self._text)
@@ -27,61 +33,71 @@ class Node:
 
     @property
     def inter(self):
-        # this trick is so that if I remove an element from the list I don't intact the next one cause it is going backwards
-        for x in self.symbols[::-1]:
-            if x[1] < self.index: # update only those that haven't been used    
-                if x[0] not in self.text:
-                    self.symbols.remove(x)
+        """ this functions search for the first symbol occurrence that has already been analysed yet, i.e. that precedes the current index """
+        for x in list(self.symbols.keys()):
+            if self.symbols[x] < self.index: # update only those that haven't been used    
+                if x not in self.text:
+                    self.symbols.pop(x)
                 else:
-                    x[1] = self._text.find(x[0], self.index)
+                    self.symbols[x] = self._text.find(x, self.index)
         if any(self.symbols):
-            return min( x[1] for x in self.symbols) - self.index
+            return min( self.symbols.values() ) - self.index
         else:
             return False
 
     def move_index(self, text_to_find):
+        """ search for text_to_find and move index at the end of the text """ 
         self.index = self._text.find(text_to_find, self.index) + len(text_to_find)
 
 
 class Source:
+    """ mock class that behaves like the head of the ListNode (inherits most of its attributes) and pops the head when it's been fully analysed """
 
     def __init__(self, text):
         self.head = Node(text)
     
     # <<< treat this class as the actual head of the node
     def __getattr__(self, name):
-        if name == "head":
-            return self.head
-        elif name == "index":
-            return self.head.index
-        elif name == "text":
-            return self.head.text
-        elif name == "inter":
-            return self.head.inter
-        else:
-            return self.head.__dict__[name]
+        """ inherits members of the Node class """
+        match name:
+            case "head":
+                return self.head
+            case "index":
+                return self.head.index
+            case "text":
+                return self.head.text
+            case "inter":
+                return self.head.inter
+            case _:
+                return self.head.__dict__[name]
 
     def __setattr__(self, name, value):
-        if name == "head":
-            self.__dict__[name] = value
-        elif name == "index":
-            self.head.index = value
-        elif name == "text":
-            self.head.text = value
-        else:
-            self.head.__dict__[name] = value
+        """ inherits members of the Node class """
+        match name:
+            case "head":
+                self.__dict__[name] = value
+            case "index":
+                self.head.index = value
+            case "text":
+                self.head.text = value
+            case _:
+                self.head.__dict__[name] = value
 
     def move_index(self, text_to_find):
+        """ inherits the move_index function from Node """
         self.head.move_index(text_to_find)
     # >>>
 
     def add(self, text):
+        """ add a new node and set it as head """
         self.head = Node(text, self.head)
 
     def pop(self):
+        """ remove the current node, keeping the object as is """
         self.head = self.head.root
 
 class Clean:
+    """ class that contains the cleaned up tex code """
 
     def __init__(self):
         self._text = []
@@ -89,12 +105,17 @@ class Clean:
         self.aggro = set()
     
     def add(self, text):
+        """ add new cleaned text """
         self._text.append(text)
     
     @property
     def text(self):
-        return ''.join(self._text)
+        """ when being called, it assembles the code that has been added and returns it, keeping it in memory in case its called again """
+        if len(self._text) > 1:
+            self._text = [''.join(self._text)]
+        return self._text[0]
         
     @text.setter
     def text(self, text):
+        """ when setting the text, it clears the queue """
         self._text = [text]

@@ -1,4 +1,8 @@
-import os, sys, argparse, re
+""" necessary modules """
+import os
+import sys
+import argparse
+import re
 from classes import Source, Clean
 from exceptions import interpret
 
@@ -6,23 +10,27 @@ parser = argparse.ArgumentParser(prog="grammafy", description="clean up tex file
 parser.add_argument("-c", "--commandline", help="select via command line argument")
 args = parser.parse_args() # args.picker contains the modality
 if not args.commandline:
-    import pyleManager
-    pyleManager.clear()
-    input("Press enter to pick a tex file")
-    file_path = pyleManager.main("-p")
-    pyleManager.clear()
+    import pyle_manager
+    pyle_manager.clear()
+    print("Press enter to pick a tex file")
+    pyle_manager.get_key()
+    file_path = pyle_manager.main("-p")
+    pyle_manager.clear()
 else:
     file_path = args.commandline
 
+FILE_NAME = ""
 if not file_path:
     sys.exit("File not selected")
 elif not file_path.endswith(".tex"):
-    if input("the file selected is not in a tex format, enter Y to continue anyway. ").lower() != "y":
-        sys.exit("the file selected is not a tex file")
+    if input("The file selected is not in a tex format, enter Y to continue anyway. ").lower() != "y":
+        sys.exit("Grammification interrupted")
     else:
-        file_name = os.path.basename(file_path)
+        FILE_NAME = os.path.basename(file_path)
 else:
-    file_name = os.path.basename(file_path)[:-4]
+    FILE_NAME = os.path.basename(file_path)[:-4]
+if not FILE_NAME:
+    sys.exit("Error fetching the file name")
 
 if os.name == "nt":
     folder_path = f"{os.path.dirname(file_path)}\\"
@@ -38,7 +46,7 @@ end_command = (" ","{","}",".",",",":",";","[","]","(",")","$","\\","\n","\"","'
 clean = Clean()
 
 # copy the main .tex file to a string
-with open(file_path) as source_temp:
+with open(file_path, encoding="utf-8") as source_temp:
     source = Source( source_temp.read() )
 
 # find the beginning of the document
@@ -99,18 +107,18 @@ clean.text = re.sub("( )*\n( )*", "\n", clean.text)
 # too many lines
 clean.text = re.sub("\n\n\s*", "\n\n", clean.text)
 # dourble spacing
-clean.text = re.sub("( )+", " ", clean.text)
+clean.text = re.sub(r"( )+", " ", clean.text)
 # remove new line before [_] unless preceded by -
-clean.text = re.sub("(\S)\n?(?<!-)\[_\]", r"\1 [_]", clean.text)
+clean.text = re.sub(r"(\S)\n?(?<!-)\[_\]", r"\1 [_]", clean.text)
 # remove new line after [_] unless followed by bulletpoint
-clean.text = re.sub("\[_\](\.|,|;)?\n(?!(?:\d+\.|-))(\S)", r"[_]\1 \2", clean.text) 
+clean.text = re.sub(r"\[_\](\.|,|;)?\n(?!(?:\d+\.|-))(\S)", r"[_]\1 \2", clean.text) 
 
 
-with open(f"{folder_path}{file_name}_grammafied.txt","w", encoding="utf-8") as file_output:
+with open(f"{folder_path}{FILE_NAME}_grammafied.txt","w", encoding="utf-8") as file_output:
     file_output.write(clean.text)
-    print(f"File written successfully, check {folder_path}{file_name}_grammafied.txt")
+    print(f"File written successfully, check {folder_path}{FILE_NAME}_grammafied.txt")
 
 if any(clean.aggro):
-    print(f"Unknown commands, please check {file_name}_unknowns.txt")
-    with open(f"{folder_path}{file_name}_unknowns.txt","w", encoding="utf-8") as file_unknowns:    
+    print(f"Unknown commands, please check {FILE_NAME}_unknowns.txt")
+    with open(f"{folder_path}{FILE_NAME}_unknowns.txt","w", encoding="utf-8") as file_unknowns:    
         file_unknowns.write(str(clean.aggro))

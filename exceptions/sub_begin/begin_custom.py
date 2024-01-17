@@ -2,10 +2,12 @@
 # FUNCTIONS
 #----------------------------------------
 
-def title(source, clean, command, folder_path):
+def _title(source, clean, command, folder_path):
+    """ add title to clean """
     clean.add(command.title() + ".")
 
-def thm(source, clean, command, folder_path):
+def _thm(source, clean, command, folder_path):
+    """ add theorem to clean """
     clean.add("Theorem.")
 
 #----------------------------------------
@@ -13,10 +15,10 @@ def thm(source, clean, command, folder_path):
 #----------------------------------------
 
 dic_commands_c = {
-    "assumption":title,
-    "example":title,
-    "exercise":title,
-    "thm":thm
+    "assumption":_title,
+    "example":_title,
+    "exercise":_title,
+    "thm":_thm
 }
 
 void_c = (
