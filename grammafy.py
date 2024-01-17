@@ -32,12 +32,7 @@ else:
 if not FILE_NAME:
     sys.exit("Error fetching the file name")
 
-if os.name == "nt":
-    folder_path = f"{os.path.dirname(file_path)}\\"
-elif os.name == "posix":
-    folder_path = f"{os.path.dirname(file_path)}/"
-else:
-    sys.exit("Operating system not recognised")
+folder_path = f"{os.path.dirname(file_path)}{os.sep}"
 
 # list of admissible characters for commands
 end_command = (" ","{","}",".",",",":",";","[","]","(",")","$","\\","\n","\"","'","~")
