@@ -38,82 +38,84 @@ folder_path = f"{os.path.dirname(file_path)}{os.sep}"
 end_command = (" ","{","}",".",",",":",";","[","]","(",")","$","\\","\n","\"","'","~")
 
 # initialise the final text
-clean = Clean()
+CLEAN = Clean()
 
 # copy the main .tex file to a string
-with open(file_path, encoding="utf-8") as source_temp:
-    source = Source( source_temp.read() )
+with open(file_path, encoding="utf-8") as SOURCE:
+    SOURCE = Source( SOURCE.read() )
 
 # find the beginning of the document
-if "\\begin{document}" not in source.text:
+if "\\begin{document}" not in SOURCE.text:
     print("\\begin{document} missing")
 else:
-    source.move_index("\\begin{document}")
+    SOURCE.move_index("\\begin{document}")
 
 # start analysing the text
-while source.head: # if any such element occurs
-    next_index = source.inter
+while SOURCE.head: # if any such element occurs
+    next_index = SOURCE.inter
     if next_index is False:
-        clean.add(source.text)
-        source.pop()
+        CLEAN.add(SOURCE.text)
+        SOURCE.pop()
         continue
     
-    clean.add(source.text[:next_index]) # we can immediately add what we skipped before any interactive element
-    source.index += next_index
+    # we can immediately add what we skipped before any interactive element
+    CLEAN.add(SOURCE.text[:next_index])
+    SOURCE.index += next_index
 
-    match source.text[0]:
+    match SOURCE.text[0]:
         case "\\": # FROM HERE - MAKE IT INTO A MATCH and include all this into the interpret if possible
-            i = min( ( source.text.find(x,1) for x in end_command if x in source.text[1:] ) )  # take note of the index of such element
-            command = source.text[ 1:i ]
-            source.index += i
+            i = min( ( SOURCE.text.find(x,1) for x in end_command if x in SOURCE.text[1:] ) )  # take note of the index of such element
+            command = SOURCE.text[ 1:i ]
+            SOURCE.index += i
             # execute the routines
-            interpret(source, clean, command, folder_path)
+            interpret(SOURCE, CLEAN, command, folder_path)
         case "~":
-            source.index += 1
-            clean.add(" ")
+            SOURCE.index += 1
+            CLEAN.add(" ")
         case "{":
-            source.index += 1
+            SOURCE.index += 1
         case "}":
-            source.index += 1
+            SOURCE.index += 1
         case "$":
-            clean.add("[_]")
-            source.index += 1
-            if source.text[0] == "$":
-                source.move_index("$$")
+            CLEAN.add("[_]")
+            SOURCE.index += 1
+            if SOURCE.text[0] == "$":
+                SOURCE.move_index("$$")
             else: # assuming there are no double dollars within one-dollar equations
-                source.move_index("$")
+                SOURCE.move_index("$")
         case "%":
-            source.move_index("\n")
+            SOURCE.move_index("\n")
         case _:
-            if input(f"Fatal error, unknown interactive {source.text[0]}. \
+            if input(f"Fatal error, unknown interactive {SOURCE.text[0]}. \
                     Press Y to continue or any other button to abort").lower() != "y":
                 sys.exit("Aborted")
             else:
-                source.index += 1
+                SOURCE.index += 1
 
 
 # CLEANING ROUTINES
 # trailing spaces
-clean.text = clean.text.strip()
+CLEAN.text = CLEAN.text.strip()
 # unmatched brackets and tabs
-clean.text = clean.text.replace("[]","").replace("()","").replace("\t"," ")
+CLEAN.text = CLEAN.text.replace("[]", "").replace("()", "").replace("\t", " ")
 # pointless spaces
-clean.text = re.sub("( )*\n( )*", "\n", clean.text)
+CLEAN.text = re.sub(r"( )*\n( )*", "\n", CLEAN.text)
 # too many lines
-clean.text = re.sub("\n\n\s*", "\n\n", clean.text)
+CLEAN.text = re.sub(r"\n\n\s*", "\n\n", CLEAN.text)
 # dourble spacing
-clean.text = re.sub(r"( )+", " ", clean.text)
+CLEAN.text = re.sub(r"( )+", " ", CLEAN.text)
 # remove new line before [_] unless preceded by -
-clean.text = re.sub(r"(\S)\n?(?<!-)\[_\]", r"\1 [_]", clean.text)
+CLEAN.text = re.sub(r"(\S)\n?(?<!-)\[_\]", r"\1 [_]", CLEAN.text)
 # remove new line after [_] unless followed by bulletpoint
-clean.text = re.sub(r"\[_\](\.|,|;)?\n(?!(?:\d+\.|-))(\S)", r"[_]\1 \2", clean.text) 
+CLEAN.text = re.sub(
+    r"\[_\](\.|,|;)?\n(?!(?:\d+\.|-))(\S)", r"[_]\1 \2", CLEAN.text)
 
 
 with open(f"{folder_path}{FILE_NAME}_grammafied.txt","w", encoding="utf-8") as file_output:
-    file_output.write(clean.text)
+    file_output.write(CLEAN.text)
     print(f"File written successfully, check {folder_path}{FILE_NAME}_grammafied.txt")
 
-if any(clean.aggro):
+if any(CLEAN.aggro):
     print(f"Unknown commands, please check {FILE_NAME}_unknowns.txt")
     with open(f"{folder_path}{FILE_NAME}_unknowns.txt","w", encoding="utf-8") as file_unknowns:    
-        file_unknowns.write(str(clean.aggro))
+        file_unknowns.write(str(CLEAN.aggro))

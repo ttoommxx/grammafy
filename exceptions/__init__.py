@@ -4,112 +4,112 @@
 
 import os
 
-def _reprint(source, clean, command, folder_path):
-    """ add the command to clean the command """
-    clean.add(command)
+def _reprint(SOURCE, CLEAN, command, folder_path):
+    """ add the command to CLEAN the command """
+    CLEAN.add(command)
 
-def _curly(source, clean, command, folder_path):
+def _curly(SOURCE, CLEAN, command, folder_path):
     """ move to the end of curly brackets """
-    source.move_index("}")
+    SOURCE.move_index("}")
 
-def _curly_curly(source, clean, command, folder_path):
+def _curly_curly(SOURCE, CLEAN, command, folder_path):
     """ move to the end for 2 consecutive curly brackets """
-    source.move_index("}")
-    source.move_index("}")
+    SOURCE.move_index("}")
+    SOURCE.move_index("}")
 
-def _color(source, clean, command, folder_path):
-    """ add color to source and move to the end of curly brackets """
-    clean.add("Color:")
-    i = source.text.find( "}" )
-    clean.add(source.text[ 1:i ].upper())
-    source.index += i+1
+def _color(SOURCE, CLEAN, command, folder_path):
+    """ add color to SOURCE and move to the end of curly brackets """
+    CLEAN.add("Color:")
+    i = SOURCE.text.find( "}" )
+    CLEAN.add(SOURCE.text[ 1:i ].upper())
+    SOURCE.index += i+1
 
-def _footnote(source, clean, command, folder_path):
-    """ add footnote to source and move to the end of nested curly brackets """
+def _footnote(SOURCE, CLEAN, command, folder_path):
+    """ add footnote to SOURCE and move to the end of nested curly brackets """
     i = 1
     j = i # index for open brackets
     while i >= j and j > 0 :
-        i = source.text.find( "}",i ) +1
-        j = source.text.find( "{",j ) +1
+        i = SOURCE.text.find( "}",i ) +1
+        j = SOURCE.text.find( "{",j ) +1
 
     # add the text in the footnote to the queue in parenthesis
-    source.add("(FOOTNOTE: " + source.text[ 1:i-1 ] + ")")
-    source.root.index += i
+    SOURCE.add("(FOOTNOTE: " + SOURCE.text[ 1:i-1 ] + ")")
+    SOURCE.root.index += i
 
-def _include(source, clean, command, folder_path):
-    """ responds to \include command and adds the new source to the head of source. The included files need to be in the same folder """
-    i = source.text.find("}")
-    include_path = source.text[ 1:i ]
+def _include(SOURCE, CLEAN, command, folder_path):
+    """ responds to \include command and adds the new SOURCE to the head of SOURCE. The included files need to be in the same folder """
+    i = SOURCE.text.find("}")
+    include_path = SOURCE.text[ 1:i ]
     if not include_path.endswith(".tex"): # if the extension is not present
         include_path += ".tex"
     with open(f"{folder_path}{include_path}", encoding="utf-8") as include_tex:
-        source.add( include_tex.read() )
-    source.root.index += i+1
+        SOURCE.add( include_tex.read() )
+    SOURCE.root.index += i+1
 
-def _print_curly(source, clean, command, folder_path):
-    """ [_] to clean when meeting curly brackets and move to the end of curly brackets """
-    clean.add("[_]")
-    source.move_index("}")
+def _print_curly(SOURCE, CLEAN, command, folder_path):
+    """ [_] to CLEAN when meeting curly brackets and move to the end of curly brackets """
+    CLEAN.add("[_]")
+    SOURCE.move_index("}")
 
-def _print_square_curly(source, clean, command, folder_path):
-    """ add [_] for clean and move to the end of square if present, and then curly brackets """
-    clean.add("[_]")
-    if source.text[0] == "[":
-        source.move_index("]")
-    source.move_index("}")
+def _print_square_curly(SOURCE, CLEAN, command, folder_path):
+    """ add [_] for CLEAN and move to the end of square if present, and then curly brackets """
+    CLEAN.add("[_]")
+    if SOURCE.text[0] == "[":
+        SOURCE.move_index("]")
+    SOURCE.move_index("}")
 
 from exceptions import sub_begin
 
-def _begin(source, clean, command, folder_path):
+def _begin(SOURCE, CLEAN, command, folder_path):
     """ responds to the command being and move to the function begin and its subroutines """
-    i = source.text.find("}") # right next after the brackets
-    command = source.text[ 1:i ] # remove asterisk if any
-    source.move_index("}")
-    sub_begin.interpret(source, clean, command, folder_path)
+    i = SOURCE.text.find("}") # right next after the brackets
+    command = SOURCE.text[ 1:i ] # remove asterisk if any
+    SOURCE.move_index("}")
+    sub_begin.interpret(SOURCE, CLEAN, command, folder_path)
         
 from exceptions import sub_end
         
-def _end(source, clean, command, folder_path):
+def _end(SOURCE, CLEAN, command, folder_path):
     """ responds to the command end and move to the function end and its subroutines """
-    i = source.text.find("}")
-    command = source.text[ 1:i ]
-    source.move_index("}")
-    sub_end.interpret(source, clean, command, folder_path)
+    i = SOURCE.text.find("}")
+    command = SOURCE.text[ 1:i ]
+    SOURCE.move_index("}")
+    sub_end.interpret(SOURCE, CLEAN, command, folder_path)
 
 # special commands (not include command to avoid string problems)
 
-def _new_line(source, clean, folder_path):
-    """ add a new line to clean """
-    clean.add("\n")
-    source.index += 1
+def _new_line(SOURCE, CLEAN, folder_path):
+    """ add a new line to CLEAN """
+    CLEAN.add("\n")
+    SOURCE.index += 1
 
-def _square_equation(source, clean, folder_path):
+def _square_equation(SOURCE, CLEAN, folder_path):
     """ add [_] when meeting an equation called via \[ and move index to the end if it """
-    i = source.text.find( "\\]" )
-    clean.add("[_]")
-    if source.text[:i].rstrip()[-1] in [",", ";", "."]: # add punctuation to non-inline equations
-        clean.add(source.text[:i].rstrip()[-1])
-    source.move_index( "\\]" )
+    i = SOURCE.text.find( "\\]" )
+    CLEAN.add("[_]")
+    if SOURCE.text[:i].rstrip()[-1] in [",", ";", "."]: # add punctuation to non-inline equations
+        CLEAN.add(SOURCE.text[:i].rstrip()[-1])
+    SOURCE.move_index( "\\]" )
 
-def _round_equation(source, clean, folder_path):
+def _round_equation(SOURCE, CLEAN, folder_path):
     """ add [_] when meeting an equation called via \( and move index to the end if it """
-    i = source.text.find( "\\)" )
-    clean.add("[_]")
-    if source.text[:i].rstrip()[-1] in [",", ";", "."]: # add punctuation to non-inline equations
-        clean.add(source.text[:i].rstrip()[-1])
-    source.move_index( "\\)" )
+    i = SOURCE.text.find( "\\)" )
+    CLEAN.add("[_]")
+    if SOURCE.text[:i].rstrip()[-1] in [",", ";", "."]: # add punctuation to non-inline equations
+        CLEAN.add(SOURCE.text[:i].rstrip()[-1])
+    SOURCE.move_index( "\\)" )
 
-def _apostrofe(source, clean, folder_path):
+def _apostrofe(SOURCE, CLEAN, folder_path):
     """ skip letter when meeting an apostrofe """
-    if source.text[1] in ("a","e","i","o","u"):
-        source.index += 1
+    if SOURCE.text[1] in ("a","e","i","o","u"):
+        SOURCE.index += 1
 
-def _tilde(source, clean, folder_path):
-    """ add tilde to clean """
-    clean.add("~")
-    source.index += 1
+def _tilde(SOURCE, CLEAN, folder_path):
+    """ add tilde to CLEAN """
+    CLEAN.add("~")
+    SOURCE.index += 1
 
-def _null_function(source, clean, folder_path):
+def _null_function(SOURCE, CLEAN, folder_path):
     """ null function, does nothing """
 
 
@@ -217,39 +217,39 @@ special_commands = {
 # INTERPRETER
 #----------------------------------------
 
-def interpret(source, clean, command, folder_path):
+def interpret(SOURCE, CLEAN, command, folder_path):
     """ this is the custom interpreter that recalls first custom subroutines, then built-in subroutines and then skip the command if not recognised """
     if command:
         if command in void or command in void_c:
             pass
         elif command in dic_commands_c:
-            dic_commands_c[command](source, clean, command, folder_path)
+            dic_commands_c[command](SOURCE, CLEAN, command, folder_path)
         elif command in dic_commands:
-            dic_commands[command](source, clean, command, folder_path)
+            dic_commands[command](SOURCE, CLEAN, command, folder_path)
         else:
-            while source.text[0] in ["{","["]: # check if opening and closing brackets
-                if source.text[0] == "{":
-                    i = source.text.find("{",1)
-                    j = source.text.find("}",1)
+            while SOURCE.text[0] in ["{","["]: # check if opening and closing brackets
+                if SOURCE.text[0] == "{":
+                    i = SOURCE.text.find("{",1)
+                    j = SOURCE.text.find("}",1)
                     while 0 < i < j:
-                        i = source.text.find("{",i+1)
-                        j = source.text.find("}",j+1)
-                    source.index += j+1
+                        i = SOURCE.text.find("{",i+1)
+                        j = SOURCE.text.find("}",j+1)
+                    SOURCE.index += j+1
                 else:
-                    i = source.text.find("[",1)
-                    j = source.text.find("]",1)
+                    i = SOURCE.text.find("[",1)
+                    j = SOURCE.text.find("]",1)
                     while 0 < i < j:
-                        i = source.text.find("[",i+1)
-                        j = source.text.find("]",j+1)
-                    source.index += j+1
-            clean.aggro.add(command)
+                        i = SOURCE.text.find("[",i+1)
+                        j = SOURCE.text.find("]",j+1)
+                    SOURCE.index += j+1
+            CLEAN.aggro.add(command)
     else: # empty string
-        command = source.text[0]
+        command = SOURCE.text[0]
         if command in special_commands:
-            special_commands[command](source, clean, folder_path)
+            special_commands[command](SOURCE, CLEAN, folder_path)
         else:
-            clean.add(" ")
-            source.index += 1
+            CLEAN.add(" ")
+            SOURCE.index += 1
 
 
 #----------------------------------------

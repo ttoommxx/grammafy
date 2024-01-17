@@ -2,13 +2,13 @@
 # FUNCTIONS
 #----------------------------------------
 
-def _title(source, clean, command, folder_path):
-    """ add title to clean """
-    clean.add(command.title() + ".")
+def _title(SOURCE, CLEAN, command, folder_path):
+    """ add title to CLEAN """
+    CLEAN.add(command.title() + ".")
 
-def _thm(source, clean, command, folder_path):
-    """ add theorem to clean """
-    clean.add("Theorem.")
+def _thm(SOURCE, CLEAN, command, folder_path):
+    """ add theorem to CLEAN """
+    CLEAN.add("Theorem.")
 
 #----------------------------------------
 # VARIABLES

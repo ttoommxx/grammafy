@@ -2,9 +2,9 @@
 # BULTI-IN FUNCTIONS
 #----------------------------------------
 
-def _proof(source, clean, command, folder_path):
-    """ add proof to clean """
-    clean.add("■\n")
+def _proof(SOURCE, CLEAN, command, folder_path):
+    """ add proof to CLEAN """
+    CLEAN.add("■\n")
 
 #----------------------------------------
 # VARIABLES
@@ -24,11 +24,11 @@ dic_commands = {
 # INTERPRETER
 #----------------------------------------
 
-def interpret(source, clean, command, folder_path):
+def interpret(SOURCE, CLEAN, command, folder_path):
     """ custom interpreter for the end routine """
     if command in void_c:
         pass
     elif command in dic_commands_c:
-        dic_commands_c[command](source, clean, command, folder_path)
+        dic_commands_c[command](SOURCE, CLEAN, command, folder_path)
     elif command in dic_commands:
-        dic_commands[command](source, clean, command, folder_path)
+        dic_commands[command](SOURCE, CLEAN, command, folder_path)

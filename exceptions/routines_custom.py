@@ -2,10 +2,10 @@
 # FUNCTIONS
 #----------------------------------------
 
-def _print_curly(source, clean, command, folder_path):
-    """ add [_] to clean when meeting curly brackets and move to the end of curly brackets """
-    clean.add("[_]")
-    source.move_index("}")
+def _print_curly(SOURCE, CLEAN, command, folder_path):
+    """ add [_] to CLEAN when meeting curly brackets and move to the end of curly brackets """
+    CLEAN.add("[_]")
+    SOURCE.move_index("}")
 
 #----------------------------------------
 # VARIABLES
