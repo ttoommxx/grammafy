@@ -11,11 +11,9 @@ parser.add_argument("-c", "--commandline", help="select via command line argumen
 args = parser.parse_args() # args.picker contains the modality
 if not args.commandline:
     import pyle_manager
-    pyle_manager.clear()
     print("Press enter to pick a tex file")
     pyle_manager.get_key()
     file_path = pyle_manager.main("-p")
-    pyle_manager.clear()
 else:
     file_path = args.commandline
 
