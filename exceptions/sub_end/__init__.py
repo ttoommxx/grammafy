@@ -1,14 +1,21 @@
-#----------------------------------------
+"""end routines module intitialiser"""
+from typing import NoReturn, TypeVar
+
+EnvVar = TypeVar("EnvVar")
+
+# ----------------------------------------
 # BULTI-IN FUNCTIONS
-#----------------------------------------
+# ----------------------------------------
 
-def _proof(SOURCE, CLEAN, command, folder_path):
-    """ add proof to CLEAN """
-    CLEAN.add("■\n")
 
-#----------------------------------------
+def _proof(ENV: EnvVar) -> NoReturn:
+    """add proof to CLEAN"""
+    ENV.clean.add("■\n")
+
+
+# ----------------------------------------
 # VARIABLES
-#----------------------------------------
+# ----------------------------------------
 
 from exceptions.sub_end.end_custom import void_c
 
@@ -16,19 +23,18 @@ from exceptions.sub_end.end_custom import void_c
 
 from exceptions.sub_end.end_custom import dic_commands_c
 
-dic_commands = {
-    "proof":_proof
-}
+dic_commands = {"proof": _proof}
 
-#----------------------------------------
+# ----------------------------------------
 # INTERPRETER
-#----------------------------------------
+# ----------------------------------------
 
-def interpret(SOURCE, CLEAN, command, folder_path):
-    """ custom interpreter for the end routine """
-    if command in void_c:
+
+def interpret(ENV: EnvVar) -> NoReturn:
+    """custom interpreter for the end routine"""
+    if ENV.command in void_c:
         pass
-    elif command in dic_commands_c:
-        dic_commands_c[command](SOURCE, CLEAN, command, folder_path)
-    elif command in dic_commands:
-        dic_commands[command](SOURCE, CLEAN, command, folder_path)
+    elif ENV.command in dic_commands_c:
+        dic_commands_c[ENV.command](ENV)
+    elif ENV.command in dic_commands:
+        dic_commands[ENV.command](ENV)

@@ -1,29 +1,35 @@
-#----------------------------------------
+"""custom begin routines"""
+from typing import NoReturn, TypeVar
+
+EnvVar = TypeVar("EnvVar")
+
+# ----------------------------------------
 # FUNCTIONS
-#----------------------------------------
+# ----------------------------------------
 
-def _title(SOURCE, CLEAN, command, folder_path):
-    """ add title to CLEAN """
-    CLEAN.add(command.title() + ".")
 
-def _thm(SOURCE, CLEAN, command, folder_path):
-    """ add theorem to CLEAN """
-    CLEAN.add("Theorem.")
+def _title(ENV: EnvVar) -> NoReturn:
+    """add title to CLEAN"""
+    ENV.clean.add(ENV.command.title() + ".")
 
-#----------------------------------------
+
+def _thm(ENV: EnvVar) -> NoReturn:
+    """add theorem to CLEAN"""
+    ENV.clean.add("Theorem.")
+
+
+# ----------------------------------------
 # VARIABLES
-#----------------------------------------
+# ----------------------------------------
 
 dic_commands_c = {
-    "assumption":_title,
-    "example":_title,
-    "exercise":_title,
-    "thm":_thm
+    "assumption": _title,
+    "example": _title,
+    "exercise": _title,
+    "thm": _thm,
 }
 
-void_c = (
-    
-)
+void_c = ()
 
 # TEMPLATE
 # dic_commands_c = {
