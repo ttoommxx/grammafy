@@ -1,14 +1,11 @@
 """end routines module intitialiser"""
-from typing import NoReturn, TypeVar
-
-EnvVar = TypeVar("EnvVar")
 
 # ----------------------------------------
 # BULTI-IN FUNCTIONS
 # ----------------------------------------
 
 
-def _proof(ENV: EnvVar) -> NoReturn:
+def _proof(ENV) -> None:
     """add proof to CLEAN"""
     ENV.clean.add("■\n")
 
@@ -30,7 +27,7 @@ dic_commands = {"proof": _proof}
 # ----------------------------------------
 
 
-def interpret(ENV: EnvVar) -> NoReturn:
+def interpret(ENV) -> None:
     """custom interpreter for the end routine"""
     if ENV.command in void_c:
         pass

@@ -1,14 +1,11 @@
 """custom routines"""
-from typing import NoReturn, TypeVar
-
-EnvVar = TypeVar("EnvVar")
 
 # ----------------------------------------
 # FUNCTIONS
 # ----------------------------------------
 
 
-def _print_curly(ENV: EnvVar) -> NoReturn:
+def _print_curly(ENV) -> None:
     """add [_] to CLEAN when meeting curly brackets and move to the end of curly brackets"""
     ENV.clean.add("[_]")
     ENV.source.move_index("}")

@@ -1,19 +1,16 @@
 """being routines initialiser"""
-from typing import NoReturn, TypeVar
-
-EnvVar = TypeVar("EnvVar")
 
 # ----------------------------------------
 # BULTI-IN FUNCTIONS
 # ----------------------------------------
 
 
-def _title(ENV: EnvVar) -> NoReturn:
+def _title(ENV) -> None:
     """add title to ENV.clean"""
     ENV.clean.add(ENV.command.title() + ".")
 
 
-def _equation(ENV: EnvVar) -> NoReturn:
+def _equation(ENV) -> None:
     """add [_] and move to the end of the equation command"""
     ENV.clean.add("[_]")
     # find the index where the whole portion ends
@@ -23,7 +20,7 @@ def _equation(ENV: EnvVar) -> NoReturn:
     ENV.source.move_index("\\end{" + ENV.command + "}")
 
 
-def _enumerate(ENV: EnvVar) -> NoReturn:
+def _enumerate(ENV) -> None:
     """add a new node to ENV.source, replacing item with . followed by a new number"""
     if ENV.source.text[0] == "[":
         ENV.source.move_index("]")
@@ -38,7 +35,7 @@ def _enumerate(ENV: EnvVar) -> NoReturn:
     ENV.source.root.move_index("\\end{enumerate}")
 
 
-def _itemize(ENV: EnvVar) -> NoReturn:
+def _itemize(ENV) -> None:
     """add a new node to ENV.source, replacing item with -"""
     if ENV.source.text[0] == "[":
         ENV.source.move_index("]")
@@ -49,19 +46,19 @@ def _itemize(ENV: EnvVar) -> NoReturn:
     ENV.source.root.move_index("\\end{itemize}")
 
 
-def _curly_curly(ENV: EnvVar) -> NoReturn:
+def _curly_curly(ENV) -> None:
     """move index by two curly brackets"""
     ENV.source.move_index("}")
     ENV.source.move_index("}")
 
 
-def _curly_curly_curly(ENV: EnvVar) -> NoReturn:
+def _curly_curly_curly(ENV) -> None:
     """move index by 3 curly brackets"""
     for _ in range(3):
         ENV.source.move_index("}")
 
 
-def _skip(ENV: EnvVar) -> NoReturn:
+def _skip(ENV) -> None:
     """skip command when not recognised"""
     ENV.source.move_index("\\end{" + ENV.command + "}")
 
@@ -115,7 +112,7 @@ dic_commands = {
 # ----------------------------------------
 
 
-def interpret(ENV: EnvVar) -> NoReturn:
+def interpret(ENV) -> None:
     """custom interpreted for the begin routine, works similarly to the main interpreter"""
     if ENV.command in void or ENV.command in void_c:
         pass

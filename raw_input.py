@@ -1,7 +1,6 @@
 """ cross platofrm module to handle raw input from terminal """
 import os
 import sys
-from typing import NoReturn
 
 # posix utils
 if os.name == "posix":
@@ -17,15 +16,15 @@ if os.name == "posix":
 
     VARS = Vars()
 
-    def keyboard_attach() -> NoReturn:
+    def keyboard_attach() -> None:
         """attach keyboard input"""
         tty.setraw(VARS.fd)
 
-    def keyboard_detach() -> NoReturn:
+    def keyboard_detach() -> None:
         """detach keyboard input"""
         termios.tcsetattr(VARS.fd, termios.TCSADRAIN, VARS.old_settings)
 
-    def clear() -> NoReturn:
+    def clear() -> None:
         """clear screen"""
         os.system("clear")
 
@@ -65,7 +64,7 @@ elif os.name == "nt":
 
     VARS = Vars()
 
-    def clear() -> NoReturn:
+    def clear() -> None:
         """clear screen"""
         os.system("cls")
 

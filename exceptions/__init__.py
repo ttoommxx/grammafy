@@ -1,30 +1,27 @@
 """routine modules initialiser"""
-from typing import NoReturn, TypeVar
-
-EnvVar = TypeVar("EnvVar")
 
 # ----------------------------------------
 # BUILT-IN FUNCTIONS
 # ----------------------------------------
 
 
-def _reprint(ENV: EnvVar) -> NoReturn:
+def _reprint(ENV) -> None:
     """add the command to ENV.clean the command"""
     ENV.clean.add(ENV.command)
 
 
-def _curly(ENV: EnvVar) -> NoReturn:
+def _curly(ENV) -> None:
     """move to the end of curly brackets"""
     ENV.source.move_index("}")
 
 
-def _curly_curly(ENV: EnvVar) -> NoReturn:
+def _curly_curly(ENV) -> None:
     """move to the end for 2 consecutive curly brackets"""
     ENV.source.move_index("}")
     ENV.source.move_index("}")
 
 
-def _color(ENV: EnvVar) -> NoReturn:
+def _color(ENV) -> None:
     """add color to ENV.source and move to the end of curly brackets"""
     ENV.clean.add("Color:")
     i = ENV.source.text.find("}")
@@ -32,7 +29,7 @@ def _color(ENV: EnvVar) -> NoReturn:
     ENV.source.index += i + 1
 
 
-def _footnote(ENV: EnvVar) -> NoReturn:
+def _footnote(ENV) -> None:
     """add footnote to ENV.source and move to the end of nested curly brackets"""
     i = 1
     j = i  # index for open brackets
@@ -45,7 +42,7 @@ def _footnote(ENV: EnvVar) -> NoReturn:
     ENV.source.root.index += i
 
 
-def _include(ENV: EnvVar) -> NoReturn:
+def _include(ENV) -> None:
     r"""responds to \include command and adds the new ENV.source to the head of ENV.source. The included files need to be in the same folder"""
     i = ENV.source.text.find("}")
     include_path = ENV.source.text[1:i]
@@ -60,13 +57,13 @@ def _include(ENV: EnvVar) -> NoReturn:
         ENV.source.root.index += i + 1
 
 
-def _print_curly(ENV: EnvVar) -> NoReturn:
+def _print_curly(ENV) -> None:
     """[_] to ENV.clean when meeting curly brackets and move to the end of curly brackets"""
     ENV.clean.add("[_]")
     ENV.source.move_index("}")
 
 
-def _print_square_curly(ENV: EnvVar) -> NoReturn:
+def _print_square_curly(ENV) -> None:
     """add [_] for ENV.clean and move to the end of square if present, and then curly brackets"""
     ENV.clean.add("[_]")
     if ENV.source.text[0] == "[":
@@ -77,7 +74,7 @@ def _print_square_curly(ENV: EnvVar) -> NoReturn:
 from exceptions import sub_begin
 
 
-def _begin(ENV: EnvVar) -> NoReturn:
+def _begin(ENV) -> None:
     """responds to the command being and move to the function begin and its subroutines"""
     i = ENV.source.text.find("}")  # right next after the brackets
     ENV.command = ENV.source.text[1:i]  # remove asterisk if any
@@ -88,7 +85,7 @@ def _begin(ENV: EnvVar) -> NoReturn:
 from exceptions import sub_end
 
 
-def _end(ENV: EnvVar) -> NoReturn:
+def _end(ENV) -> None:
     """responds to the command end and move to the function end and its subroutines"""
     i = ENV.source.text.find("}")
     ENV.command = ENV.source.text[1:i]
@@ -99,13 +96,13 @@ def _end(ENV: EnvVar) -> NoReturn:
 # special commands (not include command to avoid string problems)
 
 
-def _new_line(ENV: EnvVar) -> NoReturn:
+def _new_line(ENV) -> None:
     """add a new line to ENV.clean"""
     ENV.clean.add("\n")
     ENV.source.index += 1
 
 
-def _square_equation(ENV: EnvVar) -> NoReturn:
+def _square_equation(ENV) -> None:
     r"""add [_] when meeting an equation called via \[ and move index to the end if it"""
     i = ENV.source.text.find("\\]")
     ENV.clean.add("[_]")
@@ -118,7 +115,7 @@ def _square_equation(ENV: EnvVar) -> NoReturn:
     ENV.source.move_index("\\]")
 
 
-def _round_equation(ENV: EnvVar) -> NoReturn:
+def _round_equation(ENV) -> None:
     r"""add [_] when meeting an equation called via \( and move index to the end if it"""
     i = ENV.source.text.find("\\)")
     ENV.clean.add("[_]")
@@ -131,19 +128,19 @@ def _round_equation(ENV: EnvVar) -> NoReturn:
     ENV.source.move_index("\\)")
 
 
-def _apostrofe(ENV: EnvVar) -> NoReturn:
+def _apostrofe(ENV) -> None:
     """skip letter when meeting an apostrofe"""
     if ENV.source.text[1] in ("a", "e", "i", "o", "u"):
         ENV.source.index += 1
 
 
-def _tilde(ENV: EnvVar) -> NoReturn:
+def _tilde(ENV) -> None:
     """add tilde to ENV.clean"""
     ENV.clean.add("~")
     ENV.source.index += 1
 
 
-def _null_function(ENV: EnvVar) -> NoReturn:
+def _null_function(ENV) -> None:
     """null function, does nothing"""
 
 
@@ -252,7 +249,7 @@ special_commands = {
 # ----------------------------------------
 
 
-def interpret(ENV: EnvVar) -> NoReturn:
+def interpret(ENV) -> None:
     """this is the custom interpreter that recalls first custom subroutines, then built-in subroutines and then skip the command if not recognised"""
     if ENV.command:
         if ENV.command in void or ENV.command in void_c:

@@ -3,13 +3,8 @@ import os
 import sys
 import argparse
 import re
-from typing import TypeVar
 from classes import Source, Clean
 from exceptions import interpret
-
-SourceVar = TypeVar("SourceVar")
-CleanVar = TypeVar("CleanVar")
-EnvVar = TypeVar("EnvVar")
 
 
 parser = argparse.ArgumentParser(prog="grammafy", description="clean up tex files")

@@ -1,19 +1,16 @@
 """custom begin routines"""
-from typing import NoReturn, TypeVar
-
-EnvVar = TypeVar("EnvVar")
 
 # ----------------------------------------
 # FUNCTIONS
 # ----------------------------------------
 
 
-def _title(ENV: EnvVar) -> NoReturn:
+def _title(ENV) -> None:
     """add title to CLEAN"""
     ENV.clean.add(ENV.command.title() + ".")
 
 
-def _thm(ENV: EnvVar) -> NoReturn:
+def _thm(ENV) -> None:
     """add theorem to CLEAN"""
     ENV.clean.add("Theorem.")
 

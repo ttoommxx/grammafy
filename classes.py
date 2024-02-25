@@ -1,5 +1,4 @@
 """main objects used by grammafy main execution"""
-from typing import Any, NoReturn
 
 
 class Node:
@@ -22,7 +21,7 @@ class Node:
         return self._text[self.index :]
 
     @text.setter
-    def text(self, text: str) -> NoReturn:
+    def text(self, text: str) -> None:
         """does not allow for modifying the source code"""
         raise ValueError("text is a constant and should not be changed")
 
@@ -32,7 +31,7 @@ class Node:
         return self._index
 
     @index.setter
-    def index(self, index: int) -> NoReturn:
+    def index(self, index: int) -> None:
         """set the index and reset if analysing backwards, this way if functions are poorly programmer the script won't loop"""
         if index < self._index:
             print("index overload: the index has been reset")
@@ -54,7 +53,7 @@ class Node:
         else:
             return False
 
-    def move_index(self, text_to_find: str) -> NoReturn:
+    def move_index(self, text_to_find: str) -> None:
         """search for text_to_find and move index at the end of the text"""
         self.index = self._text.find(text_to_find, self.index) + len(text_to_find)
 
@@ -66,7 +65,7 @@ class Source:
         self.head = Node(text)
 
     # <<< treat this class as the actual head of the node
-    def __getattr__(self, name: str) -> Any:
+    def __getattr__(self, name: str):
         """inherits members of the Node class"""
         match name:
             case "head":
@@ -80,7 +79,7 @@ class Source:
             case _:
                 return self.head.__dict__[name]
 
-    def __setattr__(self, name, value: Any) -> NoReturn:
+    def __setattr__(self, name, value) -> None:
         """inherits members of the Node class"""
         match name:
             case "head":
@@ -92,17 +91,17 @@ class Source:
             case _:
                 self.head.__dict__[name] = value
 
-    def move_index(self, text_to_find: str) -> NoReturn:
+    def move_index(self, text_to_find: str) -> None:
         """inherits the move_index function from Node"""
         self.head.move_index(text_to_find)
 
     # >>>
 
-    def add(self, text: str) -> NoReturn:
+    def add(self, text: str) -> None:
         """add a new node and set it as head"""
         self.head = Node(text, self.head)
 
-    def pop(self) -> NoReturn:
+    def pop(self) -> None:
         """remove the current node, keeping the object as is"""
         self.head = self.head.root
 
@@ -115,7 +114,7 @@ class Clean:
         # aggessive mode, we are going to store all the skipped command in one .txt file
         self.aggro = set()
 
-    def add(self, text: str) -> NoReturn:
+    def add(self, text: str) -> None:
         """add new cleaned text"""
         self._text.append(text)
 
@@ -127,6 +126,6 @@ class Clean:
         return self._text[0]
 
     @text.setter
-    def text(self, text: str) -> NoReturn:
+    def text(self, text: str) -> None:
         """when setting the text, it clears the queue"""
         self._text = [text]
