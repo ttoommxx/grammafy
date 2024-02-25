@@ -7,6 +7,7 @@ from itertools import chain
 from platform import system
 import threading
 from typing import Any, Generator, NoReturn
+import raw_input
 
 
 # utility functions
@@ -14,15 +15,6 @@ def slice_ij(v: list[Any], i: int, j: int) -> Generator:
     """create an iterator for a given array from i to j"""
     # notice that islice does not work this way, but consume the iterable from the beginning
     return (v[k] for k in range(i, min(len(v), j)))
-
-
-if os.name == "posix":
-    import termios
-    import tty
-elif os.name == "nt":
-    from msvcrt import getch as getch_encoded
-else:
-    sys.exit("Operating system not recognised")
 
 
 # parsing args
@@ -56,8 +48,6 @@ class Settings:
         self.start_line_directory = 0
         self.selection = ""
         self.index = 0
-        fd = sys.stdin.fileno()
-        self.terminal_status = (fd, termios.tcgetattr(fd))
         self.print_latent = False
         self.picker = args.picker
 
@@ -118,13 +108,13 @@ class Settings:
 
     def key_attach(self) -> NoReturn:
         """attach key stdin"""
-        fd, _ = settings.terminal_status
-        tty.setraw(fd)
+        if os.name == "posix":
+            raw_input.keyboard_attach()
 
     def key_detach(self) -> NoReturn:
         """detach key stdin"""
-        fd, old_settings = settings.terminal_status
-        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        if os.name == "posix":
+            raw_input.keyboard_detach()
 
     def change_print_latent(self) -> NoReturn:
         """change status latent printer"""
@@ -225,19 +215,6 @@ def directory() -> list[str]:
     return settings.current_directory
 
 
-# CLEAN TERMINAL
-if os.name == "posix":
-
-    def clear():
-        """clear screen"""
-        os.system("clear")
-elif os.name == "nt":
-
-    def clear():
-        """clear screen"""
-        os.system("cls")
-
-
 def dir_printer(position: str = "beginning") -> NoReturn:
     """printing function"""
 
@@ -263,7 +240,7 @@ def dir_printer(position: str = "beginning") -> NoReturn:
         # else print down 1
         settings.start_line_directory += 1
 
-    clear()
+    raw_input.clear()
     # path directory
     to_print = [
         "### pyleManager --- press i for instructions ###"[: settings.cols_length],
@@ -374,56 +351,6 @@ def dir_printer(position: str = "beginning") -> NoReturn:
             )
 
 
-# FETCH KEYBOARD INPUT
-if os.name == "posix":
-
-    def getch() -> str:
-        """read raw terminal input"""
-        try:
-            settings.key_attach()
-            ch = sys.stdin.read(1)
-        finally:
-            settings.key_detach()
-        return ch
-
-    conv_arrows = {"D": "left", "C": "right", "A": "up", "B": "down"}
-
-    def get_key() -> str:
-        """process correct string for keyboard input"""
-        key_pressed = getch()
-        match key_pressed:
-            case "\r":
-                return "enter"
-            case "\x1b":
-                if getch() == "[":
-                    return conv_arrows.get(getch(), None)
-            case _:
-                return key_pressed
-
-elif os.name == "nt":
-
-    def getch() -> str:
-        """read raw terminal input"""
-        letter = getch_encoded()
-        try:
-            return letter.decode("ascii")
-        except:
-            return letter
-
-    conv_arrows = {"K": "left", "M": "right", "H": "up", "P": "down"}
-
-    def get_key() -> str:
-        """process correct string for keyboard input"""
-        key_pressed = getch()
-        match key_pressed:
-            case "\r":
-                return "enter"
-            case b"\xe0":
-                return conv_arrows.get(getch(), None)
-            case _:
-                return key_pressed
-
-
 def beeper() -> NoReturn:
     """make a beep"""
     if settings.beep:
@@ -469,7 +396,7 @@ def latent_printer() -> NoReturn:
 
 def pre_quit(latent_printer_daemon: threading.Thread) -> NoReturn:
     """running to execute before quitting"""
-    clear()
+    raw_input.clear()
     os.chdir(LOCAL_FOLDER)
     if settings.print_latent:
         settings.change_print_latent()
@@ -478,7 +405,7 @@ def pre_quit(latent_printer_daemon: threading.Thread) -> NoReturn:
 
 def instructions() -> NoReturn:
     """print instructions"""
-    clear()
+    raw_input.clear()
     print(
         f"""INSTRUCTIONS:
 
@@ -505,7 +432,7 @@ def selection_permission(path):
 press any button to continue""",
         end="",
     )
-    get_key()
+    raw_input.getkey()
 
 
 # --------------------------------------------------
@@ -526,7 +453,7 @@ def main(*args: list[str]) -> NoReturn:
     while True:
         settings.update_selection()
 
-        match get_key():
+        match raw_input.getkey():
             # up
             case "up":
                 if len(directory()) > 0 and settings.index > 0:
@@ -626,11 +553,11 @@ def main(*args: list[str]) -> NoReturn:
                             case "Darwin":
                                 os.system(f'open "{selection_os}"')
                             case _:
-                                clear()
+                                raw_input.clear()
                                 print(
                                     "system not recognised, press any button to continue"
                                 )
-                                get_key()
+                                raw_input.getkey()
                                 dir_printer_reset(restore_position="selection")
                 else:
                     beeper()
@@ -643,18 +570,18 @@ def main(*args: list[str]) -> NoReturn:
                         case "Linux":
                             os.system(f'$EDITOR "{selection_os}"')
                         case "Windows":
-                            clear()
+                            raw_input.clear()
                             print(
                                 "Windows does not have any built-in command line editor, press any button to continue"
                             )
-                            get_key()
+                            raw_input.getkey()
                             dir_printer_reset(restore_position="selection")
                         case "Darwin":
                             os.system(f'open -e "{selection_os}"')
                         case _:
-                            clear()
+                            raw_input.clear()
                             print("system not recognised, press any button to continue")
-                            get_key()
+                            raw_input.getkey()
                             dir_printer_reset(restore_position="selection")
                 else:
                     beeper()
