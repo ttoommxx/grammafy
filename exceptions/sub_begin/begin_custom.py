@@ -5,14 +5,14 @@
 # ----------------------------------------
 
 
-def _title(ENV) -> None:
+def _title(env) -> None:
     """add title to CLEAN"""
-    ENV.clean.add(ENV.command.title() + ".")
+    env.clean.add(env.command.title() + ".")
 
 
-def _thm(ENV) -> None:
+def _thm(env) -> None:
     """add theorem to CLEAN"""
-    ENV.clean.add("Theorem.")
+    env.clean.add("Theorem.")
 
 
 # ----------------------------------------

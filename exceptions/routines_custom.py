@@ -5,10 +5,10 @@
 # ----------------------------------------
 
 
-def _print_curly(ENV) -> None:
+def _print_curly(env) -> None:
     """add [_] to CLEAN when meeting curly brackets and move to the end of curly brackets"""
-    ENV.clean.add("[_]")
-    ENV.source.move_index("}")
+    env.clean.add("[_]")
+    env.source.move_index("}")
 
 
 # ----------------------------------------

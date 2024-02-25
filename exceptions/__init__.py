@@ -5,142 +5,142 @@
 # ----------------------------------------
 
 
-def _reprint(ENV) -> None:
-    """add the command to ENV.clean the command"""
-    ENV.clean.add(ENV.command)
+def _reprint(env) -> None:
+    """add the command to env.clean the command"""
+    env.clean.add(env.command)
 
 
-def _curly(ENV) -> None:
+def _curly(env) -> None:
     """move to the end of curly brackets"""
-    ENV.source.move_index("}")
+    env.source.move_index("}")
 
 
-def _curly_curly(ENV) -> None:
+def _curly_curly(env) -> None:
     """move to the end for 2 consecutive curly brackets"""
-    ENV.source.move_index("}")
-    ENV.source.move_index("}")
+    env.source.move_index("}")
+    env.source.move_index("}")
 
 
-def _color(ENV) -> None:
-    """add color to ENV.source and move to the end of curly brackets"""
-    ENV.clean.add("Color:")
-    i = ENV.source.text.find("}")
-    ENV.clean.add(ENV.source.text[1:i].upper())
-    ENV.source.index += i + 1
+def _color(env) -> None:
+    """add color to env.source and move to the end of curly brackets"""
+    env.clean.add("Color:")
+    i = env.source.text.find("}")
+    env.clean.add(env.source.text[1:i].upper())
+    env.source.index += i + 1
 
 
-def _footnote(ENV) -> None:
-    """add footnote to ENV.source and move to the end of nested curly brackets"""
+def _footnote(env) -> None:
+    """add footnote to env.source and move to the end of nested curly brackets"""
     i = 1
     j = i  # index for open brackets
     while i >= j and j > 0:
-        i = ENV.source.text.find("}", i) + 1
-        j = ENV.source.text.find("{", j) + 1
+        i = env.source.text.find("}", i) + 1
+        j = env.source.text.find("{", j) + 1
 
     # add the text in the footnote to the queue in parenthesis
-    ENV.source.add("(FOOTNOTE: " + ENV.source.text[1 : i - 1] + ")")
-    ENV.source.root.index += i
+    env.source.add("(FOOTNOTE: " + env.source.text[1 : i - 1] + ")")
+    env.source.root.index += i
 
 
-def _include(ENV) -> None:
-    r"""responds to \include command and adds the new ENV.source to the head of ENV.source. The included files need to be in the same folder"""
-    i = ENV.source.text.find("}")
-    include_path = ENV.source.text[1:i]
+def _include(env) -> None:
+    r"""responds to \include command and adds the new env.source to the head of env.source. The included files need to be in the same folder"""
+    i = env.source.text.find("}")
+    include_path = env.source.text[1:i]
 
     if include_path.endswith(".bbl"):  # skip bibliography files
-        ENV.source.index += i + 1
+        env.source.index += i + 1
     else:
         if not include_path.endswith(".tex"):  # if the extension is not present
             include_path += ".tex"
-        with open(f"{ENV.folder_path}{include_path}", encoding="utf-8") as include_tex:
-            ENV.source.add(include_tex.read())
-        ENV.source.root.index += i + 1
+        with open(f"{env.folder_path}{include_path}", encoding="utf-8") as include_tex:
+            env.source.add(include_tex.read())
+        env.source.root.index += i + 1
 
 
-def _print_curly(ENV) -> None:
-    """[_] to ENV.clean when meeting curly brackets and move to the end of curly brackets"""
-    ENV.clean.add("[_]")
-    ENV.source.move_index("}")
+def _print_curly(env) -> None:
+    """[_] to env.clean when meeting curly brackets and move to the end of curly brackets"""
+    env.clean.add("[_]")
+    env.source.move_index("}")
 
 
-def _print_square_curly(ENV) -> None:
-    """add [_] for ENV.clean and move to the end of square if present, and then curly brackets"""
-    ENV.clean.add("[_]")
-    if ENV.source.text[0] == "[":
-        ENV.source.move_index("]")
-    ENV.source.move_index("}")
+def _print_square_curly(env) -> None:
+    """add [_] for env.clean and move to the end of square if present, and then curly brackets"""
+    env.clean.add("[_]")
+    if env.source.text[0] == "[":
+        env.source.move_index("]")
+    env.source.move_index("}")
 
 
 from exceptions import sub_begin
 
 
-def _begin(ENV) -> None:
+def _begin(env) -> None:
     """responds to the command being and move to the function begin and its subroutines"""
-    i = ENV.source.text.find("}")  # right next after the brackets
-    ENV.command = ENV.source.text[1:i]  # remove asterisk if any
-    ENV.source.move_index("}")
-    sub_begin.interpret(ENV)
+    i = env.source.text.find("}")  # right next after the brackets
+    env.command = env.source.text[1:i]  # remove asterisk if any
+    env.source.move_index("}")
+    sub_begin.interpret(env)
 
 
 from exceptions import sub_end
 
 
-def _end(ENV) -> None:
+def _end(env) -> None:
     """responds to the command end and move to the function end and its subroutines"""
-    i = ENV.source.text.find("}")
-    ENV.command = ENV.source.text[1:i]
-    ENV.source.move_index("}")
-    sub_end.interpret(ENV)
+    i = env.source.text.find("}")
+    env.command = env.source.text[1:i]
+    env.source.move_index("}")
+    sub_end.interpret(env)
 
 
 # special commands (not include command to avoid string problems)
 
 
-def _new_line(ENV) -> None:
-    """add a new line to ENV.clean"""
-    ENV.clean.add("\n")
-    ENV.source.index += 1
+def _new_line(env) -> None:
+    """add a new line to env.clean"""
+    env.clean.add("\n")
+    env.source.index += 1
 
 
-def _square_equation(ENV) -> None:
+def _square_equation(env) -> None:
     r"""add [_] when meeting an equation called via \[ and move index to the end if it"""
-    i = ENV.source.text.find("\\]")
-    ENV.clean.add("[_]")
-    if ENV.source.text[:i].rstrip()[-1] in [
+    i = env.source.text.find("\\]")
+    env.clean.add("[_]")
+    if env.source.text[:i].rstrip()[-1] in [
         ",",
         ";",
         ".",
     ]:  # add punctuation to non-inline equations
-        ENV.clean.add(ENV.source.text[:i].rstrip()[-1])
-    ENV.source.move_index("\\]")
+        env.clean.add(env.source.text[:i].rstrip()[-1])
+    env.source.move_index("\\]")
 
 
-def _round_equation(ENV) -> None:
+def _round_equation(env) -> None:
     r"""add [_] when meeting an equation called via \( and move index to the end if it"""
-    i = ENV.source.text.find("\\)")
-    ENV.clean.add("[_]")
-    if ENV.source.text[:i].rstrip()[-1] in [
+    i = env.source.text.find("\\)")
+    env.clean.add("[_]")
+    if env.source.text[:i].rstrip()[-1] in [
         ",",
         ";",
         ".",
     ]:  # add punctuation to non-inline equations
-        ENV.clean.add(ENV.source.text[:i].rstrip()[-1])
-    ENV.source.move_index("\\)")
+        env.clean.add(env.source.text[:i].rstrip()[-1])
+    env.source.move_index("\\)")
 
 
-def _apostrofe(ENV) -> None:
+def _apostrofe(env) -> None:
     """skip letter when meeting an apostrofe"""
-    if ENV.source.text[1] in ("a", "e", "i", "o", "u"):
-        ENV.source.index += 1
+    if env.source.text[1] in ("a", "e", "i", "o", "u"):
+        env.source.index += 1
 
 
-def _tilde(ENV) -> None:
-    """add tilde to ENV.clean"""
-    ENV.clean.add("~")
-    ENV.source.index += 1
+def _tilde(env) -> None:
+    """add tilde to env.clean"""
+    env.clean.add("~")
+    env.source.index += 1
 
 
-def _null_function(ENV) -> None:
+def _null_function(env) -> None:
     """null function, does nothing"""
 
 
@@ -249,42 +249,42 @@ special_commands = {
 # ----------------------------------------
 
 
-def interpret(ENV) -> None:
+def interpret(env) -> None:
     """this is the custom interpreter that recalls first custom subroutines, then built-in subroutines and then skip the command if not recognised"""
-    if ENV.command:
-        if ENV.command in void or ENV.command in void_c:
+    if env.command:
+        if env.command in void or env.command in void_c:
             pass
-        elif ENV.command in dic_commands_c:
-            dic_commands_c[ENV.command](ENV)
-        elif ENV.command in dic_commands:
-            dic_commands[ENV.command](ENV)
+        elif env.command in dic_commands_c:
+            dic_commands_c[env.command](env)
+        elif env.command in dic_commands:
+            dic_commands[env.command](env)
         else:
-            while ENV.source.text[0] in [
+            while env.source.text[0] in [
                 "{",
                 "[",
             ]:  # check if opening and closing brackets
-                if ENV.source.text[0] == "{":
-                    i = ENV.source.text.find("{", 1)
-                    j = ENV.source.text.find("}", 1)
+                if env.source.text[0] == "{":
+                    i = env.source.text.find("{", 1)
+                    j = env.source.text.find("}", 1)
                     while 0 < i < j:
-                        i = ENV.source.text.find("{", i + 1)
-                        j = ENV.source.text.find("}", j + 1)
-                    ENV.source.index += j + 1
+                        i = env.source.text.find("{", i + 1)
+                        j = env.source.text.find("}", j + 1)
+                    env.source.index += j + 1
                 else:
-                    i = ENV.source.text.find("[", 1)
-                    j = ENV.source.text.find("]", 1)
+                    i = env.source.text.find("[", 1)
+                    j = env.source.text.find("]", 1)
                     while 0 < i < j:
-                        i = ENV.source.text.find("[", i + 1)
-                        j = ENV.source.text.find("]", j + 1)
-                    ENV.source.index += j + 1
-            ENV.clean.aggro.add(ENV.command)
+                        i = env.source.text.find("[", i + 1)
+                        j = env.source.text.find("]", j + 1)
+                    env.source.index += j + 1
+            env.clean.aggro.add(env.command)
     else:  # empty string
-        ENV.command = ENV.source.text[0]
-        if ENV.command in special_commands:
-            special_commands[ENV.command](ENV)
+        env.command = env.source.text[0]
+        if env.command in special_commands:
+            special_commands[env.command](env)
         else:
-            ENV.clean.add(" ")
-            ENV.source.index += 1
+            env.clean.add(" ")
+            env.source.index += 1
 
 
 # ----------------------------------------

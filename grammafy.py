@@ -35,10 +35,9 @@ elif not file_path.endswith(".tex"):
         FILE_NAME = os.path.basename(file_path)
 else:
     FILE_NAME = os.path.basename(file_path)[:-4]
+
 if not FILE_NAME:
     sys.exit("Error fetching the file name")
-
-FOLDER_PATH = f"{os.path.dirname(file_path)}{os.sep}"
 
 # list of admissible characters for commands
 end_command = (
@@ -61,30 +60,36 @@ end_command = (
     "~",
 )
 
-# initialise the final text
-CLEAN = Clean()
-
-# copy the main .tex file to a string
-with open(file_path, encoding="utf-8") as SOURCE:
-    SOURCE = Source(SOURCE.read())
-
-# find the beginning of the document
-if "\\begin{document}" not in SOURCE.text:
-    print("\\begin{document} missing")
-else:
-    SOURCE.move_index("\\begin{document}")
-
 
 class Environment:
     """class to hold the environement variables"""
 
-    source = SOURCE
-    clean = CLEAN
-    folder_path = FOLDER_PATH
+    source = None
+    clean = Clean()
+    folder_path = f"{os.path.dirname(file_path)}{os.sep}"
     command = ""
+
+    def __init__(self):
+        self.source_read()
+
+    @classmethod
+    def source_read(cls):
+        """read source file"""
+        with open(file_path, encoding="utf-8") as source_file:
+            cls.source = Source(source_file.read())
 
 
 ENV = Environment()
+
+
+# copy the main .tex file to a string
+
+# find the beginning of the document
+if "\\begin{document}" not in ENV.source.text:
+    print("\\begin{document} missing")
+else:
+    ENV.source.move_index("\\begin{document}")
+
 
 # start analysing the text
 while ENV.source.head:  # if any such element occurs
@@ -160,14 +165,16 @@ ENV.clean.text = re.sub(
 
 
 with open(
-    f"{FOLDER_PATH}{FILE_NAME}_grammafied.txt", "w", encoding="utf-8"
+    f"{ENV.folder_path}{FILE_NAME}_grammafied.txt", "w", encoding="utf-8"
 ) as file_output:
     file_output.write(ENV.clean.text)
-    print(f"File written successfully, check {FOLDER_PATH}{FILE_NAME}_grammafied.txt")
+    print(
+        f"File written successfully, check {ENV.folder_path}{FILE_NAME}_grammafied.txt"
+    )
 
 if any(ENV.clean.aggro):
     print(f"Unknown commands, please check {FILE_NAME}_unknowns.txt")
     with open(
-        f"{FOLDER_PATH}{FILE_NAME}_unknowns.txt", "w", encoding="utf-8"
+        f"{ENV.folder_path}{FILE_NAME}_unknowns.txt", "w", encoding="utf-8"
     ) as file_unknowns:
         file_unknowns.write(str(ENV.clean.aggro))

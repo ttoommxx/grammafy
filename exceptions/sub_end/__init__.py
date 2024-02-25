@@ -5,9 +5,9 @@
 # ----------------------------------------
 
 
-def _proof(ENV) -> None:
+def _proof(env) -> None:
     """add proof to CLEAN"""
-    ENV.clean.add("■\n")
+    env.clean.add("■\n")
 
 
 # ----------------------------------------
@@ -27,11 +27,11 @@ dic_commands = {"proof": _proof}
 # ----------------------------------------
 
 
-def interpret(ENV) -> None:
+def interpret(env) -> None:
     """custom interpreter for the end routine"""
-    if ENV.command in void_c:
+    if env.command in void_c:
         pass
-    elif ENV.command in dic_commands_c:
-        dic_commands_c[ENV.command](ENV)
-    elif ENV.command in dic_commands:
-        dic_commands[ENV.command](ENV)
+    elif env.command in dic_commands_c:
+        dic_commands_c[env.command](env)
+    elif env.command in dic_commands:
+        dic_commands[env.command](env)
