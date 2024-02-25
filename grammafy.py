@@ -64,19 +64,12 @@ end_command = (
 class Environment:
     """class to hold the environement variables"""
 
-    source = None
-    clean = Clean()
-    folder_path = f"{os.path.dirname(file_path)}{os.sep}"
-    command = ""
-
     def __init__(self):
-        self.source_read()
-
-    @classmethod
-    def source_read(cls):
-        """read source file"""
         with open(file_path, encoding="utf-8") as source_file:
-            cls.source = Source(source_file.read())
+            self.source = Source(source_file.read())
+        self.clean = Clean()
+        self.folder_path = f"{os.path.dirname(file_path)}{os.sep}"
+        self.command = ""
 
 
 ENV = Environment()
