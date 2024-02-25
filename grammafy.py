@@ -12,26 +12,15 @@ CleanVar = TypeVar("CleanVar")
 EnvVar = TypeVar("EnvVar")
 
 
-class Environment:
-    """class to hold the environement variables"""
-
-    def __init__(
-        self, source: SourceVar, clean: CleanVar, folder_path: str, command: str = ""
-    ):
-        self.source = source
-        self.clean = clean
-        self.folder_path = folder_path
-        self.command = command
-
-
 parser = argparse.ArgumentParser(prog="grammafy", description="clean up tex files")
 parser.add_argument("-c", "--commandline", help="select via command line argument")
 args = parser.parse_args()  # args.picker contains the modality
 if not args.commandline:
     import pyle_manager
+    import raw_input
 
     print("Press enter to pick a tex file")
-    pyle_manager.get_key()
+    raw_input.getkey()
     file_path = pyle_manager.main("-p")
 else:
     file_path = args.commandline
@@ -90,7 +79,17 @@ if "\\begin{document}" not in SOURCE.text:
 else:
     SOURCE.move_index("\\begin{document}")
 
-ENV = Environment(SOURCE, CLEAN, FOLDER_PATH)
+
+class Environment:
+    """class to hold the environement variables"""
+
+    source = SOURCE
+    clean = CLEAN
+    folder_path = FOLDER_PATH
+    command = ""
+
+
+ENV = Environment()
 
 # start analysing the text
 while ENV.source.head:  # if any such element occurs

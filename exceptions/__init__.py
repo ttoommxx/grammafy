@@ -49,11 +49,15 @@ def _include(ENV: EnvVar) -> NoReturn:
     r"""responds to \include command and adds the new ENV.source to the head of ENV.source. The included files need to be in the same folder"""
     i = ENV.source.text.find("}")
     include_path = ENV.source.text[1:i]
-    if not include_path.endswith(".tex"):  # if the extension is not present
-        include_path += ".tex"
-    with open(f"{folder_path}{include_path}", encoding="utf-8") as include_tex:
-        ENV.source.add(include_tex.read())
-    ENV.source.root.index += i + 1
+
+    if include_path.endswith(".bbl"):  # skip bibliography files
+        ENV.source.index += i + 1
+    else:
+        if not include_path.endswith(".tex"):  # if the extension is not present
+            include_path += ".tex"
+        with open(f"{ENV.folder_path}{include_path}", encoding="utf-8") as include_tex:
+            ENV.source.add(include_tex.read())
+        ENV.source.root.index += i + 1
 
 
 def _print_curly(ENV: EnvVar) -> NoReturn:
