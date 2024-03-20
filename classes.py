@@ -1,10 +1,12 @@
 """main objects used by grammafy main execution"""
 
+from typing import Any
+
 
 class Node:
     """NodeList class contained source code to be cleaned, ordered from head"""
 
-    def __init__(self, text, root=None):
+    def __init__(self, text, root=None) -> None:
         self._text = (
             "\n".join(
                 filter(lambda x: not x.lstrip().startswith("%"), text.splitlines())
@@ -40,7 +42,7 @@ class Node:
             self._index = index
 
     @property
-    def inter(self) -> bool | int:
+    def inter(self) -> int:
         """this functions search for the first symbol occurrence that has already been analysed yet, i.e. that precedes the current index"""
         for x in list(self.symbols.keys()):
             if self.symbols[x] < self.index:  # update only those that haven't been used
@@ -51,7 +53,7 @@ class Node:
         if any(self.symbols):
             return min(self.symbols.values()) - self.index
         else:
-            return False
+            return -1
 
     def move_index(self, text_to_find: str) -> None:
         """search for text_to_find and move index at the end of the text"""
@@ -61,11 +63,11 @@ class Node:
 class Source:
     """mock class that behaves like the head of the ListNode (inherits most of its attributes) and pops the head when it's been fully analysed"""
 
-    def __init__(self, text: str):
+    def __init__(self, text: str) -> None:
         self.head = Node(text)
 
     # <<< treat this class as the actual head of the node
-    def __getattr__(self, name: str):
+    def __getattr__(self, name: Any) -> Any:
         """inherits members of the Node class"""
         match name:
             case "head":
@@ -79,7 +81,7 @@ class Source:
             case _:
                 return self.head.__dict__[name]
 
-    def __setattr__(self, name, value) -> None:
+    def __setattr__(self, name: Any, value: Any) -> None:
         """inherits members of the Node class"""
         match name:
             case "head":

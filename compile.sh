@@ -9,6 +9,8 @@ installed_packages=$(pip list)
 
 if echo "$installed_packages" | grep "Uni-Curses"; then
     if echo "$installed_packages" | grep "mypy"; then
+        rm -rf .mypy_cache
+        rm -rf build
         mypyc --ignore-missing-imports grammafy.py
     else
         echo "Error: mypyc is not installed via pip, run pip install mypy"

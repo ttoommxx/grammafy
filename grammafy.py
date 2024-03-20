@@ -11,7 +11,7 @@ from exceptions import interpret
 class Environment:
     """class to hold the environement variables"""
 
-    def __init__(self, file_path: str):
+    def __init__(self, file_path: str) -> None:
         with open(file_path, encoding="utf-8") as source_file:
             self.source = Source(source_file.read())
         self.clean = Clean()
@@ -81,7 +81,7 @@ def grammafy(file_path: str = "") -> None:
     # start analysing the text
     while env.source.head:  # if any such element occurs
         next_index = env.source.inter
-        if next_index is False:
+        if next_index == -1:
             env.clean.add(env.source.text)
             env.source.pop()
             continue
