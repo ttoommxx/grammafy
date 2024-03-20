@@ -8,62 +8,10 @@ from classes import Source, Clean
 from exceptions import interpret
 
 
-parser = argparse.ArgumentParser(prog="grammafy", description="clean up tex files")
-parser.add_argument("-c", "--commandline", help="select via command line argument")
-args = parser.parse_args()  # args.picker contains the modality
-if not args.commandline:
-    import pyle_manager
-
-    input("Press enter to pick a tex file")
-    file_path = pyle_manager.file_manager("-p")
-else:
-    file_path = args.commandline
-
-FILE_NAME = ""
-if not file_path:
-    sys.exit("File not selected")
-elif not file_path.endswith(".tex"):
-    if (
-        input(
-            "The file selected is not in a tex format, enter Y to continue anyway. "
-        ).lower()
-        != "y"
-    ):
-        sys.exit("Grammification interrupted")
-    else:
-        FILE_NAME = os.path.basename(file_path)
-else:
-    FILE_NAME = os.path.basename(file_path)[:-4]
-
-if not FILE_NAME:
-    sys.exit("Error fetching the file name")
-
-# list of admissible characters for commands
-end_command = (
-    " ",
-    "{",
-    "}",
-    ".",
-    ",",
-    ":",
-    ";",
-    "[",
-    "]",
-    "(",
-    ")",
-    "$",
-    "\\",
-    "\n",
-    '"',
-    "'",
-    "~",
-)
-
-
 class Environment:
     """class to hold the environement variables"""
 
-    def __init__(self):
+    def __init__(self, file_path: str):
         with open(file_path, encoding="utf-8") as source_file:
             self.source = Source(source_file.read())
         self.clean = Clean()
@@ -71,102 +19,156 @@ class Environment:
         self.command = ""
 
 
-ENV = Environment()
+def grammafy(file_path: str = "") -> None:
+    """main function to execute"""
 
+    if not file_path:
+        import pyle_manager
 
-# copy the main .tex file to a string
+        input("Press enter to pick a tex file")
+        file_path = pyle_manager.file_manager(True)
 
-# find the beginning of the document
-if "\\begin{document}" not in ENV.source.text:
-    print("\\begin{document} missing")
-else:
-    ENV.source.move_index("\\begin{document}")
+    file_name = ""
+    if not file_path:
+        sys.exit("File not selected")
+    elif not file_path.endswith(".tex"):
+        if (
+            input(
+                "The file selected is not in a tex format, enter Y to continue anyway. "
+            ).lower()
+            != "y"
+        ):
+            sys.exit("Grammification interrupted")
+        else:
+            file_name = os.path.basename(file_path)
+    else:
+        file_name = os.path.basename(file_path)[:-4]
 
+    if not file_name:
+        sys.exit("Error fetching the file name")
 
-# start analysing the text
-while ENV.source.head:  # if any such element occurs
-    next_index = ENV.source.inter
-    if next_index is False:
-        ENV.clean.add(ENV.source.text)
-        ENV.source.pop()
-        continue
-
-    # we can immediately add what we skipped before any interactive element
-    ENV.clean.add(ENV.source.text[:next_index])
-    ENV.source.index += next_index
-
-    match ENV.source.text[0]:
-        case "\\":  # FROM HERE - MAKE IT INTO A MATCH and include all this into the interpret if possible
-            i = min(
-                (
-                    ENV.source.text.find(x, 1)
-                    for x in end_command
-                    if x in ENV.source.text[1:]
-                )
-            )  # take note of the index of such element
-            ENV.command = ENV.source.text[1:i]
-            ENV.source.index += i
-            # execute the routines
-            interpret(ENV)
-        case "~":
-            ENV.source.index += 1
-            ENV.clean.add(" ")
-        case "{":
-            ENV.source.index += 1
-        case "}":
-            ENV.source.index += 1
-        case "$":
-            ENV.clean.add("[_]")
-            ENV.source.index += 1
-            if ENV.source.text[0] == "$":
-                ENV.source.move_index("$$")
-            else:  # assuming there are no double dollars within one-dollar equations
-                ENV.source.move_index("$")
-        case "%":
-            ENV.source.move_index("\n")
-        case _:
-            if (
-                input(
-                    f"Fatal error, unknown interactive {ENV.source.text[0]}. \
-                    Press Y to continue or any other button to abort"
-                ).lower()
-                != "y"
-            ):
-                sys.exit("Aborted")
-            else:
-                ENV.source.index += 1
-
-
-# CLEANING ROUTINES
-# trailing spaces
-ENV.clean.text = ENV.clean.text.strip()
-# unmatched brackets and tabs
-ENV.clean.text = ENV.clean.text.replace("[]", "").replace("()", "").replace("\t", " ")
-# pointless spaces
-ENV.clean.text = re.sub(r"( )*\n( )*", "\n", ENV.clean.text)
-# too many lines
-ENV.clean.text = re.sub(r"\n\n\s*", "\n\n", ENV.clean.text)
-# dourble spacing
-ENV.clean.text = re.sub(r"( )+", " ", ENV.clean.text)
-# remove new line before [_] unless preceded by -
-ENV.clean.text = re.sub(r"(\S)\n?(?<!-)\[_\]", r"\1 [_]", ENV.clean.text)
-# remove new line after [_] unless followed by bulletpoint
-ENV.clean.text = re.sub(
-    r"\[_\](\.|,|;)?\n(?!(?:\d+\.|-))(\S)", r"[_]\1 \2", ENV.clean.text
-)
-
-
-with open(
-    f"{ENV.folder_path}{FILE_NAME}_grammafied.txt", "w", encoding="utf-8"
-) as file_output:
-    file_output.write(ENV.clean.text)
-    print(
-        f"File written successfully, check {ENV.folder_path}{FILE_NAME}_grammafied.txt"
+    # list of admissible characters for commands
+    end_command = (
+        " ",
+        "{",
+        "}",
+        ".",
+        ",",
+        ":",
+        ";",
+        "[",
+        "]",
+        "(",
+        ")",
+        "$",
+        "\\",
+        "\n",
+        '"',
+        "'",
+        "~",
     )
 
-if any(ENV.clean.aggro):
-    print(f"Unknown commands, please check {FILE_NAME}_unknowns.txt")
+    env = Environment(file_path)
+
+    # copy the main .tex file to a string
+
+    # find the beginning of the document
+    if "\\begin{document}" not in env.source.text:
+        print("\\begin{document} missing")
+    else:
+        env.source.move_index("\\begin{document}")
+
+    # start analysing the text
+    while env.source.head:  # if any such element occurs
+        next_index = env.source.inter
+        if next_index is False:
+            env.clean.add(env.source.text)
+            env.source.pop()
+            continue
+
+        # we can immediately add what we skipped before any interactive element
+        env.clean.add(env.source.text[:next_index])
+        env.source.index += next_index
+
+        match env.source.text[0]:
+            case "\\":  # FROM HERE - MAKE IT INTO A MATCH and include all this into the interpret if possible
+                i = min(
+                    (
+                        env.source.text.find(x, 1)
+                        for x in end_command
+                        if x in env.source.text[1:]
+                    )
+                )  # take note of the index of such element
+                env.command = env.source.text[1:i]
+                env.source.index += i
+                # execute the routines
+                interpret(env)
+            case "~":
+                env.source.index += 1
+                env.clean.add(" ")
+            case "{":
+                env.source.index += 1
+            case "}":
+                env.source.index += 1
+            case "$":
+                env.clean.add("[_]")
+                env.source.index += 1
+                if env.source.text[0] == "$":
+                    env.source.move_index("$$")
+                else:  # assuming there are no double dollars within one-dollar equations
+                    env.source.move_index("$")
+            case "%":
+                env.source.move_index("\n")
+            case _:
+                if (
+                    input(
+                        f"Fatal error, unknown interactive {env.source.text[0]}. \
+                        Press Y to continue or any other button to abort"
+                    ).lower()
+                    != "y"
+                ):
+                    sys.exit("Aborted")
+                else:
+                    env.source.index += 1
+
+    # CLEANING ROUTINES
+    # trailing spaces
+    env.clean.text = env.clean.text.strip()
+    # unmatched brackets and tabs
+    env.clean.text = (
+        env.clean.text.replace("[]", "").replace("()", "").replace("\t", " ")
+    )
+    # pointless spaces
+    env.clean.text = re.sub(r"( )*\n( )*", "\n", env.clean.text)
+    # too many lines
+    env.clean.text = re.sub(r"\n\n\s*", "\n\n", env.clean.text)
+    # dourble spacing
+    env.clean.text = re.sub(r"( )+", " ", env.clean.text)
+    # remove new line before [_] unless preceded by -
+    env.clean.text = re.sub(r"(\S)\n?(?<!-)\[_\]", r"\1 [_]", env.clean.text)
+    # remove new line after [_] unless followed by bulletpoint
+    env.clean.text = re.sub(
+        r"\[_\](\.|,|;)?\n(?!(?:\d+\.|-))(\S)", r"[_]\1 \2", env.clean.text
+    )
+
     with open(
-        f"{ENV.folder_path}{FILE_NAME}_unknowns.txt", "w", encoding="utf-8"
-    ) as file_unknowns:
-        file_unknowns.write(str(ENV.clean.aggro))
+        f"{env.folder_path}{file_name}_grammafied.txt", "w", encoding="utf-8"
+    ) as file_output:
+        file_output.write(env.clean.text)
+        print(
+            f"File written successfully, check {env.folder_path}{file_name}_grammafied.txt"
+        )
+
+    if any(env.clean.aggro):
+        print(f"Unknown commands, please check {file_name}_unknowns.txt")
+        with open(
+            f"{env.folder_path}{file_name}_unknowns.txt", "w", encoding="utf-8"
+        ) as file_unknowns:
+            file_unknowns.write(str(env.clean.aggro))
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(prog="grammafy", description="clean up tex files")
+    parser.add_argument("-c", "--commandline", help="select via command line argument")
+    args = parser.parse_args()  # args.picker contains the modality
+    grammafy(args.commandline)

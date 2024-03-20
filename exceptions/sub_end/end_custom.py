@@ -8,7 +8,7 @@
 # VARIABLES
 # ----------------------------------------
 
-dic_commands_c = {}
+dic_commands_c = {"": lambda *args: None}
 
 void_c = ()
 
