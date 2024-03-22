@@ -6,7 +6,7 @@ import argparse
 import re
 from classes import Source, Clean
 from exceptions import interpret
-import pyle_manager
+import pyle_manager  # type: ignore
 
 
 class Environment:
