@@ -6,6 +6,7 @@ import argparse
 import re
 from classes import Source, Clean
 from exceptions import interpret
+import pyle_manager
 
 
 class Environment:
@@ -23,8 +24,6 @@ def grammafy(file_path: str = "") -> None:
     """main function to execute"""
 
     if not file_path:
-        import pyle_manager
-
         input("Press enter to pick a tex file")
         file_path = pyle_manager.file_manager(True)
 
