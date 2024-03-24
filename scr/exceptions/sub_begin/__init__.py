@@ -67,11 +67,11 @@ def _skip(env) -> None:
 # VARIABLES
 # ----------------------------------------
 
-from exceptions.sub_begin.begin_custom import void_c
+from .begin_custom import void_c
 
 void = ("center", "frame")
 
-from exceptions.sub_begin.begin_custom import dic_commands_c
+from .begin_custom import dic_commands_c
 
 dic_commands = {
     "abstract": _title,

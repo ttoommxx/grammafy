@@ -148,7 +148,7 @@ def _null_function(env) -> None:
 # VARIABLES
 # ----------------------------------------
 
-from exceptions.routines_custom import void_c
+from .routines_custom import void_c
 
 void = (
     "centering",
@@ -199,7 +199,7 @@ void = (
     "texttt",
 )
 
-from exceptions.routines_custom import dic_commands_c
+from .routines_custom import dic_commands_c
 
 dic_commands = {
     "addchap": _curly,

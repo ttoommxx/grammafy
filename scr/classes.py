@@ -67,31 +67,31 @@ class Source:
         self.head = Node(text)
 
     # <<< treat this class as the actual head of the node
-    def __getattr__(self, name: Any) -> Any:
-        """inherits members of the Node class"""
-        match name:
-            case "head":
-                return self.head
-            case "index":
-                return self.head.index
-            case "text":
-                return self.head.text
-            case "inter":
-                return self.head.inter
-            case _:
-                return self.head.__dict__[name]
+    @property
+    def index(self) -> Any:
+        """return index of head"""
 
-    def __setattr__(self, name: Any, value: Any) -> None:
-        """inherits members of the Node class"""
-        match name:
-            case "head":
-                self.__dict__[name] = value
-            case "index":
-                self.head.index = value
-            case "text":
-                self.head.text = value
-            case _:
-                self.head.__dict__[name] = value
+        return self.head.index
+
+    @index.setter
+    def index(self, val: int) -> None:
+        self.head.index = val
+
+    @property
+    def text(self) -> Any:
+        """return text of head"""
+
+        return self.head.text
+
+    @text.setter
+    def text(self, val: str) -> None:
+        self.head.text = val
+
+    @property
+    def inter(self) -> Any:
+        """return inter of head"""
+
+        return self.head.inter
 
     def move_index(self, text_to_find: str) -> None:
         """inherits the move_index function from Node"""

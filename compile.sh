@@ -11,7 +11,7 @@ if echo "$installed_packages" | grep "Uni-Curses"; then
     if echo "$installed_packages" | grep "pyinstaller"; then
         rm -rf build
         rm -rf dist
-        pyinstaller --onefile grammafy.py
+        pyinstaller --onefile scr/grammafy.py
     else
         echo "Error: mypyc is not installed via pip, run pip install mypy"
     fi
