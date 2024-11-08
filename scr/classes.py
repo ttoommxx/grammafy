@@ -1,7 +1,5 @@
 """main objects used by grammafy main execution"""
 
-from typing import Any
-
 
 class Node:
     """NodeList class contained source code to be cleaned, ordered from head"""
@@ -68,7 +66,7 @@ class Source:
 
     # <<< treat this class as the actual head of the node
     @property
-    def index(self) -> Any:
+    def index(self) -> int:
         """return index of head"""
 
         return self.head.index
@@ -78,7 +76,7 @@ class Source:
         self.head.index = val
 
     @property
-    def text(self) -> Any:
+    def text(self) -> str:
         """return text of head"""
 
         return self.head.text
@@ -88,7 +86,7 @@ class Source:
         self.head.text = val
 
     @property
-    def inter(self) -> Any:
+    def inter(self) -> int:
         """return inter of head"""
 
         return self.head.inter
